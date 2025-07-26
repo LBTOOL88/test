@@ -33,76 +33,16 @@
         }
         .hidden { display: none !important; }
 
+        /* --- NỀN NÂNG CẤP --- */
         .background-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: -1;
         }
-        #grid-bg { z-index: -2; }
-        #matrix-bg { z-index: -1; }
         
-        /* --- MÀN HÌNH KHỞI ĐỘNG VI MẠCH --- */
-        #circuit-boot-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--dark-blue);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 1s ease-out, visibility 1s;
-        }
-        #circuit-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-        #boot-content {
-            z-index: 2;
-            text-align: center;
-            opacity: 0;
-            transition: opacity 0.5s ease-in;
-        }
-        #boot-content.visible {
-            opacity: 1;
-        }
-        #boot-logo {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            margin-bottom: 20px;
-            border: 2px solid var(--yellow);
-            box-shadow: 0 0 25px var(--yellow);
-        }
-        #boot-progress-bar {
-            width: 250px;
-            height: 8px;
-            border: 1px solid var(--cyan);
-            margin: 20px auto;
-            padding: 2px;
-        }
-        #boot-progress-fill {
-            width: 0%;
-            height: 100%;
-            background-color: var(--cyan);
-            transition: width 0.1s linear;
-        }
-        #boot-text {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2em;
-            color: var(--cyan);
-            text-shadow: 0 0 10px var(--cyan);
-        }
-
         /* --- AUTH SCREEN - CYBERPUNK STYLE --- */
         #authScreen {
             position: fixed;
@@ -130,35 +70,27 @@
             padding: 30px 25px;
             text-align: center;
             position: relative;
-            overflow: hidden;
-            animation: advanced-glitch 5s infinite steps(2, end);
         }
         
-        @keyframes advanced-glitch {
-            0%, 100% { transform: none; opacity: 1; }
-            5% { transform: skewX(5deg) translateX(5px); }
-            5.2% { transform: skewX(-5deg) translateX(-5px); }
-            5.4% { transform: none; }
-            30% { transform: none; }
-            30.2% { transform: skewY(2deg) translateY(3px) scale(1.01); }
-            30.4% { transform: none; }
-        }
-
-        .laser-scanner {
+        /* --- UI DETAILS: CORNER BRACKETS --- */
+        .corner-bracket {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: var(--error-red);
-            box-shadow: 0 0 15px var(--error-red);
-            animation: scan-laser 4s linear infinite;
+            width: 25px;
+            height: 25px;
+            border-style: solid;
+            border-color: var(--cyan);
+            opacity: 0;
+            animation: boot-up 0.6s ease-out forwards, corner-glow 2s infinite alternate;
         }
-        @keyframes scan-laser {
-            0% { top: -10px; }
-            50% { top: 100%; }
-            100% { top: -10px; }
+        @keyframes corner-glow {
+            from { box-shadow: 0 0 8px var(--cyan); }
+            to { box-shadow: 0 0 18px var(--cyan), 0 0 4px white; }
         }
+        .corner-bracket.top-left { top: -2px; left: -2px; border-width: 4px 0 0 4px; animation-delay: 0.2s; }
+        .corner-bracket.top-right { top: -2px; right: -2px; border-width: 4px 4px 0 0; animation-delay: 0.3s; }
+        .corner-bracket.bottom-left { bottom: -2px; left: -2px; border-width: 0 0 4px 4px; animation-delay: 0.4s; }
+        .corner-bracket.bottom-right { bottom: -2px; right: -2px; border-width: 0 4px 4px 0; animation-delay: 0.5s; }
+
 
         .boot-anim {
             opacity: 0;
@@ -189,7 +121,7 @@
             margin: 0 0 25px 0;
             text-transform: uppercase;
             letter-spacing: 2px;
-            min-height: 1.2em;
+            min-height: 1.2em; /* Reserve space for text */
         }
 
         #authScreen form { width: 100%; }
@@ -228,10 +160,16 @@
             transition: all .2s ease-out;
         }
 
+        /* --- NÚT KẾT NỐI THÔNG MINH --- */
         #loginBtn {
             background: var(--cyan);
             color: var(--dark-blue);
             box-shadow: 0 0 10px var(--cyan);
+            opacity: 0.5; /* Trạng thái chờ */
+            transition: all 0.3s ease;
+        }
+        #loginBtn.ready {
+            opacity: 1; /* Sẵn sàng */
             animation: button-glow-cyan 2s infinite alternate;
         }
         @keyframes button-glow-cyan {
@@ -308,6 +246,7 @@
             color: var(--cyan);
             text-shadow: 0 0 15px var(--cyan);
             text-transform: uppercase;
+            min-height: 1.2em;
         }
         #loggedInScreen p { font-size: 1.1em; }
         #logoutBtn {
@@ -369,56 +308,50 @@
     </style>
 </head>
 <body>
+    <canvas id="grid-bg" class="background-canvas"></canvas>
     <canvas id="matrix-bg" class="background-canvas"></canvas>
     
-    <div id="circuit-boot-screen">
-        <canvas id="circuit-canvas"></canvas>
-        <div id="boot-content">
-            <img id="boot-logo" src="https://i.ibb.co/RkhcqgKC/LOGO.png" alt="Boot Logo">
-            <div id="boot-progress-bar">
-                <div id="boot-progress-fill"></div>
-            </div>
-            <div id="boot-text">INITIALIZING SYSTEM...</div>
-        </div>
-    </div>
-
     <div id="authScreen" class="hidden">
         <div id="auth-content">
-            <div class="laser-scanner"></div>
+            <!-- UI Details: Corner Brackets -->
+            <div class="corner-bracket top-left"></div>
+            <div class="corner-bracket top-right"></div>
+            <div class="corner-bracket bottom-left"></div>
+            <div class="corner-bracket bottom-right"></div>
+
             <img id="auth-logo" class="boot-anim" src="https://i.ibb.co/RkhcqgKC/LOGO.png" alt="Logo" style="animation-delay: 0.2s;">
             
             <div id="form-container">
                 <form id="loginForm">
-                    <h2 class="boot-anim" style="animation-delay: 0.4s;">ĐĂNG NHẬP</h2>
-                    <div class="boot-anim" style="animation-delay: 0.6s;">
+                    <h2 data-text="ĐĂNG NHẬP"></h2>
+                    <div class="boot-anim" style="animation-delay: 0.8s;">
                         <input type="text" id="login-username" placeholder="TÊN TÀI KHOẢN" required>
                     </div>
-                    <div class="boot-anim" style="animation-delay: 0.8s;">
+                    <div class="boot-anim" style="animation-delay: 1.0s;">
                         <input type="password" id="login-password" placeholder="MẬT KHẨU" required>
                     </div>
-                    <div class="boot-anim" style="animation-delay: 1.0s;">
+                    <div class="boot-anim" style="animation-delay: 1.2s;">
                         <button type="submit" id="loginBtn">KẾT NỐI</button>
                     </div>
                     <p id="login-error" class="auth-error"></p>
-                    <p class="auth-switch boot-anim" style="animation-delay: 1.2s;">Chưa có tài khoản? <a id="showRegisterLink">Đăng ký</a></p>
+                    <p class="auth-switch boot-anim" style="animation-delay: 1.4s;">Chưa có tài khoản? <a id="showRegisterLink">Đăng ký</a></p>
                 </form>
 
                 <form id="registerForm" class="hidden">
-                    <h2 class="boot-anim">ĐĂNG KÝ</h2>
-                    <div class="boot-anim" style="animation-delay: 0.1s;"><input type="text" id="register-username" placeholder="TÊN TÀI KHOẢN" required></div>
-                    <div class="boot-anim" style="animation-delay: 0.2s;"><input type="tel" id="register-phone" placeholder="SỐ ĐIỆN THOẠI" required></div>
-                    <div class="boot-anim" style="animation-delay: 0.3s;"><input type="password" id="register-password" placeholder="MẬT KHẨU" required></div>
-                    <div class="boot-anim" style="animation-delay: 0.4s;"><button type="submit" id="registerBtn">TẠO MỚI</button></div>
+                    <h2 data-text="ĐĂNG KÝ"></h2>
+                    <div class="boot-anim"><input type="text" id="register-username" placeholder="TÊN TÀI KHOẢN" required></div>
+                    <div class="boot-anim" style="animation-delay: 0.1s;"><input type="tel" id="register-phone" placeholder="SỐ ĐIỆN THOẠI" required></div>
+                    <div class="boot-anim" style="animation-delay: 0.2s;"><input type="password" id="register-password" placeholder="MẬT KHẨU" required></div>
+                    <div class="boot-anim" style="animation-delay: 0.3s;"><button type="submit" id="registerBtn">TẠO MỚI</button></div>
                     <p id="register-error" class="auth-error"></p>
-                    <p class="auth-switch boot-anim" style="animation-delay: 0.5s;">Đã có tài khoản? <a id="showLoginLink">Đăng nhập</a></p>
+                    <p class="auth-switch boot-anim" style="animation-delay: 0.4s;">Đã có tài khoản? <a id="showLoginLink">Đăng nhập</a></p>
                 </form>
             </div>
         </div>
     </div>
 
     <div id="loggedInScreen" class="hidden">
-        <h1>KẾT NỐI THÀNH CÔNG</h1>
-        <p id="user-info"></p>
+        <h1 id="welcome-title"></h1>
         <button id="logoutBtn">ĐĂNG XUẤT</button>
     </div>
     
@@ -427,8 +360,6 @@
         <span>LIÊN HỆ LONG BẢO</span>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M248,8C111.033,8,0,119.033,0,256S111.033,504,248,504,496,392.967,496,256,384.967,8,248,8ZM362.952,176.66c-3.732,39.215-19.881,134.378-28.1,178.3-3.476,18.584-10.322,24.816-16.948,25.425-14.4,1.326-25.338-9.517-39.287-18.661-21.827-14.308-34.158-23.215-55.346-37.177-24.485-16.135-8.612-25,5.342-39.5,3.652-3.793,67.2-61.756,68.973-66.107,2.174-5.327.34-8.28-2.063-10.423-2.403-2.143-5.48-1.922-8.262-.973l-73.22,47.052-37.424-11.948c-13.385-4.278-23.215-6.469-23.215-15.045,0-8.173,6.7-13.218,19.967-18.071,46.5-16.979,100.013-33.507,139.14-47.785,13.87-5.021,26.124,2.756,22.399,28.857Z"/></svg>
     </a>
-    
-    <audio id="ambient-sound" loop></audio>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -459,26 +390,57 @@
         const auth = getAuth(fbApp);
         const db = getFirestore(fbApp);
 
-        // --- MATRIX RAIN SCRIPT ---
-        const canvas = document.getElementById('matrix-bg');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        // --- BACKGROUND SCRIPTS ---
+        const gridCanvas = document.getElementById('grid-bg');
+        const gctx = gridCanvas.getContext('2d');
+        const matrixCanvas = document.getElementById('matrix-bg');
+        const mctx = matrixCanvas.getContext('2d');
+
+        gridCanvas.width = matrixCanvas.width = window.innerWidth;
+        gridCanvas.height = matrixCanvas.height = window.innerHeight;
+
+        // Grid
+        let time = 0;
+        function drawGrid() {
+            gctx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+            gctx.strokeStyle = 'rgba(0, 255, 255, 0.1)';
+            gctx.lineWidth = 1;
+            const gridSize = 50;
+            for (let x = (time % gridSize) - gridSize; x < gridCanvas.width; x += gridSize) {
+                gctx.beginPath();
+                gctx.moveTo(x, 0);
+                gctx.lineTo(x, gridCanvas.height);
+                gctx.stroke();
+            }
+            for (let y = (time % gridSize) - gridSize; y < gridCanvas.height; y += gridSize) {
+                gctx.beginPath();
+                gctx.moveTo(0, y);
+                gctx.lineTo(gridCanvas.width, y);
+                gctx.stroke();
+            }
+            time += 0.2;
+            requestAnimationFrame(drawGrid);
+        }
+        drawGrid();
+
+        // Matrix
         const alphabet = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         const fontSize = 16;
-        const columns = canvas.width / fontSize;
+        const columns = matrixCanvas.width / fontSize;
         const rainDrops = Array.from({ length: columns }).fill(1);
+        let mouseX = -100, mouseY = -100;
+        window.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
         const drawMatrix = () => {
-            ctx.fillStyle = 'rgba(10, 25, 47, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = 'rgba(0, 255, 255, 0.8)';
-            ctx.font = fontSize + 'px monospace';
+            mctx.fillStyle = 'rgba(10, 25, 47, 0.05)';
+            mctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+            mctx.font = fontSize + 'px monospace';
             rainDrops.forEach((y, i) => {
                 const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                ctx.fillText(text, i * fontSize, y * fontSize);
-                if (y * fontSize > canvas.height && Math.random() > 0.975) {
-                    rainDrops[i] = 0;
-                }
+                const x = i * fontSize;
+                const dist = Math.hypot(x - mouseX, y * fontSize - mouseY);
+                mctx.fillStyle = dist < 50 ? `rgba(252, 238, 10, ${1 - dist / 50})` : 'rgba(0, 255, 255, 0.8)';
+                mctx.fillText(text, x, y * fontSize);
+                if (y * fontSize > matrixCanvas.height && Math.random() > 0.975) rainDrops[i] = 0;
                 rainDrops[i]++;
             });
         };
@@ -492,148 +454,56 @@
         const logoutBtn = document.getElementById('logoutBtn');
         const showRegisterLink = document.getElementById('showRegisterLink');
         const showLoginLink = document.getElementById('showLoginLink');
-        const userInfoDisplay = document.getElementById('user-info');
+        const loginUsernameInput = document.getElementById('login-username');
+        const loginPasswordInput = document.getElementById('login-password');
+        const loginBtn = document.getElementById('loginBtn');
+        const welcomeTitle = document.getElementById('welcome-title');
         
-        // --- CIRCUIT BOOT UP SCRIPT V2 ---
-        const circuitBootScreen = document.getElementById('circuit-boot-screen');
-        const circuitCanvas = document.getElementById('circuit-canvas');
-        const bootContent = document.getElementById('boot-content');
-        const bootProgressFill = document.getElementById('boot-progress-fill');
-        const bootText = document.getElementById('boot-text');
-        const cctx = circuitCanvas.getContext('2d');
-
-        async function startCircuitBootUp() {
-            circuitCanvas.width = window.innerWidth;
-            circuitCanvas.height = window.innerHeight;
-
-            const nodes = [];
-            const particles = [];
-            const nodeCount = (window.innerWidth < 600) ? 30 : 50;
-
-            for (let i = 0; i < nodeCount; i++) {
-                nodes.push({
-                    x: Math.random() * circuitCanvas.width,
-                    y: Math.random() * circuitCanvas.height,
-                    radius: Math.random() * 3 + 1
-                });
-            }
-
-            for (let i = 0; i < 20; i++) {
-                const startNode = nodes[Math.floor(Math.random() * nodeCount)];
-                const endNode = nodes[Math.floor(Math.random() * nodeCount)];
-                particles.push({
-                    x: startNode.x,
-                    y: startNode.y,
-                    targetX: endNode.x,
-                    targetY: endNode.y,
-                    speed: Math.random() * 0.5 + 0.2
-                });
-            }
-            
-            const totalDuration = 4000;
-            let startTime = Date.now();
-            let animationFrameId;
-
-            function animateCircuits() {
-                const elapsedTime = Date.now() - startTime;
-                if (elapsedTime > totalDuration) {
-                    cancelAnimationFrame(animationFrameId);
-                    finishBoot();
-                    return;
+        const decodeText = (element, onComplete = () => {}) => {
+            const originalText = element.dataset.text;
+            if (!originalText) return;
+            const chars = '!<>-_\\/[]{}—=+*^?#________';
+            let frame = 0;
+            const interval = setInterval(() => {
+                element.textContent = originalText.split('').map((char, index) => {
+                    if(index < frame) return originalText[index];
+                    return chars[Math.floor(Math.random() * chars.length)];
+                }).join('');
+                if(frame >= originalText.length) {
+                    clearInterval(interval);
+                    onComplete();
                 }
+                frame++;
+            }, 50);
+        };
 
-                const progress = elapsedTime / totalDuration;
-                bootProgressFill.style.width = `${progress * 100}%`;
-                if (progress > 0.5 && !bootContent.classList.contains('visible')) {
-                    bootContent.classList.add('visible');
-                }
-
-                cctx.clearRect(0, 0, circuitCanvas.width, circuitCanvas.height);
-
-                nodes.forEach(node => {
-                    cctx.beginPath();
-                    cctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-                    cctx.fillStyle = 'rgba(0, 255, 255, 0.5)';
-                    cctx.fill();
-                });
-
-                particles.forEach(p => {
-                    cctx.beginPath();
-                    cctx.moveTo(p.x, p.y);
-                    const dx = p.targetX - p.x;
-                    const dy = p.targetY - p.y;
-                    p.x += dx * p.speed * 0.05;
-                    p.y += dy * p.speed * 0.05;
-                    cctx.lineTo(p.x, p.y);
-                    cctx.strokeStyle = `rgba(252, 238, 10, 0.8)`;
-                    cctx.lineWidth = 1;
-                    cctx.stroke();
-
-                    if (Math.hypot(p.targetX - p.x, p.targetY - p.y) < 1) {
-                         const startNode = nodes[Math.floor(Math.random() * nodeCount)];
-                         const endNode = nodes[Math.floor(Math.random() * nodeCount)];
-                         p.x = startNode.x;
-                         p.y = startNode.y;
-                         p.targetX = endNode.x;
-                         p.targetY = endNode.y;
-                    }
-                });
-                
-                animationFrameId = requestAnimationFrame(animateCircuits);
-            }
-            
-            async function finishBoot() {
-                bootText.textContent = "SYSTEM READY";
-                await new Promise(resolve => setTimeout(resolve, 500));
-                
-                const flash = document.createElement('div');
-                flash.style.position = 'fixed';
-                flash.style.top = '0';
-                flash.style.left = '0';
-                flash.style.width = '100%';
-                flash.style.height = '100%';
-                flash.style.backgroundColor = 'white';
-                flash.style.zIndex = '2000';
-                flash.style.opacity = '0';
-                flash.style.transition = 'opacity 0.5s ease-out';
-                document.body.appendChild(flash);
-                
-                await new Promise(resolve => setTimeout(resolve, 10));
-                flash.style.opacity = '1';
-                
-                await new Promise(resolve => setTimeout(resolve, 100));
-                circuitBootScreen.style.opacity = '0';
-                flash.style.opacity = '0';
-                
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                circuitBootScreen.classList.add('hidden');
-                flash.remove();
-                
-                // Start ambient sound after boot
-                const ambientSound = document.getElementById('ambient-sound');
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(50, audioCtx.currentTime); // Low frequency hum
-                gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime); // Low volume
-                oscillator.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                oscillator.start();
-            }
-            
-            animateCircuits();
-        }
+        const startBootSequence = () => {
+            const loginTitle = loginForm.querySelector('h2');
+            setTimeout(() => decodeText(loginTitle), 400);
+        };
 
         showRegisterLink.addEventListener('click', () => {
             loginForm.classList.add('hidden');
             registerForm.classList.remove('hidden');
+            decodeText(registerForm.querySelector('h2'));
         });
 
         showLoginLink.addEventListener('click', () => {
             registerForm.classList.add('hidden');
             loginForm.classList.remove('hidden');
+            decodeText(loginForm.querySelector('h2'));
         });
+
+        // Smart Button Logic
+        const checkLoginInputs = () => {
+            if (loginUsernameInput.value.trim() !== '' && loginPasswordInput.value.trim() !== '') {
+                loginBtn.classList.add('ready');
+            } else {
+                loginBtn.classList.remove('ready');
+            }
+        };
+        loginUsernameInput.addEventListener('input', checkLoginInputs);
+        loginPasswordInput.addEventListener('input', checkLoginInputs);
 
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -642,27 +512,14 @@
             const password = document.getElementById('register-password').value;
             const errorMsg = document.getElementById('register-error');
             const registerBtn = document.getElementById('registerBtn');
-
-            if (!username || !phone || !password) {
-                errorMsg.textContent = "YÊU CẦU ĐỦ THÔNG TIN";
-                return;
-            }
+            if (!username || !phone || !password) { errorMsg.textContent = "YÊU CẦU ĐỦ THÔNG TIN"; return; }
             registerBtn.disabled = true;
             errorMsg.textContent = 'ĐANG XỬ LÝ...';
-
             try {
                 const fakeEmail = `${username}@longbao-tool.ai`;
                 const userCredential = await createUserWithEmailAndPassword(auth, fakeEmail, password);
-                
                 const userDocRef = doc(db, "users", username);
-                await setDoc(userDocRef, {
-                    uid: userCredential.user.uid,
-                    username: username,
-                    phoneNumber: phone,
-                    energy: 0,
-                    createdAt: new Date()
-                });
-                
+                await setDoc(userDocRef, { uid: userCredential.user.uid, username, phoneNumber: phone, energy: 0, createdAt: new Date() });
                 errorMsg.textContent = '';
             } catch (error) {
                 errorMsg.textContent = getFirebaseErrorMessage(error.code);
@@ -676,11 +533,8 @@
             const username = document.getElementById('login-username').value.trim().toLowerCase();
             const password = document.getElementById('login-password').value;
             const errorMsg = document.getElementById('login-error');
-            const loginBtn = document.getElementById('loginBtn');
-            
             loginBtn.disabled = true;
             errorMsg.textContent = 'ĐANG KẾT NỐI...';
-
             try {
                 const fakeEmail = `${username}@longbao-tool.ai`;
                 await signInWithEmailAndPassword(auth, fakeEmail, password);
@@ -701,10 +555,12 @@
                 const username = user.email.split('@')[0];
                 authScreen.classList.add('hidden');
                 loggedInScreen.classList.remove('hidden');
-                userInfoDisplay.textContent = `TÀI KHOẢN: ${username.toUpperCase()}`;
+                welcomeTitle.dataset.text = `XÁC THỰC... CHÀO MỪNG, ${username.toUpperCase()}`;
+                decodeText(welcomeTitle);
             } else {
                 loggedInScreen.classList.add('hidden');
                 authScreen.classList.remove('hidden');
+                startBootSequence();
             }
         });
         
@@ -713,17 +569,13 @@
                 case 'auth/invalid-email':
                 case 'auth/user-not-found':
                 case 'auth/wrong-password':
-                case 'auth/invalid-credential':
-                    return 'SAI TÊN/MẬT KHẨU';
+                case 'auth/invalid-credential': return 'SAI TÊN/MẬT KHẨU';
                 case 'auth/user-disabled': return 'TÀI KHOẢN BỊ KHÓA';
                 case 'auth/email-already-in-use': return 'TÀI KHOẢN ĐÃ TỒN TẠI';
                 case 'auth/weak-password': return 'MẬT KHẨU QUÁ YẾU';
                 default: return 'LỖI HỆ THỐNG';
             }
         }
-        
-        window.addEventListener('load', startCircuitBootUp);
-
     </script>
 </body>
 </html>

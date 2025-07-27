@@ -40,7 +40,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            z-index: -1; 
         }
         
         /* --- AUTH SCREEN - CYBERPUNK STYLE --- */
@@ -91,7 +91,6 @@
         .corner-bracket.bottom-left { bottom: -2px; left: -2px; border-width: 0 0 4px 4px; animation-delay: 0.4s; }
         .corner-bracket.bottom-right { bottom: -2px; right: -2px; border-width: 0 4px 4px 0; animation-delay: 0.5s; }
 
-
         .boot-anim {
             opacity: 0;
             transform: translateY(20px);
@@ -113,15 +112,18 @@
             box-shadow: 0 0 20px var(--yellow);
         }
 
-        #authScreen h2 {
+        h1, h2, h3 {
             font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+        }
+
+        #authScreen h2 {
             font-size: 1.8em;
             color: var(--yellow);
             text-shadow: 0 0 10px var(--yellow), 0 0 20px var(--cyan);
             margin: 0 0 25px 0;
-            text-transform: uppercase;
             letter-spacing: 2px;
-            min-height: 1.2em; /* Reserve space for text */
+            min-height: 1.2em;
         }
 
         #authScreen form { width: 100%; }
@@ -148,11 +150,10 @@
             box-shadow: 0 0 15px var(--yellow);
         }
         
-        #authScreen button {
+        button {
             font-family: 'Orbitron', sans-serif;
             font-weight: 700;
             padding: 15px 20px;
-            margin-top: 20px;
             cursor: pointer;
             font-size: 1em;
             text-transform: uppercase;
@@ -160,23 +161,24 @@
             transition: all .2s ease-out;
         }
 
-        /* --- NÚT KẾT NỐI THÔNG MINH --- */
-        #loginBtn {
+        .btn-next, #loginBtn {
             background: var(--cyan);
             color: var(--dark-blue);
             box-shadow: 0 0 10px var(--cyan);
-            opacity: 0.5; /* Trạng thái chờ */
+            opacity: 0.8;
             transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 15px;
         }
-        #loginBtn.ready {
-            opacity: 1; /* Sẵn sàng */
+        .btn-next:hover, #loginBtn.ready {
+            opacity: 1;
             animation: button-glow-cyan 2s infinite alternate;
         }
         @keyframes button-glow-cyan {
             from { box-shadow: 0 0 10px var(--cyan); }
             to { box-shadow: 0 0 25px var(--cyan), 0 0 10px var(--cyan); }
         }
-        #loginBtn:hover:not(:disabled) {
+        .btn-next:hover, #loginBtn:hover:not(:disabled) {
             background: var(--yellow);
             color: var(--dark-blue);
             animation-play-state: paused;
@@ -190,14 +192,8 @@
             animation: button-glow-yellow 1.5s infinite alternate;
         }
         @keyframes button-glow-yellow {
-            from {
-                box-shadow: 0 0 15px var(--yellow);
-                transform: scale(1.05);
-            }
-            to {
-                box-shadow: 0 0 35px var(--yellow), 0 0 10px var(--yellow);
-                transform: scale(1.1);
-            }
+            from { box-shadow: 0 0 15px var(--yellow); transform: scale(1.05); }
+            to { box-shadow: 0 0 35px var(--yellow), 0 0 10px var(--yellow); transform: scale(1.1); }
         }
         #registerBtn:hover:not(:disabled) {
             background: var(--yellow);
@@ -207,10 +203,10 @@
             box-shadow: 0 0 40px var(--yellow);
         }
 
-        #authScreen button:active:not(:disabled) {
+        button:active:not(:disabled) {
             transform: scale(0.95) !important;
         }
-        #authScreen button:disabled { background: #555; color: #888; cursor: not-allowed; animation: none; }
+        button:disabled { background: #555; color: #888; cursor: not-allowed; animation: none; }
         
         .auth-error { color: var(--error-red); margin-top: 15px; height: 1em; font-size: 0.9em; }
         .auth-switch { margin-top: 20px; font-size: 1em; }
@@ -222,98 +218,114 @@
             color: var(--yellow);
             animation: register-glow 2s infinite alternate;
         }
-        #showRegisterLink:hover {
-            text-shadow: 0 0 8px var(--yellow);
-        }
+        #showRegisterLink:hover { text-shadow: 0 0 8px var(--yellow); }
         @keyframes register-glow {
             from { text-shadow: 0 0 5px var(--yellow); opacity: 0.8; }
             to { text-shadow: 0 0 15px var(--yellow), 0 0 5px var(--yellow); opacity: 1; }
         }
+        
+        .f168-banner {
+            display: block; text-decoration: none; color: var(--error-red); font-weight: 700;
+            margin-top: 15px; padding: 10px; border: 1px solid var(--error-red);
+            text-shadow: 0 0 5px var(--error-red); font-size: 0.9em; line-height: 1.4;
+            cursor: pointer; transition: all 0.2s ease;
+            animation: boot-up 0.6s ease-out forwards, warning-blink 1.2s infinite 0.6s;
+        }
+        @keyframes warning-blink {
+            0%, 100% { background-color: rgba(255, 60, 60, 0.15); box-shadow: 0 0 8px rgba(255, 60, 60, 0.7); }
+            50% { background-color: rgba(255, 60, 60, 0.3); box-shadow: 0 0 18px var(--error-red); }
+        }
+        .f168-banner:hover { background-color: rgba(255, 60, 60, 0.5); color: var(--text-light); text-shadow: 0 0 10px var(--text-light); animation-play-state: paused; }
 
-        /* --- LOGGED IN SCREEN --- */
-        #loggedInScreen {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            z-index: 2;
-            padding: 20px;
+        /* --- MÀN HÌNH CHỌN LÕI A.I --- */
+        #aiCoreSelectionScreen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 3; padding: 20px; box-sizing: border-box;
         }
-        #loggedInScreen h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5em;
-            color: var(--cyan);
-            text-shadow: 0 0 15px var(--cyan);
-            text-transform: uppercase;
-            min-height: 1.2em;
+        #aiCoreSelectionScreen h1 {
+            color: var(--cyan); text-shadow: 0 0 15px var(--cyan); font-size: 2em; margin-bottom: 30px; text-align: center;
         }
-        #loggedInScreen p { font-size: 1.1em; }
-        #logoutBtn {
-            font-family: 'Orbitron', sans-serif;
-            padding: 15px 20px;
-            margin-top: 30px;
+        #core-options-container {
+            display: flex; flex-direction: column; gap: 25px;
+            width: 100%; max-width: 1000px;
+        }
+        .core-option {
+            background: var(--container-bg);
+            border: 2px solid var(--border-color);
+            box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2), 0 0 15px var(--border-color);
+            padding: 20px; text-align: center; flex: 1;
+            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
             cursor: pointer;
-            font-size: 1em;
-            text-transform: uppercase;
-            background: var(--error-red);
-            color: var(--text-light);
-            border: none;
-            box-shadow: 0 0 10px var(--error-red);
         }
+        .core-option:hover {
+            border-color: var(--yellow);
+            box-shadow: inset 0 0 15px rgba(252, 238, 10, 0.3), 0 0 25px var(--yellow);
+        }
+        .core-option.selected {
+            border-color: var(--yellow);
+            box-shadow: inset 0 0 20px rgba(252, 238, 10, 0.5), 0 0 35px var(--yellow);
+            transform: scale(1.03);
+        }
+        .core-option h3 {
+            color: var(--yellow); font-size: 1.4em; margin-top: 0; margin-bottom: 15px;
+        }
+        .gif-container {
+            width: 100%; height: 0; padding-bottom: 100%; /* 1:1 Aspect Ratio */
+            position: relative; margin: 15px 0; background-color: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-color);
+            pointer-events: none; /* Prevent clicks on iframe */
+        }
+        .gif-container iframe {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        }
+        #main-next-btn {
+            margin-top: 30px;
+            max-width: 400px;
+        }
+        /* Responsive layout for larger screens */
+        @media (min-width: 800px) {
+            #core-options-container { flex-direction: row; }
+            #aiCoreSelectionScreen h1 { font-size: 2.5em; }
+        }
+
+        /* --- MÀN HÌNH LOADING --- */
+        #loadingScreen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--dark-blue); z-index: 10;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        #loading-matrix-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 11;
+        }
+        #loading-text {
+            font-family: 'Orbitron', sans-serif; font-size: 2em; color: var(--yellow);
+            text-shadow: 0 0 20px var(--yellow); z-index: 12;
+            text-align: center;
+            line-height: 1.5;
+        }
+        @media (max-width: 600px) { #loading-text { font-size: 1.5em; } }
 
         /* --- COPYRIGHT & TELEGRAM --- */
-        #copyright {
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.8em;
-            color: rgba(255, 255, 255, 0.4);
-            z-index: 5;
-        }
-        #contact-link {
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            z-index: 5;
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: var(--cyan);
-        }
-        #contact-link svg {
-            width: 32px;
-            height: 32px;
-            fill: var(--cyan);
-            filter: drop-shadow(0 0 5px var(--cyan));
-            transition: all 0.3s ease;
-        }
-        #contact-link span {
-            margin-right: 10px;
-            font-weight: 700;
-            opacity: 0;
-            transition: all 0.3s ease;
-            transform: translateX(10px);
-        }
-        #contact-link:hover svg {
-            fill: var(--yellow);
-            filter: drop-shadow(0 0 10px var(--yellow));
-        }
-        #contact-link:hover span {
-            opacity: 1;
-            transform: translateX(0);
-            color: var(--yellow);
-        }
+        #copyright, #contact-link { z-index: 5; }
+        #copyright { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 0.8em; color: rgba(255, 255, 255, 0.4); }
+        #contact-link { position: fixed; bottom: 15px; right: 15px; display: flex; align-items: center; text-decoration: none; color: var(--cyan); }
+        #contact-link svg { width: 32px; height: 32px; fill: var(--cyan); filter: drop-shadow(0 0 5px var(--cyan)); transition: all 0.3s ease; }
+        #contact-link span { margin-right: 10px; font-weight: 700; opacity: 0; transition: all 0.3s ease; transform: translateX(10px); }
+        #contact-link:hover svg { fill: var(--yellow); filter: drop-shadow(0 0 10px var(--yellow)); }
+        #contact-link:hover span { opacity: 1; transform: translateX(0); color: var(--yellow); }
+
     </style>
 </head>
 <body>
+    <!-- Nền hiệu ứng -->
     <canvas id="grid-bg" class="background-canvas"></canvas>
     <canvas id="matrix-bg" class="background-canvas"></canvas>
     
+    <!-- Màn hình đăng nhập / đăng ký -->
     <div id="authScreen" class="hidden">
         <div id="auth-content">
-            <!-- UI Details: Corner Brackets -->
             <div class="corner-bracket top-left"></div>
             <div class="corner-bracket top-right"></div>
             <div class="corner-bracket bottom-left"></div>
@@ -324,17 +336,12 @@
             <div id="form-container">
                 <form id="loginForm">
                     <h2 data-text="ĐĂNG NHẬP"></h2>
-                    <div class="boot-anim" style="animation-delay: 0.8s;">
-                        <input type="text" id="login-username" placeholder="TÊN TÀI KHOẢN" required>
-                    </div>
-                    <div class="boot-anim" style="animation-delay: 1.0s;">
-                        <input type="password" id="login-password" placeholder="MẬT KHẨU" required>
-                    </div>
-                    <div class="boot-anim" style="animation-delay: 1.2s;">
-                        <button type="submit" id="loginBtn">KẾT NỐI</button>
-                    </div>
+                    <div class="boot-anim" style="animation-delay: 0.8s;"><input type="text" id="login-username" placeholder="TÊN TÀI KHOẢN" required></div>
+                    <div class="boot-anim" style="animation-delay: 1.0s;"><input type="password" id="login-password" placeholder="MẬT KHẨU" required></div>
+                    <div class="boot-anim" style="animation-delay: 1.2s;"><button type="submit" id="loginBtn">KẾT NỐI</button></div>
                     <p id="login-error" class="auth-error"></p>
                     <p class="auth-switch boot-anim" style="animation-delay: 1.4s;">Chưa có tài khoản? <a id="showRegisterLink">Đăng ký</a></p>
+                    <a href="http://www.f168.codes" target="_blank" class="f168-banner boot-anim" style="animation-delay: 1.5s;">TOOL CHỈ HOẠT ĐỘNG VỚI TÀI KHOẢN ĐĂNG KÍ TẠI SẢNH F168.CODES</a>
                 </form>
 
                 <form id="registerForm" class="hidden">
@@ -350,9 +357,36 @@
         </div>
     </div>
 
-    <div id="loggedInScreen" class="hidden">
-        <h1 id="welcome-title"></h1>
-        <button id="logoutBtn">ĐĂNG XUẤT</button>
+    <!-- Màn hình chọn lõi A.I -->
+    <div id="aiCoreSelectionScreen" class="hidden">
+        <h1 data-text="CHỌN LÕI A.I"></h1>
+        <div id="core-options-container">
+            <div class="core-option boot-anim" style="animation-delay: 0.2s;">
+                <h3>LongBao Thế Hệ IV</h3>
+                <div class="gif-container">
+                    <iframe src="https://giphy.com/embed/ws8l2aiUiFudsACu5u" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+                </div>
+            </div>
+            <div class="core-option boot-anim" style="animation-delay: 0.4s;">
+                <h3>Yian Soi Lá Bài</h3>
+                <div class="gif-container">
+                    <iframe src="https://giphy.com/embed/3Ipz588z9HiqP5sD5t" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+                </div>
+            </div>
+            <div class="core-option boot-anim" style="animation-delay: 0.6s;">
+                <h3>Siêu Lõi Aquarius</h3>
+                <div class="gif-container">
+                    <iframe src="https://giphy.com/embed/h88FMNUACANfKcsXFq" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+                </div>
+            </div>
+        </div>
+        <button id="main-next-btn" class="btn-next hidden">KÍCH HOẠT LÕI</button>
+    </div>
+
+    <!-- Màn hình Loading -->
+    <div id="loadingScreen" class="hidden">
+        <canvas id="loading-matrix-bg"></canvas>
+        <div id="loading-text"></div>
     </div>
     
     <footer id="copyright">BẢN QUYỀN THUỘC VỀ LONG BẢO</footer>
@@ -377,6 +411,7 @@
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
+            // Your Firebase config remains here
             apiKey: "AIzaSyCHDzGbXmHNWKL2UtRm57vPRVxZb31dHto",
             authDomain: "long-bao-tool-ai.firebaseapp.com",
             projectId: "long-bao-tool-ai",
@@ -390,14 +425,60 @@
         const auth = getAuth(fbApp);
         const db = getFirestore(fbApp);
 
-        // --- BACKGROUND SCRIPTS ---
+        // --- DOM Elements ---
+        const authScreen = document.getElementById('authScreen');
+        const aiCoreSelectionScreen = document.getElementById('aiCoreSelectionScreen');
+        const loadingScreen = document.getElementById('loadingScreen');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const showRegisterLink = document.getElementById('showRegisterLink');
+        const showLoginLink = document.getElementById('showLoginLink');
+        const loginUsernameInput = document.getElementById('login-username');
+        const loginPasswordInput = document.getElementById('login-password');
+        const loginBtn = document.getElementById('loginBtn');
+        const coreOptions = document.querySelectorAll('.core-option');
+        const mainNextBtn = document.getElementById('main-next-btn');
+        const loadingText = document.getElementById('loading-text');
+
+        // --- BACKGROUND & LOADING ANIMATION SCRIPTS ---
         const gridCanvas = document.getElementById('grid-bg');
         const gctx = gridCanvas.getContext('2d');
         const matrixCanvas = document.getElementById('matrix-bg');
         const mctx = matrixCanvas.getContext('2d');
+        const loadingMatrixCanvas = document.getElementById('loading-matrix-bg');
+        const lctx = loadingMatrixCanvas.getContext('2d');
 
-        gridCanvas.width = matrixCanvas.width = window.innerWidth;
-        gridCanvas.height = matrixCanvas.height = window.innerHeight;
+        const resizeCanvases = () => {
+            gridCanvas.width = matrixCanvas.width = loadingMatrixCanvas.width = window.innerWidth;
+            gridCanvas.height = matrixCanvas.height = loadingMatrixCanvas.height = window.innerHeight;
+        };
+        window.addEventListener('resize', resizeCanvases);
+        resizeCanvases();
+
+        // General Matrix Drawer
+        const createMatrixDrawer = (ctx, canvas) => {
+            const alphabet = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン01';
+            const fontSize = 16;
+            const columns = canvas.width / fontSize;
+            const rainDrops = Array.from({ length: Math.ceil(columns) }).fill(1);
+            let mouseX = -100, mouseY = -100;
+            window.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; }, { passive: true });
+
+            return () => {
+                ctx.fillStyle = 'rgba(10, 25, 47, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.font = fontSize + 'px monospace';
+                rainDrops.forEach((y, i) => {
+                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                    const x = i * fontSize;
+                    const dist = Math.hypot(x - mouseX, y * fontSize - mouseY);
+                    ctx.fillStyle = dist < 50 ? `rgba(252, 238, 10, ${1 - dist / 50})` : 'rgba(0, 255, 255, 0.8)';
+                    ctx.fillText(text, x, y * fontSize);
+                    if (y * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
+                    rainDrops[i]++;
+                });
+            };
+        };
 
         // Grid
         let time = 0;
@@ -407,62 +488,29 @@
             gctx.lineWidth = 1;
             const gridSize = 50;
             for (let x = (time % gridSize) - gridSize; x < gridCanvas.width; x += gridSize) {
-                gctx.beginPath();
-                gctx.moveTo(x, 0);
-                gctx.lineTo(x, gridCanvas.height);
-                gctx.stroke();
+                gctx.beginPath(); gctx.moveTo(x, 0); gctx.lineTo(x, gridCanvas.height); gctx.stroke();
             }
             for (let y = (time % gridSize) - gridSize; y < gridCanvas.height; y += gridSize) {
-                gctx.beginPath();
-                gctx.moveTo(0, y);
-                gctx.lineTo(gridCanvas.width, y);
-                gctx.stroke();
+                gctx.beginPath(); gctx.moveTo(0, y); gctx.lineTo(gridCanvas.width, y); gctx.stroke();
             }
             time += 0.2;
             requestAnimationFrame(drawGrid);
         }
         drawGrid();
 
-        // Matrix
-        const alphabet = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        const fontSize = 16;
-        const columns = matrixCanvas.width / fontSize;
-        const rainDrops = Array.from({ length: columns }).fill(1);
-        let mouseX = -100, mouseY = -100;
-        window.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
-        const drawMatrix = () => {
-            mctx.fillStyle = 'rgba(10, 25, 47, 0.05)';
-            mctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
-            mctx.font = fontSize + 'px monospace';
-            rainDrops.forEach((y, i) => {
-                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                const x = i * fontSize;
-                const dist = Math.hypot(x - mouseX, y * fontSize - mouseY);
-                mctx.fillStyle = dist < 50 ? `rgba(252, 238, 10, ${1 - dist / 50})` : 'rgba(0, 255, 255, 0.8)';
-                mctx.fillText(text, x, y * fontSize);
-                if (y * fontSize > matrixCanvas.height && Math.random() > 0.975) rainDrops[i] = 0;
-                rainDrops[i]++;
-            });
-        };
-        setInterval(drawMatrix, 33);
+        // Background Matrix
+        const drawBgMatrix = createMatrixDrawer(mctx, matrixCanvas);
+        setInterval(drawBgMatrix, 33);
 
-        // --- AUTH LOGIC & MOTION ---
-        const authScreen = document.getElementById('authScreen');
-        const loggedInScreen = document.getElementById('loggedInScreen');
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const showRegisterLink = document.getElementById('showRegisterLink');
-        const showLoginLink = document.getElementById('showLoginLink');
-        const loginUsernameInput = document.getElementById('login-username');
-        const loginPasswordInput = document.getElementById('login-password');
-        const loginBtn = document.getElementById('loginBtn');
-        const welcomeTitle = document.getElementById('welcome-title');
-        
+        // Loading Matrix
+        const drawLoadingMatrix = createMatrixDrawer(lctx, loadingMatrixCanvas);
+        let loadingAnimationId;
+
+        // --- UI LOGIC & MOTION ---
         const decodeText = (element, onComplete = () => {}) => {
             const originalText = element.dataset.text;
-            if (!originalText) return;
-            const chars = '!<>-_\\/[]{}—=+*^?#________';
+            if (!originalText) { element.textContent = element.textContent || ''; return; }
+            const chars = '!<>-_\\/[]{}—=+*^?#_';
             let frame = 0;
             const interval = setInterval(() => {
                 element.textContent = originalText.split('').map((char, index) => {
@@ -478,8 +526,7 @@
         };
 
         const startBootSequence = () => {
-            const loginTitle = loginForm.querySelector('h2');
-            setTimeout(() => decodeText(loginTitle), 400);
+            decodeText(loginForm.querySelector('h2'));
         };
 
         showRegisterLink.addEventListener('click', () => {
@@ -494,17 +541,60 @@
             decodeText(loginForm.querySelector('h2'));
         });
 
-        // Smart Button Logic
         const checkLoginInputs = () => {
-            if (loginUsernameInput.value.trim() !== '' && loginPasswordInput.value.trim() !== '') {
-                loginBtn.classList.add('ready');
-            } else {
-                loginBtn.classList.remove('ready');
-            }
+            loginBtn.classList.toggle('ready', loginUsernameInput.value.trim() !== '' && loginPasswordInput.value.trim() !== '');
         };
         loginUsernameInput.addEventListener('input', checkLoginInputs);
         loginPasswordInput.addEventListener('input', checkLoginInputs);
 
+        // --- CORE SELECTION & LOADING SEQUENCE ---
+        let selectedCore = null;
+
+        coreOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                coreOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                selectedCore = option.querySelector('h3').textContent;
+                mainNextBtn.classList.remove('hidden');
+            });
+        });
+
+        mainNextBtn.addEventListener('click', () => {
+            if (selectedCore) {
+                startLoadingSequence(selectedCore);
+            }
+        });
+
+        const startLoadingSequence = (coreName) => {
+            authScreen.classList.add('hidden');
+            aiCoreSelectionScreen.classList.add('hidden');
+            loadingScreen.classList.remove('hidden');
+
+            const runAnimation = () => {
+                drawLoadingMatrix();
+                loadingAnimationId = requestAnimationFrame(runAnimation);
+            }
+            runAnimation();
+
+            let progress = 0;
+            loadingText.innerHTML = `KÍCH HOẠT LÕI:<br>${coreName.toUpperCase()}<br>0%`;
+            const progressInterval = setInterval(() => {
+                progress += Math.floor(Math.random() * 3) + 1;
+                if (progress > 100) progress = 100;
+                loadingText.innerHTML = `KÍCH HOẠT LÕI:<br>${coreName.toUpperCase()}<br>${progress}%`;
+                if (progress === 100) {
+                    clearInterval(progressInterval);
+                    setTimeout(() => {
+                        loadingText.textContent = 'NẠP HOÀN TẤT';
+                        cancelAnimationFrame(loadingAnimationId);
+                        // Ở đây bạn có thể chuyển đến màn hình chính của ứng dụng
+                        console.log(`Loading complete for ${coreName}. Ready to launch the main app.`);
+                    }, 1000);
+                }
+            }, 80);
+        };
+
+        // --- FIREBASE AUTH ---
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('register-username').value.trim().toLowerCase();
@@ -530,8 +620,8 @@
 
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const username = document.getElementById('login-username').value.trim().toLowerCase();
-            const password = document.getElementById('login-password').value;
+            const username = loginUsernameInput.value.trim().toLowerCase();
+            const password = loginPasswordInput.value;
             const errorMsg = document.getElementById('login-error');
             loginBtn.disabled = true;
             errorMsg.textContent = 'ĐANG KẾT NỐI...';
@@ -546,19 +636,14 @@
             }
         });
 
-        logoutBtn.addEventListener('click', () => {
-            signOut(auth).catch(error => console.error('Lỗi đăng xuất:', error));
-        });
-
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                const username = user.email.split('@')[0];
                 authScreen.classList.add('hidden');
-                loggedInScreen.classList.remove('hidden');
-                welcomeTitle.dataset.text = `XÁC THỰC... CHÀO MỪNG, ${username.toUpperCase()}`;
-                decodeText(welcomeTitle);
+                aiCoreSelectionScreen.classList.remove('hidden');
+                decodeText(aiCoreSelectionScreen.querySelector('h1'));
             } else {
-                loggedInScreen.classList.add('hidden');
+                aiCoreSelectionScreen.classList.add('hidden');
+                loadingScreen.classList.add('hidden');
                 authScreen.classList.remove('hidden');
                 startBootSequence();
             }

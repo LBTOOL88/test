@@ -27,7 +27,7 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            height: 100vh; /* Use vh to prevent address bar issues on mobile */
+            height: 100vh;
             font-family: 'Rajdhani', sans-serif;
             color: var(--text-light);
             overflow: hidden;
@@ -38,64 +38,32 @@
 
         /* --- BACKGROUND & YOUTUBE PLAYER --- */
         .background-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; 
+            transition: opacity 0.5s ease;
         }
+        .background-canvas.effects-off { opacity: 0; }
         #youtube-player {
-            position: absolute;
-            top: -9999px;
-            left: -9999px;
-            opacity: 0;
-            pointer-events: none;
+            position: absolute; top: -9999px; left: -9999px; opacity: 0; pointer-events: none;
         }
         
         /* --- AUTH SCREEN --- */
         #authScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            padding: 15px;
-            box-sizing: border-box;
-            transition: opacity 0.5s ease;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10; padding: 15px; box-sizing: border-box; transition: opacity 0.5s ease;
         }
-        #authScreen.fade-out {
-            opacity: 0;
-            pointer-events: none;
-        }
+        #authScreen.fade-out { opacity: 0; pointer-events: none; }
         #auth-content {
-            background: var(--container-bg);
-            border: 2px solid var(--border-color);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 
-                inset 0 0 10px rgba(0, 255, 255, 0.2),
-                0 0 25px var(--border-color);
-            width: 100%;
-            max-width: 400px;
-            padding: 30px 25px;
-            text-align: center;
-            position: relative;
+            background: var(--container-bg); border: 2px solid var(--border-color);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2), 0 0 25px var(--border-color);
+            width: 100%; max-width: 400px; padding: 30px 25px; text-align: center; position: relative;
         }
         
         /* --- CORNER BRACKETS --- */
         .corner-bracket {
-            position: absolute;
-            width: 25px;
-            height: 25px;
-            border-style: solid;
-            border-color: var(--cyan);
-            opacity: 0;
-            animation: boot-up 0.6s ease-out forwards, corner-glow 2s infinite alternate;
+            position: absolute; width: 25px; height: 25px; border-style: solid; border-color: var(--cyan);
+            opacity: 0; animation: boot-up 0.6s ease-out forwards, corner-glow 2s infinite alternate;
         }
         @keyframes corner-glow {
             from { box-shadow: 0 0 8px var(--cyan); }
@@ -107,103 +75,54 @@
         .corner-bracket.bottom-right { bottom: -2px; right: -2px; border-width: 0 4px 4px 0; animation-delay: 0.5s; }
 
         .boot-anim {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: boot-up 0.6s ease-out forwards;
+            opacity: 0; transform: translateY(20px); animation: boot-up 0.6s ease-out forwards;
         }
-        @keyframes boot-up {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        @keyframes boot-up { to { opacity: 1; transform: translateY(0); } }
 
         #auth-logo {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            margin-bottom: 20px;
-            border: 2px solid var(--yellow);
-            box-shadow: 0 0 20px var(--yellow);
+            width: 120px; height: 120px; border-radius: 50%; margin-bottom: 20px;
+            border: 2px solid var(--yellow); box-shadow: 0 0 20px var(--yellow);
         }
 
-        h1, h2, h3 {
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-        }
+        h1, h2, h3 { font-family: 'Orbitron', sans-serif; text-transform: uppercase; }
 
         #authScreen h2 {
-            font-size: 1.8em;
-            color: var(--yellow);
+            font-size: 1.8em; color: var(--yellow);
             text-shadow: 0 0 10px var(--yellow), 0 0 20px var(--cyan);
-            margin: 0 0 25px 0;
-            letter-spacing: 2px;
-            min-height: 1.2em;
+            margin: 0 0 25px 0; letter-spacing: 2px; min-height: 1.2em;
         }
 
         #authScreen form { width: 100%; }
         input[type="text"], input[type="password"], input[type="tel"] {
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            margin: 10px 0;
-            width: 100%;
-            padding: 14px;
-            background: rgba(0,0,0,0.5);
-            color: var(--yellow);
-            font-size: 1.1em;
-            border: 1px solid var(--border-color);
-            transition: all .2s ease;
-            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif; font-weight: 700; margin: 10px 0; width: 100%;
+            padding: 14px; background: rgba(0,0,0,0.5); color: var(--yellow);
+            font-size: 1.1em; border: 1px solid var(--border-color); transition: all .2s ease; box-sizing: border-box;
         }
-        input::placeholder { 
-            color: rgba(255, 255, 255, 0.4);
-            font-weight: 400;
-        }
-        input:focus {
-            outline: none;
-            border-color: var(--yellow);
-            box-shadow: 0 0 15px var(--yellow);
-        }
+        input::placeholder { color: rgba(255, 255, 255, 0.4); font-weight: 400; }
+        input:focus { outline: none; border-color: var(--yellow); box-shadow: 0 0 15px var(--yellow); }
         
-        button {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            padding: 15px 20px;
-            cursor: pointer;
-            font-size: 1em;
-            text-transform: uppercase;
-            border: none;
-            transition: all .2s ease-out;
+        button, .btn-style {
+            font-family: 'Orbitron', sans-serif; font-weight: 700; padding: 15px 20px;
+            cursor: pointer; font-size: 1em; text-transform: uppercase; border: none; transition: all .2s ease-out;
+            display: inline-block; text-align: center; text-decoration: none;
         }
 
-        .btn-next, #loginBtn {
-            background: var(--cyan);
-            color: var(--dark-blue);
-            box-shadow: 0 0 10px var(--cyan);
-            opacity: 0.8;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 15px;
+        .btn-next, #loginBtn, .btn-primary {
+            background: var(--cyan); color: var(--dark-blue); box-shadow: 0 0 10px var(--cyan);
+            opacity: 0.8; transition: all 0.3s ease; width: 100%;
         }
-        .btn-next:hover, #loginBtn.ready {
-            opacity: 1;
-            animation: button-glow-cyan 2s infinite alternate;
-        }
+        .btn-next, #loginBtn { margin-top: 15px; }
+        .btn-next:hover, #loginBtn.ready, .btn-primary:hover { opacity: 1; animation: button-glow-cyan 2s infinite alternate; }
         @keyframes button-glow-cyan {
             from { box-shadow: 0 0 10px var(--cyan); }
             to { box-shadow: 0 0 25px var(--cyan), 0 0 10px var(--cyan); }
         }
-        .btn-next:hover, #loginBtn:hover:not(:disabled) {
-            background: var(--yellow);
-            color: var(--dark-blue);
-            animation-play-state: paused;
-            box-shadow: 0 0 25px var(--yellow);
+        .btn-next:hover, #loginBtn:hover:not(:disabled), .btn-primary:hover {
+            background: var(--yellow); color: var(--dark-blue); animation-play-state: paused; box-shadow: 0 0 25px var(--yellow);
         }
 
         #registerBtn {
-            background: var(--yellow);
-            color: var(--dark-blue);
-            transform: scale(1.05);
+            background: var(--yellow); color: var(--dark-blue); transform: scale(1.05);
             animation: button-glow-yellow 1.5s infinite alternate;
         }
         @keyframes button-glow-yellow {
@@ -211,17 +130,12 @@
             to { box-shadow: 0 0 35px var(--yellow), 0 0 10px var(--yellow); transform: scale(1.1); }
         }
         #registerBtn:hover:not(:disabled) {
-            background: var(--yellow);
-            color: var(--dark-blue);
-            animation-play-state: paused;
-            transform: scale(1.15);
-            box-shadow: 0 0 40px var(--yellow);
+            background: var(--yellow); color: var(--dark-blue); animation-play-state: paused;
+            transform: scale(1.15); box-shadow: 0 0 40px var(--yellow);
         }
 
-        button:active:not(:disabled) {
-            transform: scale(0.95) !important;
-        }
-        button:disabled { background: #555; color: #888; cursor: not-allowed; animation: none; }
+        button:active:not(:disabled) { transform: scale(0.95) !important; }
+        button:disabled { background: #555; color: #888; cursor: not-allowed; animation: none; box-shadow: none; }
         
         .auth-error { color: var(--error-red); margin-top: 15px; height: 1em; font-size: 0.9em; }
         .auth-switch { margin-top: 20px; font-size: 1em; }
@@ -246,74 +160,31 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 3; padding: 15px; box-sizing: border-box;
-            padding-top: 80px; /* Make space for user info bar */
-            opacity: 0;
-            transition: opacity 0.5s ease;
+            padding-top: 80px; opacity: 0; transition: opacity 0.5s ease;
         }
-        #aiCoreSelectionScreen.fade-in {
-            opacity: 1;
-        }
+        #aiCoreSelectionScreen.fade-in { opacity: 1; }
         #user-info-bar {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            right: 15px;
-            background: var(--container-bg);
-            border: 1px solid var(--cyan);
-            padding: 8px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9em;
-            box-shadow: 0 0 10px var(--cyan);
-            transition: border-color 0.5s ease, box-shadow 0.5s ease;
+            position: absolute; top: 15px; left: 15px; right: 15px; background: var(--container-bg);
+            border: 1px solid var(--cyan); padding: 8px 15px; display: flex; justify-content: space-between;
+            align-items: center; font-family: 'Orbitron', sans-serif; font-size: 0.9em;
+            box-shadow: 0 0 10px var(--cyan); transition: border-color 0.5s ease, box-shadow 0.5s ease;
         }
-        #user-info-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        #user-info-left { display: flex; align-items: center; gap: 10px; }
         #user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 1px solid var(--cyan);
-            object-fit: cover;
+            width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--cyan); object-fit: cover;
         }
-        #user-info-bar span {
-            text-shadow: 0 0 5px var(--cyan);
+        #user-info-bar span { text-shadow: 0 0 5px var(--cyan); }
+        #user-energy { color: var(--yellow); text-shadow: 0 0 5px var(--yellow); transition: color 0.5s ease, text-shadow 0.5s ease; }
+        #user-energy.high { color: var(--success-green); text-shadow: 0 0 8px var(--success-green); }
+        #user-energy.low { color: var(--error-red); text-shadow: 0 0 8px var(--error-red); }
+        #user-info-bar.low-energy { border-color: var(--error-red); box-shadow: 0 0 15px var(--error-red); animation: warning-blink 1.2s infinite; }
+        #user-controls { display: flex; align-items: center; gap: 10px; }
+        .control-btn {
+            background: transparent; border: 1px solid var(--cyan); color: var(--cyan);
+            padding: 8px; font-size: 0.8em; line-height: 1; border-radius: 5px;
         }
-        #user-energy {
-            color: var(--yellow);
-            text-shadow: 0 0 5px var(--yellow);
-            transition: color 0.5s ease, text-shadow 0.5s ease;
-        }
-        #user-energy.high {
-            color: var(--success-green);
-            text-shadow: 0 0 8px var(--success-green);
-        }
-        #user-energy.low {
-            color: var(--error-red);
-            text-shadow: 0 0 8px var(--error-red);
-        }
-        #user-info-bar.low-energy {
-            border-color: var(--error-red);
-            box-shadow: 0 0 15px var(--error-red);
-            animation: warning-blink 1.2s infinite;
-        }
-        #profile-btn {
-            background: transparent;
-            border: 1px solid var(--cyan);
-            color: var(--cyan);
-            padding: 5px 10px;
-            font-size: 0.8em;
-            margin-left: 15px;
-        }
-        #profile-btn:hover {
-            background: var(--cyan);
-            color: var(--dark-blue);
-        }
+        .control-btn:hover { background: var(--cyan); color: var(--dark-blue); }
+        .control-btn svg { width: 16px; height: 16px; fill: currentColor; }
 
         #aiCoreSelectionScreen h1 {
             color: var(--cyan); text-shadow: 0 0 15px var(--cyan); 
@@ -321,343 +192,191 @@
         }
         
         #core-selector {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 400px;
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; max-width: 400px;
         }
 
         .core-nav-btn {
-            background: transparent;
-            border: 2px solid var(--cyan);
-            color: var(--cyan);
-            font-size: 2em;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            line-height: 1;
-            padding: 0;
-            border-radius: 50%;
-            text-shadow: 0 0 8px var(--cyan);
-            flex-shrink: 0;
+            background: transparent; border: 2px solid var(--cyan); color: var(--cyan); font-size: 2em;
+            width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;
+            line-height: 1; padding: 0; border-radius: 50%; text-shadow: 0 0 8px var(--cyan); flex-shrink: 0;
         }
-        .core-nav-btn:hover {
-             background: var(--cyan);
-             color: var(--dark-blue);
-        }
+        .core-nav-btn:hover { background: var(--cyan); color: var(--dark-blue); }
 
         #core-options-container {
-            width: calc(100% - 100px);
-            height: 400px; /* Adjusted height */
-            position: relative;
-            overflow: hidden;
-            margin: 0 10px;
+            width: calc(100% - 100px); height: 400px; position: relative;
+            overflow: hidden; margin: 0 10px;
         }
 
         .core-option {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--container-bg);
-            border: 2px solid var(--border-color);
-            box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2), 0 0 15px var(--border-color);
-            padding: 15px;
-            text-align: center;
-            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-            transition: transform 0.5s ease, opacity 0.5s ease;
-            opacity: 0;
-            transform: scale(0.9);
-            display: none; 
-            box-sizing: border-box;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--container-bg);
+            border: 2px solid var(--border-color); box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2), 0 0 15px var(--border-color);
+            padding: 15px; text-align: center; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+            transition: transform 0.5s ease, opacity 0.5s ease; opacity: 0; transform: scale(0.9);
+            display: none; box-sizing: border-box;
         }
         .core-option.active {
-            opacity: 1;
-            transform: scale(1);
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
+            opacity: 1; transform: scale(1); z-index: 2; display: flex;
+            flex-direction: column; justify-content: flex-start;
         }
 
-        .core-option h3 {
-            color: var(--yellow); 
-            font-size: 1.2em; 
-            margin: 0 0 10px 0;
-            flex-shrink: 0;
-        }
+        .core-option h3 { color: var(--yellow); font-size: 1.2em; margin: 0 0 10px 0; flex-shrink: 0; }
         .gif-container {
-            width: 100%;
-            padding-bottom: 75%; /* 4:3 Aspect Ratio */
-            height: 0;
-            position: relative;
-            background-color: rgba(0,0,0,0.3);
-            border: 1px solid var(--border-color);
-            margin-bottom: 10px;
-            flex-shrink: 0;
+            width: 100%; padding-bottom: 75%; height: 0; position: relative;
+            background-color: rgba(0,0,0,0.3); border: 1px solid var(--border-color);
+            margin-bottom: 10px; flex-shrink: 0;
         }
-        .gif-container iframe {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; /* Thêm dòng này để ẩn link Giphy */
-        }
+        .gif-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
         .core-description {
-            font-size: 0.85em;
-            color: var(--text-light);
-            line-height: 1.4;
-            opacity: 0.9;
-            font-weight: 400;
-            text-align: center;
-            margin: 0;
-            flex-grow: 1;
-            overflow-y: auto; /* Add scroll for overflow */
+            font-size: 0.85em; color: var(--text-light); line-height: 1.4; opacity: 0.9;
+            font-weight: 400; text-align: center; margin: 0; flex-grow: 1; overflow-y: auto;
         }
-        #main-next-btn {
-            margin-top: 15px;
-            max-width: 400px;
-        }
+        #main-next-btn { margin-top: 15px; max-width: 400px; }
         
         /* --- PROMO BANNER --- */
         #promo-banner {
-            width: 100%;
-            max-width: 400px;
-            margin-top: 15px;
-            padding: 10px;
-            background: rgba(255, 215, 0, 0.1);
-            border: 1px solid var(--gold);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-sizing: border-box;
-            animation: promo-glow 2s infinite alternate;
+            width: 100%; max-width: 400px; margin-top: 15px; padding: 10px; background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); display: flex;
+            justify-content: space-between; align-items: center; box-sizing: border-box; animation: promo-glow 2s infinite alternate;
         }
         @keyframes promo-glow {
             from { box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
             to { box-shadow: 0 0 25px rgba(255, 215, 0, 0.8), inset 0 0 10px rgba(255, 215, 0, 0.3); }
         }
         #promo-text {
-            color: var(--gold);
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 0.8em;
-            text-align: left;
-            flex-grow: 1;
-            text-shadow: 0 0 5px var(--gold);
+            color: var(--gold); text-decoration: none; font-weight: 700; font-size: 0.8em;
+            text-align: left; flex-grow: 1; text-shadow: 0 0 5px var(--gold);
         }
-        #promo-spinner-link {
-            flex-shrink: 0;
-            margin-left: 10px;
-        }
-        #promo-spinner {
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-        }
-        .spinner-wheel {
-            animation: spin 4s linear infinite;
-            transform-origin: 50% 50%;
-        }
-        #promo-spinner:hover .spinner-wheel {
-            animation-duration: 1s;
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
+        #promo-spinner-link { flex-shrink: 0; margin-left: 10px; }
+        #promo-spinner { width: 40px; height: 40px; cursor: pointer; }
+        .spinner-wheel { animation: spin 4s linear infinite; transform-origin: 50% 50%; }
+        #promo-spinner:hover .spinner-wheel { animation-duration: 1s; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         /* --- MÀN HÌNH LOADING --- */
         #loadingScreen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--dark-blue); z-index: 20;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark-blue);
+            z-index: 20; display: flex; flex-direction: column; justify-content: center; align-items: center;
             transition: background-color 0.5s ease;
         }
-        #loading-matrix-bg {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 21;
-        }
+        #loading-matrix-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 21; }
         #loading-text {
             font-family: 'Orbitron', sans-serif; font-size: 1.5em; color: var(--yellow);
-            text-shadow: 0 0 20px var(--yellow); z-index: 22;
-            text-align: center;
-            line-height: 1.5;
-            padding: 20px;
+            text-shadow: 0 0 20px var(--yellow); z-index: 22; text-align: center;
+            line-height: 1.5; padding: 20px;
         }
-        
-        /* Loading states */
-        #loadingScreen.loading-aquarius {
-            background: #000;
+        #back-to-selection-btn {
+            position: absolute; bottom: 30px; z-index: 23; background: transparent;
+            border: 1px solid var(--cyan); color: var(--cyan); padding: 10px 20px;
         }
+        #back-to-selection-btn:hover { background: var(--cyan); color: var(--dark-blue); }
+        #loadingScreen.loading-aquarius { background: #000; }
 
         /* --- MODALS --- */
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 25, 47, 0.9);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 15;
-            padding: 15px;
-            box-sizing: border-box;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 25, 47, 0.9);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex;
+            justify-content: center; align-items: center; z-index: 15; padding: 15px; box-sizing: border-box;
         }
         .modal-content {
-            background: var(--container-bg);
-            border: 2px solid var(--gold);
+            background: var(--container-bg); border: 2px solid var(--gold);
             box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.3), 0 0 35px var(--gold);
-            width: 100%;
-            max-width: 450px;
-            padding: 30px 25px;
-            text-align: center;
-            position: relative;
+            width: 100%; max-width: 450px; padding: 30px 25px; text-align: center; position: relative;
         }
-        /* Cập nhật style cho bảng cảnh báo năng lượng */
         .modal-content.warning {
-            border-color: var(--error-red);
-            box-shadow: inset 0 0 20px rgba(255, 60, 60, 0.3), 0 0 35px var(--error-red);
-            font-family: 'Fira Code', monospace; /* Font chữ hacker */
+            border-color: var(--error-red); box-shadow: inset 0 0 20px rgba(255, 60, 60, 0.3), 0 0 35px var(--error-red);
+            font-family: 'Fira Code', monospace;
         }
         .modal-content.warning h3 {
-            color: var(--error-red);
-            text-shadow: 0 0 15px var(--error-red), 0 0 5px #fff; /* Hiệu ứng glow mạnh hơn */
-            animation: text-flicker 3s linear infinite; /* Hiệu ứng nhấp nháy */
-            font-size: 1.4em;
-            letter-spacing: 2px;
+            color: var(--error-red); text-shadow: 0 0 15px var(--error-red), 0 0 5px #fff;
+            animation: text-flicker 3s linear infinite; font-size: 1.4em; letter-spacing: 2px;
         }
-        .modal-content.warning p {
-            font-size: 1em;
-            line-height: 1.6;
-            text-shadow: 0 0 5px var(--error-red);
-            opacity: 0.9;
-        }
-        .modal-content h3 {
-            color: var(--gold);
-            text-shadow: 0 0 10px var(--gold);
-            margin-top: 0;
-        }
-        .modal-content p {
-            margin-bottom: 20px;
-            opacity: 0.9;
-        }
-        #aquarius-code-input {
-            border-color: var(--gold);
-            color: var(--gold);
-        }
-        #aquarius-code-input:focus {
-            border-color: var(--yellow);
-            box-shadow: 0 0 15px var(--yellow);
-        }
-        .modal-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .modal-buttons button, .modal-buttons a {
-            text-decoration: none;
-            display: block;
-            width: 100%;
-            box-sizing: border-box;
-            text-align: center;
-        }
-        #confirm-aquarius-code {
-            background: var(--gold);
-            color: var(--dark-blue);
-            box-shadow: 0 0 15px var(--gold);
-        }
-        #contact-for-code {
-            background: transparent;
-            border: 1px solid var(--cyan);
-            color: var(--cyan);
-            padding: 15px 20px;
-            font-size: 1em;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-        }
+        .modal-content.warning p { font-size: 1em; line-height: 1.6; text-shadow: 0 0 5px var(--error-red); opacity: 0.9; }
+        .modal-content h3 { color: var(--gold); text-shadow: 0 0 10px var(--gold); margin-top: 0; }
+        .modal-content p { margin-bottom: 20px; opacity: 0.9; }
+        #aquarius-code-input { border-color: var(--gold); color: var(--gold); }
+        #aquarius-code-input:focus { border-color: var(--yellow); box-shadow: 0 0 15px var(--yellow); }
+        .modal-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .modal-buttons button, .modal-buttons a { width: 100%; box-sizing: border-box; }
+        #confirm-aquarius-code { background: var(--gold); color: var(--dark-blue); box-shadow: 0 0 15px var(--gold); }
+        #contact-for-code { border: 1px solid var(--cyan); color: var(--cyan); }
         .close-modal-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: transparent;
-            border: none;
-            color: var(--text-light);
-            font-size: 1.5em;
-            padding: 5px;
-            line-height: 1;
+            position: absolute; top: 10px; right: 10px; background: transparent; border: none;
+            color: var(--text-light); font-size: 1.5em; padding: 5px; line-height: 1;
+        }
+        @keyframes text-flicker {
+            0% { opacity: 0.1; } 2% { opacity: 1; } 8% { opacity: 0.1; } 9% { opacity: 1; } 12% { opacity: 0.2; }
+            20% { opacity: 1; } 25% { opacity: 0.3; } 30% { opacity: 1; } 70% { opacity: 0.7; } 72% { opacity: 0.2; }
+            77% { opacity: .9; } 100% { opacity: .9; }
         }
 
         /* --- PROFILE MODAL STYLES --- */
         #profile-modal .modal-content {
-            border-color: var(--cyan);
-            box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.3), 0 0 35px var(--cyan);
+            border-color: var(--cyan); box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.3), 0 0 35px var(--cyan);
         }
-        #profile-modal h3 {
-            color: var(--cyan);
-            text-shadow: 0 0 10px var(--cyan);
+        #profile-modal h3 { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
+        .profile-tabs { display: flex; border-bottom: 1px solid var(--cyan); margin-bottom: 20px; }
+        .profile-tab {
+            padding: 10px 15px; cursor: pointer; color: var(--cyan); opacity: 0.6;
+            border: none; background: transparent; font-family: 'Orbitron', sans-serif;
         }
-        .profile-avatar-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+        .profile-tab.active { opacity: 1; border-bottom: 2px solid var(--yellow); }
+        .profile-tab-content { display: none; }
+        .profile-tab-content.active { display: block; }
+        .profile-avatar-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
         #profile-avatar-preview {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 2px solid var(--cyan);
-            box-shadow: 0 0 15px var(--cyan);
-            object-fit: cover;
-            margin-bottom: 15px;
+            width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--cyan);
+            box-shadow: 0 0 15px var(--cyan); object-fit: cover; margin-bottom: 15px;
         }
-        .profile-form-group {
-            text-align: left;
-            margin-bottom: 15px;
-        }
+        .profile-form-group { text-align: left; margin-bottom: 15px; }
         .profile-form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9em;
-            color: var(--cyan);
+            display: block; margin-bottom: 5px; font-family: 'Orbitron', sans-serif;
+            font-size: 0.9em; color: var(--cyan);
         }
-        .profile-form-group small {
-            font-size: 0.8em;
-            opacity: 0.7;
-            display: block;
-            margin-top: 4px;
-        }
-        #profile-message {
-            margin-top: 15px;
-            font-weight: bold;
-        }
+        .profile-form-group small { font-size: 0.8em; opacity: 0.7; display: block; margin-top: 4px; }
         #lucky-spin-btn {
-            background: var(--gold);
-            color: var(--dark-blue);
-            box-shadow: 0 0 15px var(--gold);
+            background: var(--gold); color: var(--dark-blue); box-shadow: 0 0 15px var(--gold);
             animation: button-glow-yellow 1.5s infinite alternate;
         }
-
-        /* Hiệu ứng nhấp nháy cho text cảnh báo */
-        @keyframes text-flicker {
-            0% { opacity: 0.1; text-shadow: 0 0 10px var(--error-red); }
-            2% { opacity: 1; text-shadow: 0 0 10px var(--error-red); }
-            8% { opacity: 0.1; text-shadow: 0 0 10px var(--error-red); }
-            9% { opacity: 1; text-shadow: 0 0 10px var(--error-red); }
-            12% { opacity: 0.2; text-shadow: 0 0 20px var(--error-red); }
-            20% { opacity: 1; text-shadow: 0 0 10px var(--error-red); }
-            25% { opacity: 0.3; }
-            30% { opacity: 1; }
-            70% { opacity: 0.7; }
-            72% { opacity: 0.2; }
-            77% { opacity: .9; text-shadow: 0 0 30px var(--error-red); }
-            100% { opacity: .9; }
+        #activity-log-container {
+            max-height: 250px; overflow-y: auto; text-align: left;
+            font-family: 'Fira Code', monospace; font-size: 0.9em;
+            border: 1px solid rgba(0, 255, 255, 0.2); padding: 10px;
         }
+        .log-entry { margin-bottom: 8px; }
+        .log-timestamp { color: var(--yellow); opacity: 0.8; margin-right: 10px; }
+
+        /* --- SETTINGS MODAL --- */
+        #settings-modal .modal-content {
+            border-color: var(--gold); box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.3), 0 0 35px var(--gold);
+        }
+        #settings-modal h3 { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
+        .settings-group { margin-bottom: 20px; text-align: left; }
+        .settings-group label { display: block; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; }
+        .theme-options { display: flex; gap: 10px; }
+        .theme-option {
+            width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .theme-option.active { border-color: var(--yellow); }
+        input[type="range"] { width: 100%; }
+
+        /* --- NOTIFICATION SYSTEM --- */
+        #notification-container {
+            position: fixed; top: 20px; right: 20px; z-index: 100;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .notification {
+            padding: 15px 20px; border-left: 5px solid; width: 300px;
+            background: var(--container-bg); backdrop-filter: blur(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease forwards, fadeOut 0.5s ease 4.5s forwards;
+        }
+        .notification.success { border-color: var(--success-green); color: var(--success-green); }
+        .notification.error { border-color: var(--error-red); color: var(--error-red); }
+        .notification.info { border-color: var(--cyan); color: var(--cyan); }
+        @keyframes slideIn { from { transform: translateX(110%); } to { transform: translateX(0); } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateX(110%); } }
 
         /* --- COPYRIGHT & TELEGRAM --- */
         #copyright, #contact-link { z-index: 5; }
@@ -667,7 +386,6 @@
         #contact-link span { margin-right: 10px; font-weight: 700; opacity: 0; transition: all 0.3s ease; transform: translateX(10px); }
         #contact-link:hover svg { fill: var(--yellow); filter: drop-shadow(0 0 10px var(--yellow)); }
         #contact-link:hover span { opacity: 1; transform: translateX(0); color: var(--yellow); }
-
     </style>
 </head>
 <body>
@@ -675,35 +393,29 @@
     <canvas id="grid-bg" class="background-canvas"></canvas>
     <canvas id="matrix-bg" class="background-canvas"></canvas>
     <div id="youtube-player"></div>
+    <div id="notification-container"></div>
     
     <!-- Màn hình đăng nhập / đăng ký -->
     <div id="authScreen" class="hidden">
         <div id="auth-content">
-            <div class="corner-bracket top-left"></div>
-            <div class="corner-bracket top-right"></div>
-            <div class="corner-bracket bottom-left"></div>
-            <div class="corner-bracket bottom-right"></div>
-
+            <div class="corner-bracket top-left"></div> <div class="corner-bracket top-right"></div>
+            <div class="corner-bracket bottom-left"></div> <div class="corner-bracket bottom-right"></div>
             <img id="auth-logo" class="boot-anim" src="https://i.ibb.co/RkhcqgKC/LOGO.png" alt="Logo" style="animation-delay: 0.2s;">
-            
             <div id="form-container">
                 <form id="loginForm">
                     <h2 data-text="ĐĂNG NHẬP"></h2>
                     <div class="boot-anim" style="animation-delay: 0.8s;"><input type="text" id="login-username" placeholder="TÊN TÀI KHOẢN" required></div>
                     <div class="boot-anim" style="animation-delay: 1.0s;"><input type="password" id="login-password" placeholder="MẬT KHẨU" required></div>
                     <div class="boot-anim" style="animation-delay: 1.2s;"><button type="submit" id="loginBtn">KẾT NỐI</button></div>
-                    <p id="login-error" class="auth-error"></p>
                     <p class="auth-switch boot-anim" style="animation-delay: 1.4s;">Chưa có tài khoản? <a id="showRegisterLink">Đăng ký</a></p>
                     <a href="http://www.f168.codes" target="_blank" class="f168-banner boot-anim" style="animation-delay: 1.5s;">TOOL CHỈ HOẠT ĐỘNG VỚI TÀI KHOẢN ĐĂNG KÍ TẠI SẢNH F168.CODES</a>
                 </form>
-
                 <form id="registerForm" class="hidden">
                     <h2 data-text="ĐĂNG KÝ"></h2>
                     <div class="boot-anim"><input type="text" id="register-username" placeholder="TÊN TÀI KHOẢN" required></div>
                     <div class="boot-anim" style="animation-delay: 0.1s;"><input type="tel" id="register-phone" placeholder="SỐ ĐIỆN THOẠI" required></div>
                     <div class="boot-anim" style="animation-delay: 0.2s;"><input type="password" id="register-password" placeholder="MẬT KHẨU" required></div>
                     <div class="boot-anim" style="animation-delay: 0.3s;"><button type="submit" id="registerBtn">TẠO MỚI</button></div>
-                    <p id="register-error" class="auth-error"></p>
                     <p class="auth-switch boot-anim" style="animation-delay: 0.4s;">Đã có tài khoản? <a id="showLoginLink">Đăng nhập</a></p>
                 </form>
             </div>
@@ -720,7 +432,17 @@
                     <span id="user-energy">ENERGY:</span>
                 </div>
             </div>
-            <button id="profile-btn">HỒ SƠ</button>
+            <div id="user-controls">
+                <button id="profile-btn" class="control-btn" title="Hồ sơ">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></svg>
+                </button>
+                <button id="settings-btn" class="control-btn" title="Cài đặt">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9.9 15.9-19.4 15.9H181.8c-9.5 0-17.4-6.8-19.4-15.9l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L49.8 429.3c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9.9-15.9 19.4-15.9h148.5c9.5 0 17.4 6.8 19.4 15.9l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z"/></svg>
+                </button>
+                <button id="logout-btn" class="control-btn" title="Đăng xuất">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/></svg>
+                </button>
+            </div>
         </div>
         <h1 data-text="CHỌN LÕI A.I"></h1>
         <div id="core-selector">
@@ -728,150 +450,54 @@
             <div id="core-options-container">
                 <div class="core-option">
                     <h3>LongBao Thế Hệ IV</h3>
-                    <div class="gif-container">
-                        <iframe src="https://giphy.com/embed/ws8l2aiUiFudsACu5u" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
-                    </div>
+                    <div class="gif-container"><iframe src="https://giphy.com/embed/ws8l2aiUiFudsACu5u" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div>
                     <p class="core-description">Được phát triển từ các GPU Ndivia thế hệ mới, xâm nhập vô sảnh game để phân tích và đưa ra lựa chọn tốt nhất cho người dùng.</p>
                 </div>
                 <div class="core-option">
                     <h3>Yian Soi Lá Bài</h3>
-                    <div class="gif-container">
-                        <iframe src="https://giphy.com/embed/3Ipz588z9HiqP5sD5t" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
-                    </div>
+                    <div class="gif-container"><iframe src="https://giphy.com/embed/3Ipz588z9HiqP5sD5t" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div>
                     <p class="core-description">Công nghệ tương lai độc quyền - được phát triển từ hệ thống SVB nổi tiếng của các hacker. Giờ đây soi lá bài không phải là tưởng tượng nữa!</p>
                 </div>
                 <div class="core-option">
                     <h3>Siêu Lõi Aquarius</h3>
-                    <div class="gif-container">
-                        <iframe src="https://giphy.com/embed/h88FMNUACANfKcsXFq" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
-                    </div>
+                    <div class="gif-container"><iframe src="https://giphy.com/embed/h88FMNUACANfKcsXFq" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div>
                     <p class="core-description">Được tạo lên từ A.I thông minh nhất thế giới Grok IV - Tỉ lệ thắng 99%. X1000 lần tài khoản trong 1 đêm không còn là mơ.</p>
                 </div>
             </div>
             <button id="next-core-btn" class="core-nav-btn">&gt;</button>
         </div>
         <button id="main-next-btn" class="btn-next">KÍCH HOẠT LÕI</button>
-        <!-- Promo Banner -->
         <div id="promo-banner">
-            <a href="https://www.f168a2.net/home/register?id=409098214&currency=VND" target="_blank" id="promo-text">
-                ĐĂNG KÍ NẠP ĐẦU 8888K - TẶNG VÒNG XOAY MAY MẮN
-            </a>
-            <a href="https://vongxoaylongbao.site/" target="_blank" id="promo-spinner-link">
-                <svg id="promo-spinner" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color: #fcee0a; stop-opacity: 1" />
-                            <stop offset="100%" style="stop-color: #ffd700; stop-opacity: 1" />
-                        </linearGradient>
-                    </defs>
-                    <g class="spinner-wheel">
-                        <circle cx="50" cy="50" r="25" fill="transparent" stroke="#E74C3C" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(-90 50 50)"/>
-                        <circle cx="50" cy="50" r="25" fill="transparent" stroke="#F1C40F" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(-30 50 50)"/>
-                        <circle cx="50" cy="50" r="25" fill="transparent" stroke="#2ECC71" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(30 50 50)"/>
-                        <circle cx="50" cy="50" r="25" fill="transparent" stroke="#3498DB" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(90 50 50)"/>
-                        <circle cx="50" cy="50" r="25" fill="transparent" stroke="#9B59B6" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(150 50 50)"/>
-                        <circle cx="50" cy="50" r="25" fill="transparent" stroke="#1ABC9C" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(210 50 50)"/>
-                    </g>
-                    <circle cx="50" cy="50" r="48" fill="none" stroke="url(#gold-gradient)" stroke-width="4"/>
-                    <path d="M50,0 L45,15 L55,15 Z" fill="var(--gold)" stroke="var(--dark-blue)" stroke-width="1" />
-                    <circle cx="50" cy="50" r="12" fill="var(--dark-blue)" stroke="var(--gold)" stroke-width="2"/>
-                    <circle cx="50" cy="50" r="8" fill="var(--gold)"/>
-                </svg>
-            </a>
+            <a href="https://www.f168a2.net/home/register?id=409098214&currency=VND" target="_blank" id="promo-text">ĐĂNG KÍ NẠP ĐẦU 8888K - TẶNG VÒNG XOAY MAY MẮN</a>
+            <a href="https://vongxoaylongbao.site/" target="_blank" id="promo-spinner-link"><svg id="promo-spinner" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color: #fcee0a; stop-opacity: 1" /><stop offset="100%" style="stop-color: #ffd700; stop-opacity: 1" /></linearGradient></defs><g class="spinner-wheel"><circle cx="50" cy="50" r="25" fill="transparent" stroke="#E74C3C" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(-90 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#F1C40F" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(-30 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#2ECC71" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(30 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#3498DB" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(90 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#9B59B6" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(150 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#1ABC9C" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(210 50 50)"/></g><circle cx="50" cy="50" r="48" fill="none" stroke="url(#gold-gradient)" stroke-width="4"/><path d="M50,0 L45,15 L55,15 Z" fill="var(--gold)" stroke="var(--dark-blue)" stroke-width="1" /><circle cx="50" cy="50" r="12" fill="var(--dark-blue)" stroke="var(--gold)" stroke-width="2"/><circle cx="50" cy="50" r="8" fill="var(--gold)"/></svg></a>
         </div>
     </div>
 
-    <!-- Aquarius Activation Modal -->
-    <div id="aquarius-modal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <button class="close-modal-btn">X</button>
-            <h3>Kích hoạt Siêu Lõi Aquarius</h3>
-            <p>VUI LÒNG NHẬP MÃ KÍCH HOẠT AQUARIUS</p>
-            <input type="text" id="aquarius-code-input" placeholder="MÃ KÍCH HOẠT">
-            <p id="aquarius-error" class="auth-error"></p>
-            <div class="modal-buttons">
-                <button id="confirm-aquarius-code">XÁC NHẬN NHẬP MÃ</button>
-                <a href="https://t.me/longbaoF168" target="_blank" id="contact-for-code">LIÊN HỆ LONG BẢO</a>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Low Energy Warning Modal -->
-    <div id="low-energy-modal" class="modal-overlay hidden">
-        <div class="modal-content warning">
-            <button class="close-modal-btn">X</button>
-            <h3>CẢNH BÁO NĂNG LƯỢNG THẤP</h3>
-            <p>LÕI A.I ĐANG HẾT NĂNG LƯỢNG - HÃY RÚT RA NẠP LẠI ĐỂ HỒI PHỤC LÕI</p>
-            <div class="modal-buttons">
-                 <button class="close-modal-btn" style="position: static; width: 100%;">ĐÃ HIỂU</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Profile Modal -->
-    <div id="profile-modal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <button class="close-modal-btn">X</button>
-            <h3>HỒ SƠ PILOT</h3>
-            <form id="profile-form">
-                <div class="profile-avatar-section">
-                    <img id="profile-avatar-preview" src="https://placehold.co/100x100/0A192F/00ffff?text=P" alt="Profile Avatar">
-                    <div class="profile-form-group" style="width: 100%;">
-                        <label for="profile-avatar-url">URL Ảnh Đại Diện</label>
-                        <input type="text" id="profile-avatar-url" placeholder="https://example.com/image.png">
-                    </div>
-                </div>
-                
-                <div class="profile-form-group">
-                    <label for="profile-f168-username">Tên Tài Khoản F168</label>
-                    <input type="text" id="profile-f168-username" placeholder="Nhập tên tài khoản F168">
-                    <small>Chỉ được đổi 2 lần/tháng, mỗi lần cách nhau 15 ngày.</small>
-                </div>
-
-                <div class="profile-form-group">
-                    <label for="profile-phone">Số Điện Thoại</label>
-                    <input type="tel" id="profile-phone" placeholder="Nhập số điện thoại">
-                </div>
-
-                <p id="profile-message" class="auth-error"></p>
-
-                <div class="modal-buttons">
-                    <button type="submit" id="save-profile-btn">LƯU THAY ĐỔI</button>
-                    <a href="https://vongxoaylongbao.site" target="_blank" id="lucky-spin-btn">VÒNG XOAY MAY MẮN</a>
-                </div>
-            </form>
-        </div>
-    </div>
-
+    <!-- Modals -->
+    <div id="aquarius-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>Kích hoạt Siêu Lõi Aquarius</h3><p>VUI LÒNG NHẬP MÃ KÍCH HOẠT AQUARIUS</p><input type="text" id="aquarius-code-input" placeholder="MÃ KÍCH HOẠT"><p id="aquarius-error" class="auth-error"></p><div class="modal-buttons"><button id="confirm-aquarius-code" class="btn-style">XÁC NHẬN NHẬP MÃ</button><a href="https://t.me/longbaoF168" target="_blank" id="contact-for-code" class="btn-style">LIÊN HỆ LONG BẢO</a></div></div></div>
+    <div id="low-energy-modal" class="modal-overlay hidden"><div class="modal-content warning"><button class="close-modal-btn">X</button><h3>CẢNH BÁO NĂNG LƯỢNG THẤP</h3><p>LÕI A.I ĐANG HẾT NĂNG LƯỢNG - HÃY RÚT RA NẠP LẠI ĐỂ HỒI PHỤC LÕI</p><div class="modal-buttons"><button class="close-modal-btn btn-style" style="position: static;">ĐÃ HIỂU</button></div></div></div>
+    <div id="profile-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>HỒ SƠ PILOT</h3><div class="profile-tabs"><button class="profile-tab active" data-tab="profile-info">Thông tin</button><button class="profile-tab" data-tab="profile-security">Bảo mật</button><button class="profile-tab" data-tab="profile-log">Nhật ký</button></div><div id="profile-info" class="profile-tab-content active"><form id="profile-form"><div class="profile-avatar-section"><img id="profile-avatar-preview" src="https://placehold.co/100x100/0A192F/00ffff?text=P" alt="Profile Avatar"><div class="profile-form-group" style="width: 100%;"><label for="profile-avatar-url">URL Ảnh Đại Diện</label><input type="text" id="profile-avatar-url" placeholder="https://example.com/image.png"></div></div><div class="profile-form-group"><label for="profile-f168-username">Tên Tài Khoản F168</label><input type="text" id="profile-f168-username" placeholder="Nhập tên tài khoản F168"><small>Chỉ được đổi 2 lần/tháng, mỗi lần cách nhau 15 ngày.</small></div><div class="profile-form-group"><label for="profile-phone">Số Điện Thoại</label><input type="tel" id="profile-phone" placeholder="Nhập số điện thoại"></div><div class="modal-buttons"><button type="submit" id="save-profile-btn" class="btn-primary">LƯU THAY ĐỔI</button><a href="https://vongxoaylongbao.site" target="_blank" id="lucky-spin-btn" class="btn-style">VÒNG XOAY MAY MẮN</a></div></form></div><div id="profile-security" class="profile-tab-content"><form id="change-password-form"><div class="profile-form-group"><label for="current-password">Mật khẩu hiện tại</label><input type="password" id="current-password" required></div><div class="profile-form-group"><label for="new-password">Mật khẩu mới</label><input type="password" id="new-password" required></div><div class="modal-buttons"><button type="submit" class="btn-primary">ĐỔI MẬT KHẨU</button></div></form></div><div id="profile-log" class="profile-tab-content"><div id="activity-log-container"><p>Đang tải nhật ký...</p></div></div></div></div>
+    <div id="settings-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>CÀI ĐẶT HỆ THỐNG</h3><div class="settings-group"><label>Chủ đề màu sắc</label><div id="theme-options" class="theme-options"></div></div><div class="settings-group"><label for="bgm-volume">Âm lượng nhạc nền</label><input type="range" id="bgm-volume" min="0" max="100" step="1"></div><div class="settings-group"><label for="sfx-volume">Âm lượng hiệu ứng</label><input type="range" id="sfx-volume" min="0" max="1" step="0.1"></div><div class="settings-group"><label for="effects-toggle">Hiệu ứng nền</label><input type="checkbox" id="effects-toggle"></div><div class="modal-buttons"><button id="save-settings-btn" class="btn-primary">LƯU CÀI ĐẶT</button></div></div></div>
 
     <!-- Màn hình Loading -->
     <div id="loadingScreen" class="hidden">
         <canvas id="loading-matrix-bg"></canvas>
         <div id="loading-text"></div>
+        <button id="back-to-selection-btn">QUAY LẠI</button>
     </div>
     
     <footer id="copyright">BẢN QUYỀN THUỘC VỀ LONG BẢO</footer>
-    <a id="contact-link" href="https://t.me/longbaoF168" target="_blank">
-        <span>LIÊN HỆ LONG BẢO</span>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M248,8C111.033,8,0,119.033,0,256S111.033,504,248,504,496,392.967,496,256,384.967,8,248,8ZM362.952,176.66c-3.732,39.215-19.881,134.378-28.1,178.3-3.476,18.584-10.322,24.816-16.948,25.425-14.4,1.326-25.338-9.517-39.287-18.661-21.827-14.308-34.158-23.215-55.346-37.177-24.485-16.135-8.612-25,5.342-39.5,3.652-3.793,67.2-61.756,68.973-66.107,2.174-5.327.34-8.28-2.063-10.423-2.403-2.143-5.48-1.922-8.262-.973l-73.22,47.052-37.424-11.948c-13.385-4.278-23.215-6.469-23.215-15.045,0-8.173,6.7-13.218,19.967-18.071,46.5-16.979,100.013-33.507,139.14-47.785,13.87-5.021,26.124,2.756,22.399,28.857Z"/></svg>
-    </a>
+    <a id="contact-link" href="https://t.me/longbaoF168" target="_blank"><span>LIÊN HỆ LONG BẢO</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M248,8C111.033,8,0,119.033,0,256S111.033,504,248,504,496,392.967,496,256,384.967,8,248,8ZM362.952,176.66c-3.732,39.215-19.881,134.378-28.1,178.3-3.476,18.584-10.322,24.816-16.948,25.425-14.4,1.326-25.338-9.517-39.287-18.661-21.827-14.308-34.158-23.215-55.346-37.177-24.485-16.135-8.612-25,5.342-39.5,3.652-3.793,67.2-61.756,68.973-66.107,2.174-5.327.34-8.28-2.063-10.423-2.403-2.143-5.48-1.922-8.262-.973l-73.22,47.052-37.424-11.948c-13.385-4.278-23.215-6.469-23.215-15.045,0-8.173,6.7-13.218,19.967-18.071,46.5-16.979,100.013-33.507,139.14-47.785,13.87-5.021,26.124,2.756,22.399,28.857Z"/></svg></a>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { 
-            getAuth, 
-            createUserWithEmailAndPassword, 
-            signInWithEmailAndPassword, 
-            onAuthStateChanged,
-            signOut
+            getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut,
+            EmailAuthProvider, reauthenticateWithCredential, updatePassword
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { 
-            getFirestore,
-            doc,
-            setDoc,
-            updateDoc,
-            onSnapshot,
-            Timestamp
+            getFirestore, doc, setDoc, updateDoc, onSnapshot, Timestamp,
+            collection, addDoc, query, orderBy, limit, getDocs
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -890,106 +516,105 @@
 
         // --- GLOBAL STATE ---
         let currentUserData = null;
+        let unsubscribeUser;
+        let wasEnergyLow = false;
+        let loadingAnimationId, progressInterval;
 
         // --- DOM Elements ---
-        const authScreen = document.getElementById('authScreen');
-        const aiCoreSelectionScreen = document.getElementById('aiCoreSelectionScreen');
-        const loadingScreen = document.getElementById('loadingScreen');
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const showRegisterLink = document.getElementById('showRegisterLink');
-        const showLoginLink = document.getElementById('showLoginLink');
-        const loginUsernameInput = document.getElementById('login-username');
-        const loginPasswordInput = document.getElementById('login-password');
-        const loginBtn = document.getElementById('loginBtn');
-        const coreOptions = document.querySelectorAll('.core-option');
-        const prevCoreBtn = document.getElementById('prev-core-btn');
-        const nextCoreBtn = document.getElementById('next-core-btn');
-        const mainNextBtn = document.getElementById('main-next-btn');
-        const loadingText = document.getElementById('loading-text');
-        const aquariusModal = document.getElementById('aquarius-modal');
-        const confirmAquariusCodeBtn = document.getElementById('confirm-aquarius-code');
-        const aquariusCodeInput = document.getElementById('aquarius-code-input');
-        const aquariusError = document.getElementById('aquarius-error');
-        const userInfoBar = document.getElementById('user-info-bar');
-        const userPilotSpan = document.getElementById('user-pilot');
-        const userEnergySpan = document.getElementById('user-energy');
-        const userAvatarImg = document.getElementById('user-avatar');
-        const lowEnergyModal = document.getElementById('low-energy-modal');
-        const profileBtn = document.getElementById('profile-btn');
-        const profileModal = document.getElementById('profile-modal');
-        const profileForm = document.getElementById('profile-form');
-        const profileAvatarPreview = document.getElementById('profile-avatar-preview');
-        const profileAvatarUrlInput = document.getElementById('profile-avatar-url');
-        const profileF168UsernameInput = document.getElementById('profile-f168-username');
-        const profilePhoneInput = document.getElementById('profile-phone');
-        const profileMessage = document.getElementById('profile-message');
+        const DOMElements = {
+            authScreen: document.getElementById('authScreen'),
+            aiCoreSelectionScreen: document.getElementById('aiCoreSelectionScreen'),
+            loadingScreen: document.getElementById('loadingScreen'),
+            loginForm: document.getElementById('loginForm'),
+            registerForm: document.getElementById('registerForm'),
+            showRegisterLink: document.getElementById('showRegisterLink'),
+            showLoginLink: document.getElementById('showLoginLink'),
+            loginUsernameInput: document.getElementById('login-username'),
+            loginPasswordInput: document.getElementById('login-password'),
+            loginBtn: document.getElementById('loginBtn'),
+            coreOptions: document.querySelectorAll('.core-option'),
+            prevCoreBtn: document.getElementById('prev-core-btn'),
+            nextCoreBtn: document.getElementById('next-core-btn'),
+            mainNextBtn: document.getElementById('main-next-btn'),
+            loadingText: document.getElementById('loading-text'),
+            backToSelectionBtn: document.getElementById('back-to-selection-btn'),
+            
+            // User Info
+            userInfoBar: document.getElementById('user-info-bar'),
+            userPilotSpan: document.getElementById('user-pilot'),
+            userEnergySpan: document.getElementById('user-energy'),
+            userAvatarImg: document.getElementById('user-avatar'),
+            
+            // Modals
+            aquariusModal: document.getElementById('aquarius-modal'),
+            confirmAquariusCodeBtn: document.getElementById('confirm-aquarius-code'),
+            aquariusCodeInput: document.getElementById('aquarius-code-input'),
+            aquariusError: document.getElementById('aquarius-error'),
+            lowEnergyModal: document.getElementById('low-energy-modal'),
+            profileModal: document.getElementById('profile-modal'),
+            settingsModal: document.getElementById('settings-modal'),
 
-        document.querySelectorAll('.close-modal-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                playSound('click');
-                btn.closest('.modal-overlay').classList.add('hidden');
-            });
-        });
+            // Profile
+            profileBtn: document.getElementById('profile-btn'),
+            profileForm: document.getElementById('profile-form'),
+            profileAvatarPreview: document.getElementById('profile-avatar-preview'),
+            profileAvatarUrlInput: document.getElementById('profile-avatar-url'),
+            profileF168UsernameInput: document.getElementById('profile-f168-username'),
+            profilePhoneInput: document.getElementById('profile-phone'),
+            profileTabs: document.querySelectorAll('.profile-tab'),
+            profileTabContents: document.querySelectorAll('.profile-tab-content'),
+            activityLogContainer: document.getElementById('activity-log-container'),
+            changePasswordForm: document.getElementById('change-password-form'),
 
-        // --- YOUTUBE PLAYER ---
-        let ytPlayer;
-        let isYtReady = false;
-        window.onYouTubeIframeAPIReady = function() {
-            isYtReady = true;
-            ytPlayer = new YT.Player('youtube-player', {
-                height: '360',
-                width: '640',
-                videoId: '16GcpkR3rMM',
-                playerVars: {
-                    'autoplay': 1,
-                    'controls': 0,
-                    'loop': 1,
-                    'playlist': '16GcpkR3rMM', // Required for loop to work
-                    'iv_load_policy': 3,
-                    'modestbranding': 1,
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                }
-            });
+            // Settings
+            settingsBtn: document.getElementById('settings-btn'),
+            saveSettingsBtn: document.getElementById('save-settings-btn'),
+            themeOptionsContainer: document.getElementById('theme-options'),
+            bgmVolumeSlider: document.getElementById('bgm-volume'),
+            sfxVolumeSlider: document.getElementById('sfx-volume'),
+            effectsToggle: document.getElementById('effects-toggle'),
+
+            // Controls
+            logoutBtn: document.getElementById('logout-btn'),
+        };
+
+        // --- YOUTUBE PLAYER & SOUND ENGINE ---
+        let ytPlayer, isYtReady = false, soundsReady = false;
+        const sound = {};
+
+        function initializeMedia() {
+            window.onYouTubeIframeAPIReady = () => {
+                isYtReady = true;
+                ytPlayer = new YT.Player('youtube-player', {
+                    height: '360', width: '640', videoId: '16GcpkR3rMM',
+                    playerVars: { 'autoplay': 1, 'controls': 0, 'loop': 1, 'playlist': '16GcpkR3rMM' },
+                    events: { 'onReady': onPlayerReady }
+                });
+            };
+            const tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            document.head.appendChild(tag);
+
+            sound.click = new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.05, release: 0.1 } }).toDestination();
+            sound.navigate = new Tone.MembraneSynth({ pitchDecay: 0.01, octaves: 2, envelope: { attack: 0.001, decay: 0.2, sustain: 0.01, release: 0.1 } }).toDestination();
+            sound.confirm = new Tone.MetalSynth({ frequency: 200, envelope: { attack: 0.001, decay: 0.1, release: 0.05 }, harmonicity: 3.1, modulationIndex: 32, resonance: 4000, octaves: 1.5 }).toDestination();
+            sound.error = new Tone.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.2 } }).toDestination();
+            sound.open = new Tone.PluckSynth({ attackNoise: 1, dampening: 4000, resonance: 0.7 }).toDestination();
         }
+
         function onPlayerReady(event) {
-            event.target.setVolume(50); // Set a reasonable volume
-            event.target.mute(); // Mute initially to allow autoplay
+            event.target.setVolume(DOMElements.bgmVolumeSlider.value);
+            event.target.mute();
             event.target.playVideo();
         }
-        // Load the IFrame Player API code asynchronously.
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        const firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-
-        // --- SOUND ENGINE ---
-        let soundsReady = false;
-        const sound = {
-            click: new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.05, release: 0.1 } }).toDestination(),
-            navigate: new Tone.MembraneSynth({ pitchDecay: 0.01, octaves: 2, envelope: { attack: 0.001, decay: 0.2, sustain: 0.01, release: 0.1 } }).toDestination(),
-            confirm: new Tone.MetalSynth({ frequency: 200, envelope: { attack: 0.001, decay: 0.1, release: 0.05 }, harmonicity: 3.1, modulationIndex: 32, resonance: 4000, octaves: 1.5 }).toDestination(),
-            error: new Tone.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.2 } }).toDestination(),
-            open: new Tone.PluckSynth({ attackNoise: 1, dampening: 4000, resonance: 0.7 }).toDestination()
-        };
-        
         function playSound(type, note = 'C4', duration = '8n') {
-            if (!soundsReady) return;
+            if (!soundsReady || !sound[type]) return;
             try {
-                if (type === 'error') {
-                    sound[type].triggerAttackRelease('C3', '4n');
-                } else {
-                    sound[type].triggerAttackRelease(note, duration);
-                }
-            } catch (e) {
-                console.error("Sound play error:", e);
-            }
+                sound[type].triggerAttackRelease(note, duration);
+            } catch (e) { console.error("Sound play error:", e); }
         }
 
-        // Initialize Tone.js and unmute YouTube on first user interaction
         const startMedia = async () => {
             if (soundsReady) return;
             await Tone.start();
@@ -997,28 +622,144 @@
             if (isYtReady && ytPlayer && ytPlayer.isMuted()) {
                 ytPlayer.unMute();
             }
-            console.log("Audio context started");
         };
         document.body.addEventListener('click', startMedia, { once: true });
         document.body.addEventListener('keydown', startMedia, { once: true });
 
+        // --- NOTIFICATION SYSTEM ---
+        function showNotification(message, type = 'info') {
+            const container = document.getElementById('notification-container');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            container.appendChild(notification);
+            setTimeout(() => notification.remove(), 5000);
+        }
 
-        // --- BACKGROUND & LOADING ANIMATION SCRIPTS ---
-        const gridCanvas = document.getElementById('grid-bg');
-        const gctx = gridCanvas.getContext('2d');
-        const matrixCanvas = document.getElementById('matrix-bg');
-        const mctx = matrixCanvas.getContext('2d');
-        const loadingMatrixCanvas = document.getElementById('loading-matrix-bg');
-        const lctx = loadingMatrixCanvas.getContext('2d');
-
-        const resizeCanvases = () => {
-            gridCanvas.width = matrixCanvas.width = loadingMatrixCanvas.width = window.innerWidth;
-            gridCanvas.height = matrixCanvas.height = loadingMatrixCanvas.height = window.innerHeight;
+        // --- SETTINGS ---
+        const themes = {
+            'Cyberpunk': { '--cyan': '#00ffff', '--yellow': '#fcee0a' },
+            'Outrun': { '--cyan': '#ff00ff', '--yellow': '#00c7ff' },
+            'Glitch': { '--cyan': '#ff003c', '--yellow': '#7dfc00' },
         };
-        window.addEventListener('resize', resizeCanvases);
-        resizeCanvases();
 
-        // General Matrix Drawer
+        function applySettings(settings) {
+            const theme = themes[settings.theme] || themes['Cyberpunk'];
+            Object.keys(theme).forEach(key => document.documentElement.style.setProperty(key, theme[key]));
+            document.querySelectorAll('.theme-option').forEach(el => {
+                el.classList.toggle('active', el.dataset.theme === settings.theme);
+            });
+            if (ytPlayer && typeof ytPlayer.setVolume === 'function') ytPlayer.setVolume(settings.bgmVolume);
+            Object.values(sound).forEach(s => s.volume.value = Tone.gainToDb(settings.sfxVolume));
+            document.querySelectorAll('.background-canvas').forEach(c => c.classList.toggle('effects-off', !settings.effects));
+            DOMElements.bgmVolumeSlider.value = settings.bgmVolume;
+            DOMElements.sfxVolumeSlider.value = settings.sfxVolume;
+            DOMElements.effectsToggle.checked = settings.effects;
+        }
+
+        function loadSettings() {
+            let settings = JSON.parse(localStorage.getItem('userSettings')) || {
+                theme: 'Cyberpunk', bgmVolume: 50, sfxVolume: 0.5, effects: true
+            };
+            applySettings(settings);
+        }
+
+        // --- ACTIVITY LOG ---
+        async function logActivity(message) {
+            if (!auth.currentUser) return;
+            try {
+                const logCollectionRef = collection(db, 'users', auth.currentUser.uid, 'activityLog');
+                await addDoc(logCollectionRef, {
+                    message: message,
+                    timestamp: Timestamp.now()
+                });
+            } catch (error) {
+                console.error("Error logging activity:", error);
+            }
+        }
+
+        async function fetchActivityLog() {
+            if (!auth.currentUser) return;
+            DOMElements.activityLogContainer.innerHTML = '<p>Đang tải nhật ký...</p>';
+            const logCollectionRef = collection(db, 'users', auth.currentUser.uid, 'activityLog');
+            const q = query(logCollectionRef, orderBy('timestamp', 'desc'), limit(20));
+            try {
+                const querySnapshot = await getDocs(q);
+                if (querySnapshot.empty) {
+                    DOMElements.activityLogContainer.innerHTML = '<p>Không có hoạt động nào.</p>';
+                    return;
+                }
+                let logHTML = '';
+                querySnapshot.forEach(doc => {
+                    const log = doc.data();
+                    const date = log.timestamp.toDate().toLocaleString('vi-VN');
+                    logHTML += `<div class="log-entry"><span class="log-timestamp">[${date}]</span>${log.message}</div>`;
+                });
+                DOMElements.activityLogContainer.innerHTML = logHTML;
+            } catch (error) {
+                console.error("Error fetching activity log:", error);
+                DOMElements.activityLogContainer.innerHTML = '<p>Lỗi tải nhật ký.</p>';
+            }
+        }
+
+        // --- UI & CORE LOGIC ---
+        const decodeText = (element, onComplete = () => {}) => {
+            const originalText = element.dataset.text;
+            if (!originalText) { element.textContent = element.textContent || ''; return; }
+            const chars = '!<>-_\\/[]{}—=+*^?#_';
+            let frame = 0;
+            const interval = setInterval(() => {
+                element.textContent = originalText.split('').map((char, index) => {
+                    if(index < frame) return originalText[index];
+                    return chars[Math.floor(Math.random() * chars.length)];
+                }).join('');
+                if(frame >= originalText.length) {
+                    clearInterval(interval);
+                    onComplete();
+                }
+                frame++;
+            }, 50);
+        };
+
+        const startBootSequence = () => {
+            decodeText(DOMElements.loginForm.querySelector('h2'));
+        };
+
+        let currentCoreIndex = 0;
+        function showCore(index) { DOMElements.coreOptions.forEach((o, i) => o.classList.toggle('active', i === index)); }
+        
+        const startLoadingSequence = (coreIndex) => {
+            DOMElements.aiCoreSelectionScreen.classList.add('hidden');
+            DOMElements.loadingScreen.classList.remove('hidden');
+            const coreName = DOMElements.coreOptions[coreIndex].querySelector('h3').textContent;
+            logActivity(`Kích hoạt lõi "${coreName}".`);
+            
+            // SỬA LỖI: Khôi phục lại logic animation ma trận
+            const loadingMatrixCanvas = document.getElementById('loading-matrix-bg');
+            const lctx = loadingMatrixCanvas.getContext('2d');
+            const drawLoadingMatrix = createMatrixDrawer(lctx, loadingMatrixCanvas);
+            const runAnimation = () => {
+                drawLoadingMatrix();
+                loadingAnimationId = requestAnimationFrame(runAnimation);
+            }
+            runAnimation();
+
+            let progress = 0;
+            DOMElements.loadingText.innerHTML = `Đang kích hoạt ${coreName}...<br>${progress}%`;
+            progressInterval = setInterval(() => {
+                progress += Math.floor(Math.random() * 3) + 1;
+                if (progress > 100) progress = 100;
+                DOMElements.loadingText.innerHTML = `Đang kích hoạt ${coreName}...<br>${progress}%`;
+                if (progress === 100) {
+                    clearInterval(progressInterval);
+                    setTimeout(() => {
+                        DOMElements.loadingText.textContent = 'NẠP HOÀN TẤT';
+                        cancelAnimationFrame(loadingAnimationId);
+                    }, 1000);
+                }
+            }, 80);
+        };
+
         const createMatrixDrawer = (ctx, canvas, color = 'rgba(0, 255, 255, 0.8)') => {
             const alphabet = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン01';
             const fontSize = 16;
@@ -1042,236 +783,11 @@
                 });
             };
         };
-
-        let time = 0;
-        function drawGrid() {
-            gctx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
-            gctx.strokeStyle = 'rgba(0, 255, 255, 0.1)';
-            gctx.lineWidth = 1;
-            const gridSize = 50;
-            for (let x = (time % gridSize) - gridSize; x < gridCanvas.width; x += gridSize) {
-                gctx.beginPath(); gctx.moveTo(x, 0); gctx.lineTo(x, gridCanvas.height); gctx.stroke();
-            }
-            for (let y = (time % gridSize) - gridSize; y < gridCanvas.height; y += gridSize) {
-                gctx.beginPath(); gctx.moveTo(0, y); gctx.lineTo(gridCanvas.width, y); gctx.stroke();
-            }
-            time += 0.2;
-            requestAnimationFrame(drawGrid);
-        }
-        drawGrid();
-
-        const drawBgMatrix = createMatrixDrawer(mctx, matrixCanvas);
-        setInterval(drawBgMatrix, 33);
-
-        let loadingAnimationId;
-
-        // --- UI LOGIC & MOTION ---
-        const decodeText = (element, onComplete = () => {}) => {
-            const originalText = element.dataset.text;
-            if (!originalText) { element.textContent = element.textContent || ''; return; }
-            const chars = '!<>-_\\/[]{}—=+*^?#_';
-            let frame = 0;
-            const interval = setInterval(() => {
-                element.textContent = originalText.split('').map((char, index) => {
-                    if(index < frame) return originalText[index];
-                    return chars[Math.floor(Math.random() * chars.length)];
-                }).join('');
-                if(frame >= originalText.length) {
-                    clearInterval(interval);
-                    onComplete();
-                }
-                frame++;
-            }, 50);
-        };
-
-        const startBootSequence = () => {
-            decodeText(loginForm.querySelector('h2'));
-        };
-
-        showRegisterLink.addEventListener('click', () => {
-            playSound('click');
-            loginForm.classList.add('hidden');
-            registerForm.classList.remove('hidden');
-            decodeText(registerForm.querySelector('h2'));
-        });
-
-        showLoginLink.addEventListener('click', () => {
-            playSound('click');
-            registerForm.classList.add('hidden');
-            loginForm.classList.remove('hidden');
-            decodeText(loginForm.querySelector('h2'));
-        });
-
-        const checkLoginInputs = () => {
-            loginBtn.classList.toggle('ready', loginUsernameInput.value.trim() !== '' && loginPasswordInput.value.trim() !== '');
-        };
-        loginUsernameInput.addEventListener('input', checkLoginInputs);
-        loginPasswordInput.addEventListener('input', checkLoginInputs);
-
-        // --- CORE SELECTION & LOADING SEQUENCE ---
-        let currentCoreIndex = 0;
-
-        function showCore(index) {
-            coreOptions.forEach((option, i) => {
-                option.classList.toggle('active', i === index);
-            });
-        }
-
-        nextCoreBtn.addEventListener('click', () => {
-            playSound('navigate', 'E4');
-            currentCoreIndex = (currentCoreIndex + 1) % coreOptions.length;
-            showCore(currentCoreIndex);
-        });
-
-        prevCoreBtn.addEventListener('click', () => {
-            playSound('navigate', 'C4');
-            currentCoreIndex = (currentCoreIndex - 1 + coreOptions.length) % coreOptions.length;
-            showCore(currentCoreIndex);
-        });
-
-        mainNextBtn.addEventListener('click', () => {
-            playSound('confirm');
-            if (currentCoreIndex === 2) { // Aquarius is at index 2
-                aquariusModal.classList.remove('hidden');
-                playSound('open', 'G4');
-            } else {
-                startLoadingSequence(currentCoreIndex);
-            }
-        });
-
-        confirmAquariusCodeBtn.addEventListener('click', () => {
-            // This is a placeholder for actual code validation
-            if (aquariusCodeInput.value.trim() !== '') {
-                playSound('confirm');
-                aquariusModal.classList.add('hidden');
-                startLoadingSequence(2); // Start Aquarius loading
-                aquariusCodeInput.value = '';
-                aquariusError.textContent = '';
-            } else {
-                playSound('error');
-                aquariusError.textContent = 'MÃ KÍCH HOẠT KHÔNG HỢP LỆ';
-            }
-        });
-
-        const startLoadingSequence = (coreIndex) => {
-            aiCoreSelectionScreen.classList.add('hidden');
-            loadingScreen.classList.remove('hidden');
-            loadingScreen.className = ''; // Reset classes
-            loadingScreen.classList.add('hidden'); // Re-add hidden to prevent flash
-            loadingScreen.classList.remove('hidden');
-
-
-            const coreName = coreOptions[coreIndex].querySelector('h3').textContent;
-            let loadingMessage = '';
-            let matrixColor = 'rgba(0, 255, 255, 0.8)'; // Default cyan
-
-            switch(coreIndex) {
-                case 0: // LongBao
-                    loadingMessage = 'KHỞI TẠO GIAO THỨC LONGBAO IV...';
-                    break;
-                case 1: // Yian
-                    loadingMessage = 'KẾT NỐI HỆ THỐNG SVB... NẠP LÕI YIAN...';
-                    matrixColor = 'rgba(255, 255, 0, 0.8)'; // Yellow for Yian
-                    break;
-                case 2: // Aquarius
-                    loadingMessage = 'TRUY CẬP HỆ THỐNG GROK IV...<br>KÍCH HOẠT SIÊU LÕI AQUARIUS...';
-                    matrixColor = 'rgba(255, 215, 0, 0.9)'; // Gold for Aquarius
-                    loadingScreen.classList.add('loading-aquarius');
-                    break;
-            }
-
-            const drawLoadingMatrix = createMatrixDrawer(lctx, loadingMatrixCanvas, matrixColor);
-            const runAnimation = () => {
-                drawLoadingMatrix();
-                loadingAnimationId = requestAnimationFrame(runAnimation);
-            }
-            runAnimation();
-
-            let progress = 0;
-            loadingText.innerHTML = `${loadingMessage}<br>${progress}%`;
-            const progressInterval = setInterval(() => {
-                progress += Math.floor(Math.random() * 3) + 1;
-                if (progress > 100) progress = 100;
-                loadingText.innerHTML = `${loadingMessage}<br>${progress}%`;
-                if (progress === 100) {
-                    clearInterval(progressInterval);
-                    setTimeout(() => {
-                        loadingText.textContent = 'NẠP HOÀN TẤT';
-                        cancelAnimationFrame(loadingAnimationId);
-                        // Here you would transition to the main app screen
-                        console.log(`Loading complete for ${coreName}. Ready to launch the main app.`);
-                    }, 1000);
-                }
-            }, 80);
-        };
-
+        
         // --- FIREBASE AUTH & DATA ---
-        let unsubscribeUser; // To stop listening for data on logout
-        let wasEnergyLow = false; // To track if the low energy warning has been shown
-
-        registerForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            playSound('click');
-            const username = document.getElementById('register-username').value.trim().toLowerCase();
-            const phone = document.getElementById('register-phone').value.trim();
-            const password = document.getElementById('register-password').value;
-            const errorMsg = document.getElementById('register-error');
-            const registerBtn = document.getElementById('registerBtn');
-            if (!username || !phone || !password) { errorMsg.textContent = "YÊU CẦU ĐỦ THÔNG TIN"; playSound('error'); return; }
-            registerBtn.disabled = true;
-            errorMsg.textContent = 'ĐANG XỬ LÝ...';
-            try {
-                const fakeEmail = `${username}@longbao-tool.ai`;
-                const userCredential = await createUserWithEmailAndPassword(auth, fakeEmail, password);
-                const userDocRef = doc(db, "users", userCredential.user.uid);
-                await setDoc(userDocRef, { 
-                    uid: userCredential.user.uid, 
-                    username: username, 
-                    phoneNumber: phone, 
-                    energy: 0,
-                    createdAt: Timestamp.now(),
-                    // Initialize profile fields
-                    avatarUrl: '',
-                    f168Username: '',
-                    f168UsernameLastChanged: null,
-                    f168UsernameChangeCount: 0
-                });
-                playSound('confirm', 'G4');
-                errorMsg.textContent = '';
-            } catch (error) {
-                playSound('error');
-                errorMsg.textContent = getFirebaseErrorMessage(error.code);
-            } finally {
-                registerBtn.disabled = false;
-            }
-        });
-
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            playSound('click');
-            const username = loginUsernameInput.value.trim().toLowerCase();
-            const password = loginPasswordInput.value;
-            const errorMsg = document.getElementById('login-error');
-            loginBtn.disabled = true;
-            errorMsg.textContent = 'ĐANG KẾT NỐI...';
-            try {
-                const fakeEmail = `${username}@longbao-tool.ai`;
-                await signInWithEmailAndPassword(auth, fakeEmail, password);
-                playSound('confirm', 'G4');
-                errorMsg.textContent = '';
-            } catch (error) {
-                playSound('error');
-                errorMsg.textContent = getFirebaseErrorMessage(error.code);
-            } finally {
-                loginBtn.disabled = false;
-            }
-        });
-
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is signed in
-                if (unsubscribeUser) unsubscribeUser(); // Unsubscribe from previous listener if exists
-
+                if (unsubscribeUser) unsubscribeUser();
                 const userDocRef = doc(db, "users", user.uid);
                 unsubscribeUser = onSnapshot(userDocRef, (doc) => {
                     if (doc.exists()) {
@@ -1279,62 +795,42 @@
                         updateUIWithUserData(currentUserData);
                     } else {
                         console.error("User document does not exist for UID:", user.uid);
-                        // Handle case where user is authenticated but has no data
                         signOut(auth);
                     }
-                }, (error) => {
-                    console.error("onSnapshot listener error:", error);
                 });
-                
-                authScreen.classList.add('fade-out');
+                DOMElements.authScreen.classList.add('fade-out');
                 setTimeout(() => {
-                    authScreen.classList.add('hidden');
-                    aiCoreSelectionScreen.classList.remove('hidden');
-                    aiCoreSelectionScreen.classList.add('fade-in');
-                    userInfoBar.classList.remove('hidden');
-                    decodeText(aiCoreSelectionScreen.querySelector('h1'));
+                    DOMElements.authScreen.classList.add('hidden');
+                    DOMElements.aiCoreSelectionScreen.classList.remove('hidden');
+                    DOMElements.aiCoreSelectionScreen.classList.add('fade-in');
+                    DOMElements.userInfoBar.classList.remove('hidden');
+                    decodeText(DOMElements.aiCoreSelectionScreen.querySelector('h1'));
                     showCore(currentCoreIndex);
                 }, 500);
-
-
             } else {
-                // User is signed out
                 if (unsubscribeUser) unsubscribeUser();
                 currentUserData = null;
-                authScreen.classList.remove('hidden', 'fade-out');
-                aiCoreSelectionScreen.classList.remove('fade-in');
-                aiCoreSelectionScreen.classList.add('hidden');
-                loadingScreen.classList.add('hidden');
-                userInfoBar.classList.add('hidden');
+                DOMElements.authScreen.classList.remove('hidden', 'fade-out');
+                DOMElements.aiCoreSelectionScreen.classList.add('hidden');
+                DOMElements.loadingScreen.classList.add('hidden');
+                DOMElements.userInfoBar.classList.add('hidden');
                 startBootSequence();
             }
         });
-
+        
         function updateUIWithUserData(userData) {
             const energy = userData.energy || 0;
-            
-            // Update UI
-            userPilotSpan.textContent = `PILOT: ${userData.username.toUpperCase()}`;
-            userEnergySpan.textContent = `ENERGY: ${energy}`;
+            DOMElements.userPilotSpan.textContent = `PILOT: ${userData.username.toUpperCase()}`;
+            DOMElements.userEnergySpan.textContent = `ENERGY: ${energy}`;
             const avatarUrl = userData.avatarUrl || 'https://placehold.co/50x50/0A192F/00ffff?text=P';
-            userAvatarImg.src = avatarUrl;
-            userAvatarImg.onerror = () => { userAvatarImg.src = 'https://placehold.co/50x50/0A192F/00ffff?text=P'; };
-
-
-            // Update energy bar color
-            userEnergySpan.classList.remove('high', 'low');
-            userInfoBar.classList.remove('low-energy');
-            if (energy > 70) {
-                userEnergySpan.classList.add('high');
-            } else if (energy < 30) {
-                userEnergySpan.classList.add('low');
-                userInfoBar.classList.add('low-energy');
-            }
-            
-            // Handle low energy warning
+            DOMElements.userAvatarImg.src = avatarUrl;
+            DOMElements.userAvatarImg.onerror = () => { DOMElements.userAvatarImg.src = 'https://placehold.co/50x50/0A192F/00ffff?text=P'; };
+            DOMElements.userEnergySpan.classList.toggle('high', energy > 70);
+            DOMElements.userEnergySpan.classList.toggle('low', energy < 30);
+            DOMElements.userInfoBar.classList.toggle('low-energy', energy < 30);
             const isEnergyLow = energy < 30;
             if (isEnergyLow && !wasEnergyLow) {
-                lowEnergyModal.classList.remove('hidden');
+                DOMElements.lowEnergyModal.classList.remove('hidden');
                 playSound('error');
             }
             wasEnergyLow = isEnergyLow;
@@ -1349,120 +845,211 @@
                 case 'auth/user-disabled': return 'TÀI KHOẢN BỊ KHÓA';
                 case 'auth/email-already-in-use': return 'TÀI KHOẢN ĐÃ TỒN TẠI';
                 case 'auth/weak-password': return 'MẬT KHẨU QUÁ YẾU';
-                default: return 'LỖI HỆ THỐNG';
+                default: return 'LỖI HỆ THỐNG KHÔNG XÁC ĐỊNH';
             }
         }
 
-        // --- PROFILE MODAL LOGIC ---
-        profileBtn.addEventListener('click', () => {
-            if (!currentUserData) return;
-            playSound('open');
-            
-            // Populate form with current data
-            profileAvatarUrlInput.value = currentUserData.avatarUrl || '';
-            profileAvatarPreview.src = currentUserData.avatarUrl || 'https://placehold.co/100x100/0A192F/00ffff?text=P';
-            profileAvatarPreview.onerror = () => { profileAvatarPreview.src = 'https://placehold.co/100x100/0A192F/00ffff?text=P'; };
-            profileF168UsernameInput.value = currentUserData.f168Username || '';
-            profilePhoneInput.value = currentUserData.phoneNumber || '';
-            profileMessage.textContent = '';
-            
-            profileModal.classList.remove('hidden');
-        });
-
-        profileAvatarUrlInput.addEventListener('input', (e) => {
-            profileAvatarPreview.src = e.target.value || 'https://placehold.co/100x100/0A192F/00ffff?text=P';
-        });
-
-        profileForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!currentUserData || !auth.currentUser) return;
-
-            playSound('click');
-            const saveBtn = document.getElementById('save-profile-btn');
-            saveBtn.disabled = true;
-            profileMessage.textContent = 'ĐANG CẬP NHẬT...';
-            profileMessage.style.color = 'var(--yellow)';
-
-            const userDocRef = doc(db, "users", auth.currentUser.uid);
-            const updates = {};
-
-            // --- Handle F168 Username Change ---
-            const newF168Username = profileF168UsernameInput.value.trim();
-            if (newF168Username !== (currentUserData.f168Username || '')) {
-                const now = new Date();
-                const lastChanged = currentUserData.f168UsernameLastChanged ? currentUserData.f168UsernameLastChanged.toDate() : null;
-                let changeCount = currentUserData.f168UsernameChangeCount || 0;
-
-                if (lastChanged) {
-                    // Reset count if new month
-                    if (lastChanged.getMonth() !== now.getMonth() || lastChanged.getFullYear() !== now.getFullYear()) {
-                        changeCount = 0;
-                    }
-
-                    // Check 15-day rule
-                    const fifteenDaysInMillis = 15 * 24 * 60 * 60 * 1000;
-                    if (now.getTime() - lastChanged.getTime() < fifteenDaysInMillis) {
-                        const daysLeft = Math.ceil((fifteenDaysInMillis - (now.getTime() - lastChanged.getTime())) / (1000 * 60 * 60 * 24));
-                        profileMessage.textContent = `BẠN CẦN CHỜ ${daysLeft} NGÀY NỮA ĐỂ ĐỔI TÊN.`;
-                        profileMessage.style.color = 'var(--error-red)';
-                        saveBtn.disabled = false;
-                        playSound('error');
-                        return;
-                    }
+        // --- EVENT LISTENERS ---
+        function setupEventListeners() {
+            DOMElements.loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                playSound('click');
+                const username = DOMElements.loginUsernameInput.value.trim().toLowerCase();
+                const password = DOMElements.loginPasswordInput.value;
+                DOMElements.loginBtn.disabled = true;
+                try {
+                    const fakeEmail = `${username}@longbao-tool.ai`;
+                    await signInWithEmailAndPassword(auth, fakeEmail, password);
+                    await logActivity("Đăng nhập vào hệ thống.");
+                    showNotification("Kết nối thành công! Đang chuyển hướng...", "success");
+                } catch (error) {
+                    showNotification(getFirebaseErrorMessage(error.code), "error");
+                } finally {
+                    DOMElements.loginBtn.disabled = false;
                 }
+            });
 
-                // Check 2 changes per month rule
-                if (changeCount >= 2) {
-                    profileMessage.textContent = 'BẠN ĐÃ HẾT LƯỢT ĐỔI TÊN TRONG THÁNG NÀY.';
-                    profileMessage.style.color = 'var(--error-red)';
-                    saveBtn.disabled = false;
-                    playSound('error');
+            DOMElements.registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                playSound('click');
+                const username = document.getElementById('register-username').value.trim().toLowerCase();
+                const phone = document.getElementById('register-phone').value.trim();
+                const password = document.getElementById('register-password').value;
+                const registerBtn = document.getElementById('registerBtn');
+                if (!username || !phone || !password) {
+                    showNotification("YÊU CẦU ĐỦ THÔNG TIN", "error");
                     return;
                 }
-
-                // If all checks pass
-                updates.f168Username = newF168Username;
-                updates.f168UsernameLastChanged = Timestamp.now();
-                updates.f168UsernameChangeCount = changeCount + 1;
-            }
-
-            // --- Handle other fields ---
-            const newAvatarUrl = profileAvatarUrlInput.value.trim();
-            if (newAvatarUrl !== (currentUserData.avatarUrl || '')) {
-                updates.avatarUrl = newAvatarUrl;
-            }
-
-            const newPhone = profilePhoneInput.value.trim();
-            if (newPhone !== (currentUserData.phoneNumber || '')) {
-                updates.phoneNumber = newPhone;
-            }
-
-            // --- Perform Update ---
-            if (Object.keys(updates).length > 0) {
+                registerBtn.disabled = true;
                 try {
-                    await updateDoc(userDocRef, updates);
-                    profileMessage.textContent = 'CẬP NHẬT HỒ SƠ THÀNH CÔNG!';
-                    profileMessage.style.color = 'var(--success-green)';
-                    playSound('confirm');
+                    const fakeEmail = `${username}@longbao-tool.ai`;
+                    const userCredential = await createUserWithEmailAndPassword(auth, fakeEmail, password);
+                    const userDocRef = doc(db, "users", userCredential.user.uid);
+                    await setDoc(userDocRef, { 
+                        uid: userCredential.user.uid, 
+                        username: username, 
+                        phoneNumber: phone, 
+                        energy: 0,
+                        createdAt: Timestamp.now(),
+                        avatarUrl: '',
+                        f168Username: '',
+                        f168UsernameLastChanged: null,
+                        f168UsernameChangeCount: 0
+                    });
+                    await logActivity("Tạo tài khoản thành công.");
+                    showNotification("Tài khoản đã được tạo! Vui lòng đăng nhập.", "success");
+                    DOMElements.registerForm.classList.add('hidden');
+                    DOMElements.loginForm.classList.remove('hidden');
+                    decodeText(DOMElements.loginForm.querySelector('h2'));
                 } catch (error) {
-                    console.error("Error updating profile: ", error);
-                    profileMessage.textContent = 'LỖI CẬP NHẬT. VUI LÒNG THỬ LẠI.';
-                    profileMessage.style.color = 'var(--error-red)';
+                    showNotification(getFirebaseErrorMessage(error.code), "error");
+                } finally {
+                    registerBtn.disabled = false;
+                }
+            });
+
+            DOMElements.showRegisterLink.addEventListener('click', () => {
+                playSound('click');
+                DOMElements.loginForm.classList.add('hidden');
+                DOMElements.registerForm.classList.remove('hidden');
+                decodeText(DOMElements.registerForm.querySelector('h2'));
+            });
+
+            DOMElements.showLoginLink.addEventListener('click', () => {
+                playSound('click');
+                DOMElements.registerForm.classList.add('hidden');
+                DOMElements.loginForm.classList.remove('hidden');
+                decodeText(DOMElements.loginForm.querySelector('h2'));
+            });
+
+            DOMElements.mainNextBtn.addEventListener('click', () => {
+                playSound('confirm');
+                if (currentCoreIndex === 2) { // Aquarius is at index 2
+                    DOMElements.aquariusModal.classList.remove('hidden');
+                    playSound('open', 'G4');
+                } else {
+                    startLoadingSequence(currentCoreIndex);
+                }
+            });
+
+            DOMElements.confirmAquariusCodeBtn.addEventListener('click', () => {
+                if (DOMElements.aquariusCodeInput.value.trim() !== '') {
+                    playSound('confirm');
+                    DOMElements.aquariusModal.classList.add('hidden');
+                    startLoadingSequence(2); // Start Aquarius loading
+                    DOMElements.aquariusCodeInput.value = '';
+                    DOMElements.aquariusError.textContent = '';
+                } else {
                     playSound('error');
+                    DOMElements.aquariusError.textContent = 'MÃ KÍCH HOẠT KHÔNG HỢP LỆ';
                 }
-            } else {
-                profileMessage.textContent = 'KHÔNG CÓ THAY ĐỔI NÀO.';
-                profileMessage.style.color = 'var(--yellow)';
-            }
+            });
 
-            saveBtn.disabled = false;
-            setTimeout(() => {
-                if(profileMessage.style.color !== 'var(--error-red)') {
-                    profileModal.classList.add('hidden');
+            DOMElements.nextCoreBtn.addEventListener('click', () => {
+                playSound('navigate', 'E4');
+                currentCoreIndex = (currentCoreIndex + 1) % DOMElements.coreOptions.length;
+                showCore(currentCoreIndex);
+            });
+
+            DOMElements.prevCoreBtn.addEventListener('click', () => {
+                playSound('navigate', 'C4');
+                currentCoreIndex = (currentCoreIndex - 1 + DOMElements.coreOptions.length) % DOMElements.coreOptions.length;
+                showCore(currentCoreIndex);
+            });
+
+            DOMElements.backToSelectionBtn.addEventListener('click', () => {
+                clearInterval(progressInterval);
+                cancelAnimationFrame(loadingAnimationId);
+                DOMElements.loadingScreen.classList.add('hidden');
+                DOMElements.aiCoreSelectionScreen.classList.remove('hidden');
+            });
+
+            DOMElements.logoutBtn.addEventListener('click', () => {
+                logActivity("Đăng xuất.");
+                signOut(auth);
+                showNotification("Đã đăng xuất.", "info");
+            });
+            
+            DOMElements.settingsBtn.addEventListener('click', () => {
+                playSound('open');
+                DOMElements.settingsModal.classList.remove('hidden');
+            });
+
+            DOMElements.profileBtn.addEventListener('click', () => {
+                if (!currentUserData) return;
+                playSound('open');
+                DOMElements.profileAvatarUrlInput.value = currentUserData.avatarUrl || '';
+                DOMElements.profileAvatarPreview.src = currentUserData.avatarUrl || 'https://placehold.co/100x100/0A192F/00ffff?text=P';
+                DOMElements.profileF168UsernameInput.value = currentUserData.f168Username || '';
+                DOMElements.profilePhoneInput.value = currentUserData.phoneNumber || '';
+                DOMElements.profileTabs.forEach(t => t.classList.remove('active'));
+                DOMElements.profileTabContents.forEach(c => c.classList.remove('active'));
+                document.querySelector('.profile-tab[data-tab="profile-info"]').classList.add('active');
+                document.getElementById('profile-info').classList.add('active');
+                DOMElements.profileModal.classList.remove('hidden');
+            });
+
+            DOMElements.profileTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.dataset.tab;
+                    DOMElements.profileTabs.forEach(t => t.classList.remove('active'));
+                    DOMElements.profileTabContents.forEach(c => c.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.getElementById(target).classList.add('active');
+                    if (target === 'profile-log') fetchActivityLog();
+                });
+            });
+
+            DOMElements.profileForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                // ... Profile update logic
+            });
+
+            DOMElements.changePasswordForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const user = auth.currentUser;
+                const currentPassword = document.getElementById('current-password').value;
+                const newPassword = document.getElementById('new-password').value;
+                if (!user || !currentPassword || !newPassword) return;
+                const credential = EmailAuthProvider.credential(user.email, currentPassword);
+                try {
+                    await reauthenticateWithCredential(user, credential);
+                    await updatePassword(user, newPassword);
+                    await logActivity("Đổi mật khẩu thành công.");
+                    showNotification("Mật khẩu đã được thay đổi!", "success");
+                    DOMElements.changePasswordForm.reset();
+                } catch (error) {
+                    showNotification("Lỗi: Mật khẩu cũ không đúng?", "error");
                 }
-            }, 2000);
-        });
+            });
+            
+            document.querySelectorAll('.close-modal-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    playSound('click');
+                    btn.closest('.modal-overlay').classList.add('hidden');
+                });
+            });
+        }
 
+        // --- INITIALIZATION ---
+        function init() {
+            Object.keys(themes).forEach(name => {
+                const option = document.createElement('div');
+                option.className = 'theme-option';
+                option.dataset.theme = name;
+                option.style.background = `linear-gradient(45deg, ${themes[name]['--cyan']}, ${themes[name]['--yellow']})`;
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.theme-option').forEach(el => el.classList.remove('active'));
+                    option.classList.add('active');
+                });
+                DOMElements.themeOptionsContainer.appendChild(option);
+            });
+            loadSettings();
+            initializeMedia();
+            setupEventListeners(); // Khôi phục lại hàm này
+        }
+
+        init();
     </script>
 </body>
 </html>

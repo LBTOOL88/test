@@ -3,13 +3,19 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>LONG BẢO A.I - Cyberpunk Terminal</title>
+    <title>LONG BẢO A.I - Tích Hợp</title>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@400;700&family=Fira+Code:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <!-- Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
     <style>
+        /* --- CORE STYLES from index.html --- */
         :root {
             --cyan: #00ffff;
             --yellow: #fcee0a;
@@ -37,7 +43,6 @@
         }
         .hidden { display: none !important; }
 
-        /* --- BACKGROUND & YOUTUBE PLAYER --- */
         .background-canvas {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; 
             transition: opacity 0.5s ease;
@@ -60,7 +65,6 @@
             width: 100%; max-width: 400px; padding: 30px 25px; text-align: center; position: relative;
         }
         
-        /* --- CORNER BRACKETS --- */
         .corner-bracket {
             position: absolute; width: 25px; height: 25px; border-style: solid; border-color: var(--cyan);
             opacity: 0; animation: boot-up 0.6s ease-out forwards, corner-glow 2s infinite alternate;
@@ -80,8 +84,15 @@
         @keyframes boot-up { to { opacity: 1; transform: translateY(0); } }
 
         #auth-logo {
-            width: 120px; height: 120px; border-radius: 50%; margin-bottom: 20px;
-            border: 2px solid var(--yellow); box-shadow: 0 0 20px var(--yellow);
+            display: block; /* Ensures margin auto works */
+            margin-left: auto; /* Centers the logo */
+            margin-right: auto; /* Centers the logo */
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            border: 2px solid var(--yellow);
+            box-shadow: 0 0 20px var(--yellow);
         }
 
         h1, h2, h3 { font-family: 'Orbitron', sans-serif; text-transform: uppercase; }
@@ -233,7 +244,6 @@
         }
         #main-next-btn { margin-top: 15px; max-width: 400px; }
         
-        /* --- PROMO BANNER --- */
         #promo-banner {
             width: 100%; max-width: 400px; margin-top: 15px; padding: 10px; background: rgba(255, 215, 0, 0.1);
             border: 1px solid var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); display: flex;
@@ -252,162 +262,6 @@
         .spinner-wheel { animation: spin 4s linear infinite; transform-origin: 50% 50%; }
         #promo-spinner:hover .spinner-wheel { animation-duration: 1s; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        /* --- MÀN HÌNH KÍCH HOẠT ULTIMATE --- */
-        #activationScreen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #000;
-            z-index: 20; display: flex; justify-content: center; align-items: center;
-            font-family: 'Fira Code', monospace;
-            padding: 15px; box-sizing: border-box;
-            opacity: 0; transition: opacity 0.5s ease;
-        }
-        #activationScreen.visible { opacity: 1; }
-        #activation-hud {
-            width: 100%; height: 100%;
-            max-width: 800px; max-height: 1200px;
-            display: grid;
-            grid-template-rows: auto 1fr auto;
-            grid-template-columns: 1fr 2fr 1fr;
-            gap: 15px;
-            position: relative;
-        }
-        .hud-panel {
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            padding: 10px;
-            position: relative;
-            background: rgba(10, 25, 47, 0.3);
-        }
-        #hud-header { grid-column: 1 / 4; text-align: center; }
-        #hud-header h1 {
-            font-size: clamp(1.5em, 5vw, 2.5em);
-            color: var(--yellow); text-shadow: 0 0 15px var(--yellow);
-            margin: 0; animation: text-flicker 4s linear infinite;
-        }
-        #hud-left-panel, #hud-right-panel {
-            display: flex; flex-direction: column; gap: 10px;
-            font-size: clamp(0.7em, 2vw, 0.9em);
-        }
-        .data-stream {
-            height: 100%; overflow: hidden;
-            white-space: pre;
-        }
-        .data-stream span { display: block; }
-        #hud-center-panel {
-            grid-row: 2 / 3; grid-column: 2 / 3;
-            display: flex; flex-direction: column; justify-content: space-between; align-items: center;
-        }
-        #core-3d-container {
-            width: 100%;
-            flex-grow: 1;
-            min-height: 150px;
-        }
-        #activation-status { text-align: center; width: 100%; padding-bottom: 10px; }
-        #activation-status-text { font-size: 1.2em; height: 1.5em; color: var(--text-light); }
-        .progress-bar-container { width: 100%; height: 10px; border: 1px solid var(--cyan); margin-top: 10px; padding: 2px; }
-        .progress-bar-fill { width: 0%; height: 100%; background: var(--cyan); transition: width 0.5s ease-out; box-shadow: 0 0 10px var(--cyan); }
-
-        #hud-footer {
-            grid-column: 1 / 4;
-            display: flex; justify-content: center;
-        }
-        #cancel-activation-btn {
-            background: transparent; border: 1px solid var(--error-red); color: var(--error-red);
-            padding: 10px 30px;
-        }
-        #cancel-activation-btn:hover { background: var(--error-red); color: var(--dark-blue); }
-
-        .system-check-item {
-            opacity: 0.5; transition: opacity 0.5s, color 0.5s;
-        }
-        .system-check-item.online {
-            opacity: 1; color: var(--success-green);
-        }
-        
-        /* --- YIAN CORE SCREEN --- */
-        #yianCoreScreen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--yian-bg-color); z-index: 25;
-            padding: 15px; box-sizing: border-box;
-            opacity: 0; transition: opacity 0.5s ease;
-            display: none; /* Hidden by default */
-        }
-        #yianCoreScreen.visible { 
-            display: block;
-            opacity: 1; 
-        }
-        #yian-app-container {
-            width: 100%;
-            height: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            gap: 20px;
-            grid-template-columns: 300px 1fr 300px;
-            grid-template-rows: auto 1fr auto;
-            grid-template-areas:
-                "yian-header yian-header yian-header"
-                "yian-left yian-main yian-right"
-                "yian-footer yian-footer yian-footer";
-        }
-        .yian-panel {
-            background: var(--yian-container-bg);
-            border-radius: 15px;
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 
-                        inset 0 1px 1px rgba(255, 255, 255, 0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            overflow: hidden;
-            position: relative;
-            border: 2px solid transparent;
-        }
-        .yian-panel-title {
-            font-size: 1.2em; font-weight: 700; color: var(--yian-secondary);
-            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;
-            text-shadow: 0 0 4px rgba(0,0,0,0.5); border-bottom: 1px solid var(--yian-border);
-            padding-bottom: 10px;
-        }
-        #yian-header { grid-area: yian-header; text-align: center; }
-        #yian-header h1 {
-            font-size: 2.5em; font-weight: 700; letter-spacing: 8px;
-            background: linear-gradient(45deg, var(--yian-prism-1), var(--yian-prism-2), var(--yian-prism-3));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px var(--yian-prism-1));
-        }
-        #yian-left-panel { grid-area: yian-left; }
-        #yian-main-panel { grid-area: yian-main; }
-        #yian-right-panel { grid-area: yian-right; }
-        #yian-footer { grid-area: yian-footer; text-align: center; color: rgba(193, 215, 224, 0.4); }
-        #yian-scan-button {
-            width: 80%; max-width: 400px; padding: 15px; font-size: 1.5em;
-            font-weight: 700; letter-spacing: 3px; color: #fff;
-            background: linear-gradient(45deg, var(--yian-prism-1), var(--yian-prism-2), var(--yian-prism-3));
-            background-size: 200% 200%; border: none; border-radius: 10px;
-            cursor: pointer; transition: all 0.3s ease;
-            text-shadow: 0 1px 5px rgba(0,0,0,0.4); position: relative;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.2);
-            animation: gradient-pan 5s ease infinite;
-        }
-        @keyframes gradient-pan {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        #yian-result-display { background: rgba(0,0,0,0.3); border: 1px solid var(--yian-border); border-radius: 10px; padding: 15px; text-align: center; min-height: 150px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        #yian-result-text { font-family: 'Share Tech Mono', monospace; font-size: 2.2em; font-weight: 700; letter-spacing: 2px; color: var(--success-green); text-shadow: 0 0 10px var(--success-green); min-height: 40px; }
-        #yian-secondary-result-text { font-family: 'Rajdhani', sans-serif; font-size: 1.2em; font-weight: 500; color: var(--warning-color); text-shadow: 0 0 8px var(--warning-color); margin-top: 5px; min-height: 20px; }
-        #yian-energy-bar-outer { width: 100%; height: 15px; background: rgba(0,0,0,0.4); border: 1px solid var(--yian-border); border-radius: 8px; padding: 2px; }
-        #yian-energy-bar-inner { width: 100%; height: 100%; background: linear-gradient(45deg, var(--yian-prism-1), var(--yian-prism-2), var(--yian-prism-3)); border-radius: 5px; transition: width 0.5s, background 0.5s; box-shadow: 0 0 8px var(--success-green); }
-        #yian-energy-percent-text { font-family: 'Share Tech Mono', monospace; font-size: 1.2em; margin-top: 8px; color: var(--yian-secondary); }
-        #yian-exit-button {
-            position: absolute; top: 20px; right: 20px;
-            background: transparent; border: 1px solid var(--error-red); color: var(--error-red);
-            padding: 5px 10px; z-index: 1000;
-        }
 
         /* --- MODALS --- */
         .modal-overlay {
@@ -508,17 +362,145 @@
         #contact-link span { margin-right: 10px; font-weight: 700; opacity: 0; transition: all 0.3s ease; transform: translateX(10px); }
         #contact-link:hover svg { fill: var(--yellow); filter: drop-shadow(0 0 10px var(--yellow)); }
         #contact-link:hover span { opacity: 1; transform: translateX(0); color: var(--yellow); }
+
+        /* --- STYLES from LONGBAO IV.HTML --- */
+        #longbaoIVScreen {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: #020a18;
+            color: #e0e0e0;
+            overflow: auto; /* Allow scrolling within the tool */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 20;
+            padding: 1rem;
+        }
+
+        #longbaoIV-background-canvas {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; z-index: -1; opacity: 0.4;
+        }
+
+        :root {
+            --neon-green: #00ff9b;
+            --neon-gold: #ffd700;
+            --neon-blue: #00c2ff;
+            --neon-red: #ff1d58;
+            --lb4-border-color: rgba(0, 255, 155, 0.4);
+            --lb4-bg-color: rgba(15, 23, 42, 0.7);
+        }
+
+        .glow-text-player { text-shadow: 0 0 8px var(--neon-blue), 0 0 12px var(--neon-blue); }
+        .glow-text-banker { text-shadow: 0 0 8px var(--neon-red), 0 0 12px var(--neon-red); }
+        .glow-text-gold { text-shadow: 0 0 8px var(--neon-gold); }
+
+        .glow-border-gold {
+            border: 2px solid var(--neon-gold);
+            box-shadow: 0 0 15px var(--neon-gold), inset 0 0 10px var(--neon-gold);
+        }
+
+        .progress-circle {
+            border-radius: 50%; display: grid; place-items: center;
+            background: conic-gradient(var(--neon-green) var(--progress, 0deg), #334155 0deg);
+            position: relative; transition: background 0.5s;
+        }
+        
+        .history-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(20px, 1fr));
+            grid-auto-rows: 20px; gap: 4px; background-color: rgba(0,0,0,0.4);
+            border: 1px solid var(--lb4-border-color); padding: 8px; border-radius: 8px;
+            min-height: 140px; backdrop-filter: blur(2px);
+        }
+        .history-dot {
+            @apply w-full h-full rounded-full;
+            animation: dot-enter 0.5s ease-out forwards;
+        }
+        .dot-player { background-color: #3b82f6; box-shadow: 0 0 6px #3b82f6; }
+        .dot-banker { background-color: #ef4444; box-shadow: 0 0 6px #ef4444; }
+        .dot-tie { background-color: #22c55e; box-shadow: 0 0 6px #22c55e; }
+
+        .countdown-bar {
+            height: 4px; width: 100%;
+            background: linear-gradient(90deg, var(--neon-green), var(--neon-blue));
+            border-radius: 4px; box-shadow: 0 0 8px var(--neon-green);
+        }
+        
+        .box-panel {
+            background-color: var(--lb4-bg-color); border: 1px solid var(--lb4-border-color);
+            border-radius: 0.5rem; backdrop-filter: blur(8px);
+            box-shadow: 0 0 20px rgba(0, 255, 155, 0.1);
+        }
+
+        .bet-option-box {
+            @apply flex items-center justify-center p-2 sm:p-3 text-sm sm:text-base font-semibold border-2 border-slate-700 bg-slate-800/80 text-gray-400 rounded-md transition-all duration-300 relative overflow-hidden;
+        }
+        .bet-option-box.active { color: white; text-shadow: 0 0 5px white; }
+        .bet-option-box.active::before {
+            content: ''; position: absolute; top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: flash 1.5s infinite;
+        }
+        
+        #bet-option-nhà-con.active { border-color: var(--neon-blue); background-color: rgba(0, 194, 255, 0.2); box-shadow: 0 0 15px var(--neon-blue); }
+        #bet-option-nhà-cái.active { border-color: var(--neon-red); background-color: rgba(255, 29, 88, 0.2); box-shadow: 0 0 15px var(--neon-red); }
+        #bet-option-hòa.active { border-color: var(--neon-green); background-color: rgba(0, 255, 155, 0.2); box-shadow: 0 0 15px var(--neon-green); }
+        .sub-bet.active { border-color: var(--neon-gold); background-color: rgba(255, 215, 0, 0.2); box-shadow: 0 0 15px var(--neon-gold); }
+
+        .predict-enter { animation: predict-enter-animation 0.5s ease-out forwards; }
+        
+        .table-item-ultimate {
+            background: #0a101d;
+            border: 1px solid #273142;
+            clip-path: polygon(0 15px, 15px 0, calc(100% - 15px) 0, 100% 15px, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0 calc(100% - 15px));
+            transition: all 0.3s ease; cursor: pointer; position: relative;
+            opacity: 0; transform: translateY(20px);
+            animation: table-enter 0.5s ease-out forwards;
+        }
+        .table-item-ultimate:hover {
+            border-color: var(--neon-green); transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 0 25px rgba(0, 255, 155, 0.4);
+        }
+        .win-rate-text-ultimate { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); }
+
+        .screen { animation: screen-fade-in 0.5s ease-out; }
+        .hud-corner {
+            position: absolute; width: 20px; height: 20px;
+            border: 2px solid var(--neon-green); opacity: 0.5;
+        }
+        .hud-corner.top-left { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+        .hud-corner.top-right { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+        .hud-corner.bottom-left { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+        .hud-corner.bottom-right { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+        .shockwave {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: shockwave-animation 0.7s ease-out forwards;
+        }
+        .energy-bar-pulsing { animation: pulse-red 1s infinite; }
+
+        @keyframes screen-fade-in { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        @keyframes panel-enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes dot-enter { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+        @keyframes flash { from { left: -100%; } to { left: 100%; } }
+        @keyframes predict-enter-animation { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes table-enter { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shockwave-animation {
+            from { width: 0; height: 0; opacity: 0.7; border: 2px solid var(--neon-gold); }
+            to { width: 200%; height: 200%; opacity: 0; border: 2px solid transparent; }
+        }
+        @keyframes pulse-red { 50% { box-shadow: 0 0 15px var(--neon-red); } }
     </style>
 </head>
 <body>
+    <!-- Nền hiệu ứng -->
     <canvas id="matrix-bg" class="background-canvas"></canvas>
-    <audio id="background-audio" loop>
-        <source src="-The Final Battle- - Epic Choir Version - Elden Ring - Tai Tomisawa.mp4" type="video/mp4">
-        Trình duyệt của bạn không hỗ trợ phát âm thanh.
-    </audio>
+    <div id="youtube-player"></div>
     <div id="notification-container"></div>
     
-    <div id="authScreen" class="hidden">
+    <!-- Màn hình đăng nhập / đăng ký -->
+    <div id="authScreen">
         <div id="auth-content">
             <div class="corner-bracket top-left"></div> <div class="corner-bracket top-right"></div>
             <div class="corner-bracket bottom-left"></div> <div class="corner-bracket bottom-right"></div>
@@ -544,6 +526,7 @@
         </div>
     </div>
 
+    <!-- Màn hình chọn lõi A.I -->
     <div id="aiCoreSelectionScreen" class="hidden">
         <div id="user-info-bar" class="hidden">
             <div id="user-info-left">
@@ -564,7 +547,7 @@
         </div>
         <h1 data-text="CHỌN LÕI A.I"></h1>
         <div id="core-selector">
-            <button id="prev-core-btn" class="core-nav-btn"><</button>
+            <button id="prev-core-btn" class="core-nav-btn">&lt;</button>
             <div id="core-options-container">
                 <div class="core-option">
                     <h3>LongBao Thế Hệ IV</h3>
@@ -578,11 +561,11 @@
                 </div>
                 <div class="core-option">
                     <h3>Siêu Lõi Aquarius</h3>
-                    <div class="gif-container"><iframe src="https://giphy.com/embed/h88FMNUACanfKcsXFq" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div>
+                    <div class="gif-container"><iframe src="https://giphy.com/embed/h88FMNUACANfKcsXFq" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div>
                     <p class="core-description">Được tạo lên từ A.I thông minh nhất thế giới Grok IV - Tỉ lệ thắng 99%. X1000 lần tài khoản trong 1 đêm không còn là mơ.</p>
                 </div>
             </div>
-            <button id="next-core-btn" class="core-nav-btn">></button>
+            <button id="next-core-btn" class="core-nav-btn">&gt;</button>
         </div>
         <button id="main-next-btn" class="btn-next">KÍCH HOẠT LÕI</button>
         <div id="promo-banner">
@@ -591,78 +574,98 @@
         </div>
     </div>
 
+    <!-- Màn hình Lõi LongBao IV (Tích hợp) -->
+    <div id="longbaoIVScreen" class="hidden">
+        <canvas id="longbaoIV-background-canvas"></canvas>
+        <button id="exit-longbao-btn" class="fixed top-4 left-4 box-panel p-2 rounded-full hover:bg-slate-700 transition-colors z-50 text-white">
+             Thoát Lõi
+        </button>
+
+        <!-- ULTIMATE: Table Selection Screen -->
+        <div id="table-selection-screen" class="screen">
+            <div class="max-w-7xl mx-auto">
+                <h1 class="text-2xl sm:text-4xl font-bold text-center mb-6 text-[var(--neon-green)] glow-text-gold tracking-widest box-panel py-2">CHỌN BÀN CHƠI</h1>
+                <div id="table-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Tables will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Tool Screen (Initially Hidden) -->
+        <div id="tool-screen" class="hidden screen">
+            <button id="back-to-tables-btn" class="fixed top-4 right-4 box-panel p-2 rounded-full hover:bg-slate-700 transition-colors z-50">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            <div class="hud-corner top-left"></div><div class="hud-corner top-right"></div>
+            <div class="hud-corner bottom-left"></div><div class="hud-corner bottom-right"></div>
+            <div id="main-content" class="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+                <div class="lg:col-span-1 flex flex-col gap-4 lg:gap-6">
+                    <div class="box-panel p-3 sm:p-4">
+                        <h2 id="tool-title" class="text-lg sm:text-xl font-bold text-[var(--neon-gold)] tracking-widest flex items-center gap-2 mb-2">DỰ ĐOÁN</h2>
+                        <div class="w-full bg-slate-700/50 rounded-full h-1 mb-2"><div id="countdown-bar" class="countdown-bar"></div></div>
+                        <div id="energy-bar-container" class="relative w-full bg-slate-800 rounded-full h-5 border-2 border-slate-600 p-0.5 overflow-hidden">
+                            <div id="energy-bar" class="h-full rounded-full transition-all duration-500"></div>
+                            <span id="energy-text-lb4" class="absolute inset-0 text-xs font-bold flex items-center justify-center text-white" style="text-shadow: 1px 1px 2px black;">100%</span>
+                        </div>
+                        <div class="relative glow-border-gold h-32 sm:h-40 rounded-md flex flex-col items-center justify-center p-2 sm:p-4 overflow-hidden mt-2">
+                            <div id="shockwave-container"></div>
+                            <p id="main-prediction-text" class="text-5xl sm:text-6xl font-bold text-gray-500">CHỜ...</p>
+                            <p id="sub-prediction-text" class="text-base sm:text-xl font-semibold text-gray-500 mt-2 h-8"></p>
+                        </div>
+                    </div>
+                    <div class="box-panel p-4 flex-grow flex flex-col items-center justify-center">
+                        <h2 class="text-lg sm:text-xl font-bold text-[var(--neon-gold)] tracking-widest mb-4">TỈ LỆ THẮNG BÀN</h2>
+                        <div id="progress-circle" class="progress-circle w-36 h-36 sm:w-44 sm:h-44">
+                            <div class="w-[85%] h-[85%] bg-[#0f172a] rounded-full absolute z-0"></div>
+                            <span id="progress-value" class="relative z-10 text-2xl sm:text-3xl font-bold text-[var(--neon-green)]">80%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-2 flex flex-col gap-4 lg:gap-6">
+                    <div class="flex flex-wrap justify-end gap-2 text-xs sm:text-sm box-panel p-2">
+                        <div class="bg-slate-900/50 px-3 py-1 rounded">Vòng: <span id="round-count" class="font-bold text-white">0</span></div>
+                        <div class="bg-slate-900/50 px-3 py-1 rounded">Thắng: <span id="total-wins" class="font-bold text-[var(--neon-green)]">0</span></div>
+                        <div class="bg-slate-900/50 px-3 py-1 rounded">Thua: <span id="total-losses" class="font-bold text-[var(--neon-red)]">0</span></div>
+                    </div>
+                    <div id="bet-options-grid" class="box-panel p-2 sm:p-3 space-y-2">
+                        <div class="grid grid-cols-6 gap-2">
+                            <div id="bet-option-con-đôi" class="bet-option-box sub-bet">Con đôi</div>
+                            <div id="bet-option-phượng-đôi" class="bet-option-box sub-bet">Phượng đôi</div>
+                            <div id="bet-option-tài" class="bet-option-box sub-bet">Tài</div>
+                            <div id="bet-option-xỉu" class="bet-option-box sub-bet">Xỉu</div>
+                            <div id="bet-option-huyền-vũ" class="bet-option-box sub-bet">Huyền vũ</div>
+                            <div id="bet-option-cái-đôi" class="bet-option-box sub-bet">Cái đôi</div>
+                        </div>
+                        <div class="grid grid-cols-5 gap-2">
+                            <div id="bet-option-long-bảo-player" class="bet-option-box sub-bet col-span-1">Long Bảo</div>
+                            <div id="bet-option-nhà-con" class="bet-option-box col-span-1">NHÀ CON</div>
+                            <div id="bet-option-hòa" class="bet-option-box col-span-1">HÒA</div>
+                            <div id="bet-option-nhà-cái" class="bet-option-box col-span-1">NHÀ CÁI</div>
+                            <div id="bet-option-long-bảo-banker" class="bet-option-box sub-bet col-span-1">Long Bảo</div>
+                        </div>
+                    </div>
+                    <div id="history-grid" class="history-grid box-panel"></div>
+                    <div id="suggested-table-container" class="box-panel p-3 text-center cursor-pointer hover:border-amber-300 transition-colors">
+                        <h3 class="text-sm text-gray-400 uppercase tracking-wider">ĐỀ XUẤT BÀN CHƠI TỈ LỆ WIN 80-90%</h3>
+                        <p id="suggested-table-name" class="text-2xl font-bold text-[var(--neon-gold)] glow-text-gold">...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="energy-modal-lb4" class="hidden fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 screen">
+            <div class="box-panel p-6 text-center max-w-sm w-full border-2 border-[var(--neon-red)] shadow-lg shadow-[var(--neon-red)]/30">
+                <h2 class="text-2xl font-bold text-[var(--neon-red)]">HẾT NĂNG LƯỢNG</h2>
+                <p class="my-4 text-gray-300">ĐÃ HẾT NĂNG LƯỢNG VUI LÒNG RÚT RA NẠP LẠI HOẶC LIÊN HỆ TELE @LONGBAOF168</p>
+                <button id="modal-confirm-btn-lb4" class="bg-[var(--neon-green)] text-black font-bold py-2 px-8 rounded-md hover:bg-white transition-colors">XÁC NHẬN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
     <div id="aquarius-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>Kích hoạt Siêu Lõi Aquarius</h3><p>VUI LÒNG NHẬP MÃ KÍCH HOẠT AQUARIUS</p><input type="text" id="aquarius-code-input" placeholder="MÃ KÍCH HOẠT"><p id="aquarius-error" class="auth-error"></p><div class="modal-buttons"><button id="confirm-aquarius-code" class="btn-style">XÁC NHẬN NHẬP MÃ</button><a href="https://t.me/longbaoF168" target="_blank" id="contact-for-code" class="btn-style">LIÊN HỆ LONG BẢO</a></div></div></div>
     <div id="low-energy-modal" class="modal-overlay hidden"><div class="modal-content warning"><button class="close-modal-btn">X</button><h3>CẢNH BÁO NĂNG LƯỢNG THẤP</h3><p>LÕI A.I ĐANG HẾT NĂNG LƯỢNG - HÃY RÚT RA NẠP LẠI ĐỂ HỒI PHỤC LÕI</p><div class="modal-buttons"><button class="close-modal-btn btn-style" style="position: static;">ĐÃ HIỂU</button></div></div></div>
     <div id="profile-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>HỒ SƠ PILOT</h3><div class="profile-tabs"><button class="profile-tab active" data-tab="profile-info">Thông tin</button><button class="profile-tab" data-tab="profile-security">Bảo mật</button><button class="profile-tab" data-tab="profile-log">Nhật ký</button></div><div id="profile-info" class="profile-tab-content active"><form id="profile-form"><div class="profile-avatar-section"><img id="profile-avatar-preview" src="https://placehold.co/100x100/0A192F/00ffff?text=P" alt="Profile Avatar"><div class="profile-form-group" style="width: 100%;"><label for="profile-avatar-url">URL Ảnh Đại Diện</label><input type="text" id="profile-avatar-url" placeholder="https://example.com/image.png"></div></div><div class="profile-form-group"><label for="profile-f168-username">Tên Tài Khoản F168</label><input type="text" id="profile-f168-username" placeholder="Nhập tên tài khoản F168"><small>Chỉ được đổi 2 lần/tháng, mỗi lần cách nhau 15 ngày.</small></div><div class="profile-form-group"><label for="profile-phone">Số Điện Thoại</label><input type="tel" id="profile-phone" placeholder="Nhập số điện thoại"></div><div class="modal-buttons"><button type="submit" id="save-profile-btn" class="btn-primary">LƯU THAY ĐỔI</button><a href="https://vongxoaylongbao.site" target="_blank" id="lucky-spin-btn" class="btn-style">VÒNG XOAY MAY MẮN</a></div></form></div><div id="profile-security" class="profile-tab-content"><form id="change-password-form"><div class="profile-form-group"><label for="current-password">Mật khẩu hiện tại</label><input type="password" id="current-password" required></div><div class="profile-form-group"><label for="new-password">Mật khẩu mới</label><input type="password" id="new-password" required></div><div class="modal-buttons"><button type="submit" class="btn-primary">ĐỔI MẬT KHẨU</button></div></form></div><div id="profile-log" class="profile-tab-content"><div id="activity-log-container"><p>Đang tải nhật ký...</p></div></div></div></div>
-
-    <div id="activationScreen" class="hidden">
-        <div id="activation-hud">
-            <header id="hud-header">
-                <h1>A.I. CORE ACTIVATION</h1>
-            </header>
-            <aside id="hud-left-panel" class="hud-panel">
-                <h3>SYSTEM CHECK</h3>
-                <div id="system-check-list"></div>
-            </aside>
-            <main id="hud-center-panel" class="hud-panel">
-                <div id="core-3d-container"></div>
-                <div id="activation-status">
-                    <h2 id="activation-core-name"></h2>
-                    <p id="activation-status-text"></p>
-                    <div class="progress-bar-container">
-                        <div id="activation-progress-bar" class="progress-bar-fill"></div>
-                    </div>
-                </div>
-            </main>
-            <aside id="hud-right-panel" class="hud-panel">
-                <h3>DATA STREAM</h3>
-                <div id="data-stream" class="data-stream"></div>
-            </aside>
-            <footer id="hud-footer">
-                <button id="cancel-activation-btn" class="btn-style">HỦY BỎ</button>
-            </footer>
-        </div>
-    </div>
-
-    <div id="yianCoreScreen" class="hidden">
-        <button id="yian-exit-button" class="btn-style">THOÁT LÕI YIAN</button>
-        <div id="yian-app-container">
-            <header id="yian-header" class="yian-panel">
-                <h1>YIAN A.I. COMMAND CENTER</h1>
-            </header>
-            <div id="yian-left-panel" class="yian-panel">
-                <h2 class="yian-panel-title">LÕI PHÂN TÍCH</h2>
-                <div id="yian-core-selector"></div>
-                <div id="yian-energy-display">
-                    <h3 class="yian-panel-title" style="margin-top: 20px; border:none; padding:0; margin-bottom: 5px;">NĂNG LƯỢNG HỆ THỐNG</h3>
-                    <div id="yian-energy-bar-outer">
-                        <div id="yian-energy-bar-inner"></div>
-                    </div>
-                    <p id="yian-energy-percent-text">100%</p>
-                </div>
-            </div>
-            <div id="yian-main-panel" class="yian-panel">
-                 <div class="main-display-grid">
-                    <div id="yian-camera-view"></div>
-                    <div id="yian-holo-container"></div>
-                </div>
-                <div class="scan-controls">
-                    <div id="yian-result-display">
-                        <h2 id="yian-result-text">-- CHỜ LỆNH --</h2>
-                        <h3 id="yian-secondary-result-text"></h3>
-                    </div>
-                    <button id="yian-scan-button" class="btn-style">KHỞI TẠO QUÉT</button>
-                </div>
-            </div>
-            <div id="yian-right-panel" class="yian-panel">
-                <h3 class="yian-panel-title">NHẬT KÝ HỆ THỐNG</h3>
-                <div id="yian-system-log" class="data-stream"></div>
-            </div>
-            <footer id="yian-footer">
-                © Bản quyền thuộc về Long Bảo
-            </footer>
-        </div>
-    </div>
     
     <footer id="copyright">BẢN QUYỀN THUỘC VỀ LONG BẢO</footer>
     <a id="contact-link" href="https://t.me/longbaoF168" target="_blank"><span>LIÊN HỆ LONG BẢO</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M248,8C111.033,8,0,119.033,0,256S111.033,504,248,504,496,392.967,496,256,384.967,8,248,8ZM362.952,176.66c-3.732,39.215-19.881,134.378-28.1,178.3-3.476,18.584-10.322,24.816-16.948,25.425-14.4,1.326-25.338-9.517-39.287-18.661-21.827-14.308-34.158-23.215-55.346-37.177-24.485-16.135-8.612-25,5.342-39.5,3.652-3.793,67.2-61.756,68.973-66.107,2.174-5.327.34-8.28-2.063-10.423-2.403-2.143-5.48-1.922-8.262-.973l-73.22,47.052-37.424-11.948c-13.385-4.278-23.215-6.469-23.215-15.045,0-8.173,6.7-13.218,19.967-18.071,46.5-16.979,100.013-33.507,139.14-47.785,13.87-5.021,26.124,2.756,22.399,28.857Z"/></svg></a>
@@ -696,16 +699,13 @@
         let currentUserData = null;
         let unsubscribeUser;
         let wasEnergyLow = false;
-        let activationTimeout;
-        let dataStreamInterval;
         let three, coreAnimationId;
 
         // --- DOM Elements ---
         const DOMElements = {
+            // Main App
             authScreen: document.getElementById('authScreen'),
             aiCoreSelectionScreen: document.getElementById('aiCoreSelectionScreen'),
-            activationScreen: document.getElementById('activationScreen'),
-            yianCoreScreen: document.getElementById('yianCoreScreen'),
             loginForm: document.getElementById('loginForm'),
             registerForm: document.getElementById('registerForm'),
             showRegisterLink: document.getElementById('showRegisterLink'),
@@ -717,32 +717,11 @@
             prevCoreBtn: document.getElementById('prev-core-btn'),
             nextCoreBtn: document.getElementById('next-core-btn'),
             mainNextBtn: document.getElementById('main-next-btn'),
-            
-            // Activation Screen
-            core3dContainer: document.getElementById('core-3d-container'),
-            activationCoreName: document.getElementById('activation-core-name'),
-            activationStatusText: document.getElementById('activation-status-text'),
-            activationProgressBar: document.getElementById('activation-progress-bar'),
-            cancelActivationBtn: document.getElementById('cancel-activation-btn'),
-            systemCheckList: document.getElementById('system-check-list'),
-            dataStream: document.getElementById('data-stream'),
-            
-            // Yian Core Screen
-            yianResultText: document.getElementById('yian-result-text'),
-            yianSecondaryResultText: document.getElementById('yian-secondary-result-text'),
-            yianScanButton: document.getElementById('yian-scan-button'),
-            yianExitButton: document.getElementById('yian-exit-button'),
-            yianEnergyBarInner: document.getElementById('yian-energy-bar-inner'),
-            yianEnergyPercentText: document.getElementById('yian-energy-percent-text'),
-            yianSystemLog: document.getElementById('yian-system-log'),
-            yianCoreSelector: document.getElementById('yian-core-selector'),
-            yianCameraView: document.getElementById('yian-camera-view'),
-
-            // User Info
             userInfoBar: document.getElementById('user-info-bar'),
             userPilotSpan: document.getElementById('user-pilot'),
             userEnergySpan: document.getElementById('user-energy'),
             userAvatarImg: document.getElementById('user-avatar'),
+            logoutBtn: document.getElementById('logout-btn'),
             
             // Modals
             aquariusModal: document.getElementById('aquarius-modal'),
@@ -764,8 +743,32 @@
             activityLogContainer: document.getElementById('activity-log-container'),
             changePasswordForm: document.getElementById('change-password-form'),
 
-            // Controls
-            logoutBtn: document.getElementById('logout-btn'),
+            // --- LongBao IV Elements ---
+            longbaoIVScreen: document.getElementById('longbaoIVScreen'),
+            longbaoIVBackgroundCanvas: document.getElementById('longbaoIV-background-canvas'),
+            exitLongbaoBtn: document.getElementById('exit-longbao-btn'),
+            tableSelectionScreen: document.getElementById('table-selection-screen'),
+            toolScreen: document.getElementById('tool-screen'),
+            tableListContainer: document.getElementById('table-list'),
+            backToTablesBtn: document.getElementById('back-to-tables-btn'),
+            toolTitle: document.getElementById('tool-title'),
+            mainPredictionText: document.getElementById('main-prediction-text'),
+            subPredictionText: document.getElementById('sub-prediction-text'),
+            historyGrid: document.getElementById('history-grid'),
+            roundCountEl: document.getElementById('round-count'),
+            totalWinsEl: document.getElementById('total-wins'),
+            totalLossesEl: document.getElementById('total-losses'),
+            progressCircle: document.getElementById('progress-circle'),
+            progressValue: document.getElementById('progress-value'),
+            countdownBar: document.getElementById('countdown-bar'),
+            betOptionsGrid: document.getElementById('bet-options-grid'),
+            suggestedTableNameEl: document.getElementById('suggested-table-name'),
+            energyBar: document.getElementById('energy-bar'),
+            energyTextLB4: document.getElementById('energy-text-lb4'),
+            suggestedTableContainer: document.getElementById('suggested-table-container'),
+            energyModalLB4: document.getElementById('energy-modal-lb4'),
+            modalConfirmBtnLB4: document.getElementById('modal-confirm-btn-lb4'),
+            shockwaveContainer: document.getElementById('shockwave-container'),
         };
 
         // --- BACKGROUND EFFECTS ---
@@ -773,51 +776,50 @@
             const canvas = document.getElementById('matrix-bg');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
-
-            let w, h, cols;
-            let ypos = [];
-
+            let w, h, cols, ypos = [];
             const matrixChars = '日ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ1234567890';
-
             function resizeCanvas() {
                 w = canvas.width = window.innerWidth;
                 h = canvas.height = window.innerHeight;
                 cols = Math.floor(w / 20);
                 ypos = Array(cols).fill(0);
             }
-
             function matrix() {
-                ctx.fillStyle = 'rgba(10, 25, 47, 0.1)'; // Fading effect
+                ctx.fillStyle = 'rgba(10, 25, 47, 0.1)';
                 ctx.fillRect(0, 0, w, h);
-
-                ctx.fillStyle = '#00ffff'; // Cyan text color
+                ctx.fillStyle = '#00ffff';
                 ctx.font = '15pt monospace';
-
                 ypos.forEach((y, ind) => {
                     const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
                     const x = ind * 20;
                     ctx.fillText(text, x, y);
-
-                    if (y > 100 + Math.random() * 10000) {
-                        ypos[ind] = 0;
-                    } else {
-                        ypos[ind] = y + 20;
-                    }
+                    if (y > 100 + Math.random() * 10000) ypos[ind] = 0;
+                    else ypos[ind] = y + 20;
                 });
             }
-
             window.addEventListener('resize', resizeCanvas);
-            resizeCanvas(); // Initial setup
+            resizeCanvas();
             setInterval(matrix, 50);
         }
 
-        // --- BACKGROUND AUDIO & SOUND ENGINE ---
-        let bgAudio, soundsReady = false;
+        // --- YOUTUBE PLAYER & SOUND ENGINE ---
+        let ytPlayer, isYtReady = false, soundsReady = false;
         const sound = {};
 
         function initializeMedia() {
-            bgAudio = document.getElementById('background-audio');
+            window.onYouTubeIframeAPIReady = () => {
+                isYtReady = true;
+                ytPlayer = new YT.Player('youtube-player', {
+                    height: '360', width: '640', videoId: '16GcpkR3rMM',
+                    playerVars: { 'autoplay': 1, 'controls': 0, 'loop': 1, 'playlist': '16GcpkR3rMM' },
+                    events: { 'onReady': onPlayerReady }
+                });
+            };
+            const tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            document.head.appendChild(tag);
 
+            // Sounds from index.html
             sound.click = new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.05, release: 0.1 } }).toDestination();
             sound.navigate = new Tone.MembraneSynth({ pitchDecay: 0.01, octaves: 2, envelope: { attack: 0.001, decay: 0.2, sustain: 0.01, release: 0.1 } }).toDestination();
             sound.confirm = new Tone.MetalSynth({ frequency: 200, envelope: { attack: 0.001, decay: 0.1, release: 0.05 }, harmonicity: 3.1, modulationIndex: 32, resonance: 4000, octaves: 1.5 }).toDestination();
@@ -826,18 +828,26 @@
             sound.typing = new Tone.NoiseSynth({ noise: { type: 'pink' }, envelope: { attack: 0.001, decay: 0.05, sustain: 0 } }).toDestination();
             sound.success = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.001, decay: 0.2, sustain: 0.1, release: 0.2 } }).toDestination();
             sound.boot = new Tone.Synth({ oscillator: { type: 'sawtooth' }, envelope: { attack: 0.5, decay: 0.5, sustain: 0.2, release: 1 } }).toDestination();
+            
+            // Sounds from LONGBAO IV.HTML
+            sound.lb4_hover = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 0.1 } }).toDestination();
+            sound.lb4_click = new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.005, decay: 0.2, sustain: 0.1, release: 0.2 } }).toDestination();
+            sound.lb4_predict = new Tone.MembraneSynth().toDestination();
+            sound.lb4_lowEnergy = new Tone.NoiseSynth({ noise: { type: 'pink' }, envelope: { attack: 0.05, decay: 0.1, sustain: 0 } }).toDestination();
+        }
+
+        function onPlayerReady(event) {
+            event.target.setVolume(50);
+            event.target.mute();
+            event.target.playVideo();
         }
 
         function playSound(type, note = 'C4', duration = '8n') {
             if (!soundsReady || !sound[type]) return;
             try {
-                if (type === 'typing') {
-                    sound[type].triggerAttack();
-                } else if (type === 'boot') {
-                    sound[type].triggerAttackRelease('C3', '1s');
-                } else {
-                    sound[type].triggerAttackRelease(note, duration);
-                }
+                if (type === 'typing') sound[type].triggerAttack();
+                else if (type === 'boot') sound[type].triggerAttackRelease('C3', '1s');
+                else sound[type].triggerAttackRelease(note, duration);
             } catch (e) { console.error("Sound play error:", e); }
         }
 
@@ -845,15 +855,14 @@
             if (soundsReady) return;
             await Tone.start();
             soundsReady = true;
-            if (bgAudio) {
-                bgAudio.volume = 0.5;
-                bgAudio.play().catch(e => console.error("Audio play failed:", e));
+            if (isYtReady && ytPlayer && ytPlayer.isMuted()) {
+                ytPlayer.unMute();
             }
         };
         document.body.addEventListener('click', startMedia, { once: true });
         document.body.addEventListener('keydown', startMedia, { once: true });
 
-        // --- NOTIFICATION SYSTEM ---
+        // --- NOTIFICATION & LOGGING ---
         function showNotification(message, type = 'info') {
             const container = document.getElementById('notification-container');
             const notification = document.createElement('div');
@@ -863,7 +872,6 @@
             setTimeout(() => notification.remove(), 5000);
         }
         
-        // --- ACTIVITY LOG ---
         async function logActivity(message) {
             if (!auth.currentUser) return;
             try {
@@ -872,9 +880,7 @@
                     message: message,
                     timestamp: Timestamp.now()
                 });
-            } catch (error) {
-                console.error("Error logging activity:", error);
-            }
+            } catch (error) { console.error("Error logging activity:", error); }
         }
 
         async function fetchActivityLog() {
@@ -901,7 +907,7 @@
             }
         }
 
-        // --- UI & CORE LOGIC ---
+        // --- MAIN UI & CORE LOGIC ---
         const decodeText = (element, onComplete = () => {}) => {
             const originalText = element.dataset.text;
             if (!originalText) { element.textContent = element.textContent || ''; return; }
@@ -927,125 +933,6 @@
         let currentCoreIndex = 0;
         function showCore(index) { DOMElements.coreOptions.forEach((o, i) => o.classList.toggle('active', i === index)); }
         
-        const startActivationSequence = (coreIndex) => {
-            DOMElements.aiCoreSelectionScreen.classList.add('hidden');
-            DOMElements.activationScreen.classList.remove('hidden');
-            DOMElements.activationScreen.classList.add('visible');
-
-            const coreName = DOMElements.coreOptions[coreIndex].querySelector('h3').textContent;
-            logActivity(`Bắt đầu kích hoạt lõi "${coreName}".`);
-            DOMElements.activationCoreName.textContent = `LÕI: ${coreName.toUpperCase()}`;
-            
-            // System Check
-            const systems = ['MEMORY', 'GPU CLUSTER', 'QUANTUM CPU', 'NETWORK', 'FIREWALL'];
-            DOMElements.systemCheckList.innerHTML = systems.map(s => `<div class="system-check-item">${s}... OFFLINE</div>`).join('');
-            
-            // Data Stream
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            dataStreamInterval = setInterval(() => {
-                let line = '';
-                for (let i = 0; i < 30; i++) line += chars.charAt(Math.floor(Math.random() * chars.length));
-                const span = document.createElement('span');
-                span.textContent = line;
-                DOMElements.dataStream.appendChild(span);
-                if (DOMElements.dataStream.children.length > 20) DOMElements.dataStream.firstChild.remove();
-                playSound('typing');
-            }, 100);
-
-            // 3D Animation
-            startCoreAnimation(coreIndex);
-
-            const steps = [
-                { text: "KHỞI TẠO KIỂM TRA HỆ THỐNG...", duration: 1500, progress: 10, action: () => {} },
-                ...systems.map((sys, i) => ({
-                    text: `KIỂM TRA ${sys}...`,
-                    duration: 800,
-                    progress: 10 + (i + 1) * 10,
-                    action: () => {
-                        const item = document.querySelector(`#system-check-list .system-check-item:nth-child(${i+1})`);
-                        if(item) item.innerHTML = `${sys}... <span style="color:var(--success-green)">ONLINE</span>`;
-                        playSound('success', 'C5', '16n');
-                    }
-                })),
-                { text: "PHÂN TÍCH CẤU TRÚC LÕI...", duration: 2000, progress: 70, action: () => {} },
-                { text: "NẠP GIAO THỨC...", duration: 2000, progress: 90, action: () => {} },
-                { text: "KÍCH HOẠT!", duration: 1000, progress: 100, action: () => playSound('boot') },
-                { text: "KÍCH HOẠT HOÀN TẤT.", duration: 2000, progress: 100, action: () => {
-                     // Logic cho các lõi khác ở đây nếu cần
-                     showNotification("Kích hoạt lõi hoàn tất!", "success");
-                } }
-            ];
-
-            let currentStep = 0;
-            const runStep = () => {
-                if (currentStep >= steps.length) {
-                    clearInterval(dataStreamInterval);
-                    return;
-                }
-                const step = steps[currentStep];
-                DOMElements.activationStatusText.textContent = step.text;
-                DOMElements.activationProgressBar.style.width = `${step.progress}%`;
-                
-                activationTimeout = setTimeout(() => {
-                    step.action();
-                    currentStep++;
-                    runStep();
-                }, step.duration);
-            };
-
-            runStep();
-        };
-
-        function startCoreAnimation(coreIndex) {
-            if (three) {
-                cancelAnimationFrame(coreAnimationId);
-                while(three.scene.children.length > 0){ 
-                    three.scene.remove(three.scene.children[0]); 
-                }
-            }
-
-            const container = DOMElements.core3dContainer;
-            container.innerHTML = '';
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ alpha: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            container.appendChild(renderer.domElement);
-
-            let coreObject;
-            const light1 = new THREE.PointLight(0x00ffff, 2, 100);
-            light1.position.set(0, 5, 5);
-            scene.add(light1);
-
-            const light2 = new THREE.PointLight(0xfcee0a, 2, 100);
-            light2.position.set(0, -5, -5);
-            scene.add(light2);
-
-            if (coreIndex === 0) { // LongBao IV
-                const geometry = new THREE.IcosahedronGeometry(1.5, 0);
-                const material = new THREE.MeshStandardMaterial({ color: 0xfcee0a, metalness: 0.8, roughness: 0.2, wireframe: true });
-                coreObject = new THREE.Mesh(geometry, material);
-            } else { // Yian & Aquarius
-                const geometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
-                const material = new THREE.MeshStandardMaterial({ color: 0xff00ff, metalness: 0.9, roughness: 0.1 });
-                coreObject = new THREE.Mesh(geometry, material);
-                light1.color.set(0xff00ff);
-                light2.color.set(0x00c7ff);
-            }
-            scene.add(coreObject);
-            camera.position.z = 5;
-
-            three = { scene, camera, renderer, coreObject };
-
-            function animate() {
-                coreAnimationId = requestAnimationFrame(animate);
-                three.coreObject.rotation.x += 0.005;
-                three.coreObject.rotation.y += 0.01;
-                three.renderer.render(three.scene, three.camera);
-            }
-            animate();
-        }
-        
         // --- FIREBASE AUTH & DATA ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -1053,7 +940,7 @@
                 const userDocRef = doc(db, "users", user.uid);
                 unsubscribeUser = onSnapshot(userDocRef, (doc) => {
                     if (doc.exists()) {
-                        currentUserData = doc.data();
+                        currentUserData = { ...doc.data(), energy: doc.data().energy || 0 };
                         updateUIWithUserData(currentUserData);
                     } else {
                         console.error("User document does not exist for UID:", user.uid);
@@ -1074,7 +961,7 @@
                 currentUserData = null;
                 DOMElements.authScreen.classList.remove('hidden', 'fade-out');
                 DOMElements.aiCoreSelectionScreen.classList.add('hidden');
-                DOMElements.activationScreen.classList.add('hidden');
+                DOMElements.longbaoIVScreen.classList.add('hidden');
                 DOMElements.userInfoBar.classList.add('hidden');
                 startBootSequence();
             }
@@ -1092,9 +979,10 @@
             DOMElements.userEnergySpan.classList.toggle('low', energy < 30);
             DOMElements.userInfoBar.classList.toggle('low-energy', energy < 30);
             
-            // Yian UI
-            DOMElements.yianEnergyBarInner.style.width = `${energy}%`;
-            DOMElements.yianEnergyPercentText.textContent = `${Math.round(energy)}%`;
+            // Update LongBao IV energy bar if it's active
+            if (!DOMElements.longbaoIVScreen.classList.contains('hidden')) {
+                updateEnergyBarLB4();
+            }
 
             const isEnergyLow = energy < 30;
             if (isEnergyLow && !wasEnergyLow) {
@@ -1115,6 +1003,335 @@
                 case 'auth/weak-password': return 'MẬT KHẨU QUÁ YẾU';
                 default: return 'LỖI HỆ THỐNG KHÔNG XÁC ĐỊNH';
             }
+        }
+        
+        // --- LONGBAO IV INTEGRATED LOGIC ---
+        let lb4State = {};
+        let predictionIntervalId = null;
+        let suggestionIntervalId = null;
+        let lastExecutionTime = Date.now();
+        let currentSuggestion = {};
+        let lb4Particles = [];
+
+        const PREDICTION_INTERVAL = 25000;
+        const RESET_AFTER_ROUNDS = 50;
+        const SUGGESTION_INTERVAL = 180000;
+        const ENERGY_PER_ROUND = 5;
+        const MAX_ENERGY = 100; // Used for percentage calculation
+
+        const tableNames = [
+            'BACARAT C04', 'BACARAT C05', 'BACARAT C06', 'BACARAT C07', 'BACARAT C01', 'BACARAT C02', 'BACARAT C03', 'BACARAT C08', 'BACARAT C09', 'BACARAT C10',
+            'BACARAT 1', 'BACARAT 2', 'BACARAT 3', 'BACARAT 4', 'BACARAT 5', 'BACARAT 7', 'BACARAT 8', 'BACARAT 9', 'BACARAT 10', 'BACARAT C11', 'BACARAT C12', 'BACARAT C13', 'BACARAT C15'
+        ];
+        const mainOutcomes = ['NHÀ CON', 'NHÀ CÁI'];
+        const subOutcomes = ['Con đôi', 'Phượng đôi', 'Tài', 'Xỉu', 'Huyền vũ', 'Cái đôi', 'Long Bảo Player', 'Long Bảo Banker'];
+        const outcomeClasses = { 'NHÀ CON': 'dot-player', 'NHÀ CÁI': 'dot-banker', 'HÒA': 'dot-tie' };
+        const mainPredictionStyles = {
+            'NHÀ CON': 'text-[var(--neon-blue)] glow-text-player',
+            'NHÀ CÁI': 'text-[var(--neon-red)] glow-text-banker',
+        };
+
+        function launchLongBaoIV() {
+            logActivity("Khởi chạy Lõi LongBao IV.");
+            DOMElements.aiCoreSelectionScreen.classList.add('hidden');
+            DOMElements.longbaoIVScreen.classList.remove('hidden');
+            DOMElements.tableSelectionScreen.classList.remove('hidden');
+            DOMElements.toolScreen.classList.add('hidden');
+            generateTableListLB4();
+            initLongBaoIVBackground();
+        }
+
+        function exitLongBaoIV() {
+            if (predictionIntervalId) clearInterval(predictionIntervalId);
+            if (suggestionIntervalId) clearInterval(suggestionIntervalId);
+            predictionIntervalId = null;
+            suggestionIntervalId = null;
+            
+            DOMElements.longbaoIVScreen.classList.add('hidden');
+            DOMElements.aiCoreSelectionScreen.classList.remove('hidden');
+        }
+
+        function generateTableListLB4() {
+            DOMElements.tableListContainer.innerHTML = '';
+            tableNames.forEach((name, index) => {
+                const winRate = Math.floor(Math.random() * (95 - 70 + 1)) + 70;
+                const tableElement = document.createElement('div');
+                tableElement.className = 'table-item-ultimate p-3 flex items-center gap-3';
+                tableElement.style.animationDelay = `${index * 50}ms`;
+                tableElement.innerHTML = `
+                    <div class="flex-grow text-left">
+                        <span class="font-bold text-lg tracking-wider">${name}</span>
+                        <div class="text-xs text-gray-400">TÍN HIỆU CẦU: <span class="font-bold text-white">${Math.floor(Math.random() * 20 + 75)}%</span></div>
+                    </div>
+                    <div class="flex-shrink-0 text-center px-3 py-1 bg-black/30 rounded-md border border-slate-600">
+                        <p class="text-xs text-gray-400">Tỷ lệ thắng</p>
+                        <p class="font-bold text-xl win-rate-text-ultimate">${winRate}%</p>
+                    </div>
+                `;
+                tableElement.addEventListener('mouseenter', () => playSound('lb4_hover', 'C5', '8n'));
+                tableElement.addEventListener('click', () => {
+                    playSound('lb4_click', 'E5', '8n');
+                    startToolForTableLB4(name, winRate / 100);
+                });
+                DOMElements.tableListContainer.appendChild(tableElement);
+            });
+        }
+
+        function startToolForTableLB4(tableName, winRateChance) {
+            DOMElements.tableSelectionScreen.classList.add('hidden');
+            DOMElements.toolScreen.classList.remove('hidden');
+
+            DOMElements.toolTitle.textContent = `DỰ ĐOÁN - ${tableName}`;
+            lb4State = {
+                round: 0, wins: 0, losses: 0, history: [],
+                winRateChance: winRateChance
+            };
+            
+            if (predictionIntervalId) clearInterval(predictionIntervalId);
+            if (suggestionIntervalId) clearInterval(suggestionIntervalId);
+
+            resetToolUILB4();
+            mainLoopLB4();
+            predictionIntervalId = setInterval(mainLoopLB4, PREDICTION_INTERVAL);
+            updateSuggestedTableLB4();
+            suggestionIntervalId = setInterval(updateSuggestedTableLB4, SUGGESTION_INTERVAL);
+        }
+
+        function showTableSelectionScreenLB4() {
+            DOMElements.toolScreen.classList.add('hidden');
+            DOMElements.tableSelectionScreen.classList.remove('hidden');
+            if (predictionIntervalId) clearInterval(predictionIntervalId);
+            if (suggestionIntervalId) clearInterval(suggestionIntervalId);
+        }
+
+        async function mainLoopLB4() {
+            if (!currentUserData || currentUserData.energy < ENERGY_PER_ROUND) {
+                if(predictionIntervalId) clearInterval(predictionIntervalId);
+                playSound('lb4_lowEnergy', "C2", "0.2n");
+                DOMElements.energyModalLB4.classList.remove('hidden');
+                return;
+            }
+            lastExecutionTime = Date.now();
+            
+            // Deduct energy first
+            const newEnergy = currentUserData.energy - ENERGY_PER_ROUND;
+            const userDocRef = doc(db, "users", auth.currentUser.uid);
+            await updateDoc(userDocRef, { energy: newEnergy });
+            logActivity(`Sử dụng Lõi LongBao IV (-${ENERGY_PER_ROUND} năng lượng). Năng lượng còn lại: ${newEnergy}`);
+            
+            runPredictionRoundLB4();
+        }
+
+        function runPredictionRoundLB4(isCatchUp = false) {
+            if (lb4State.round > 0 && lb4State.round % RESET_AFTER_ROUNDS === 0) resetToolUILB4();
+
+            const mainPrediction = mainOutcomes[Math.floor(Math.random() * mainOutcomes.length)];
+            const subPrediction = subOutcomes[Math.floor(Math.random() * subOutcomes.length)];
+            const isWin = Math.random() < lb4State.winRateChance;
+            const actualResult = isWin ? mainPrediction : mainOutcomes.find(o => o !== mainPrediction);
+            
+            lb4State.round++;
+            if (isWin) { lb4State.wins++; } else { lb4State.losses++; }
+            lb4State.history.push(actualResult);
+            
+            if (!isCatchUp) {
+                updatePredictionUILB4(mainPrediction, subPrediction);
+                updateBetOptionsUILB4(mainPrediction, subPrediction);
+                updateStatsUILB4(actualResult);
+                updateFluctuatingWinRateLB4();
+                resetCountdownLB4();
+                updateEnergyBarLB4(); // This will now read from currentUserData
+            }
+            addDotToHistoryLB4(actualResult);
+        }
+
+        function updateBetOptionsUILB4(mainPrediction, subPrediction) {
+            DOMElements.betOptionsGrid.querySelectorAll('.bet-option-box').forEach(opt => opt.classList.remove('active'));
+            const mainId = `bet-option-${mainPrediction.toLowerCase().replace(/ /g, '-')}`;
+            document.getElementById(mainId)?.classList.add('active');
+            const subId = `bet-option-${subPrediction.toLowerCase().replace(/ /g, '-')}`;
+            document.getElementById(subId)?.classList.add('active');
+        }
+
+        function resetToolUILB4() {
+            lb4State = { ...lb4State, round: 0, wins: 0, losses: 0, history: [] };
+            DOMElements.historyGrid.innerHTML = '';
+            DOMElements.roundCountEl.innerText = '0';
+            DOMElements.totalWinsEl.innerText = '0';
+            DOMElements.totalLossesEl.innerText = '0';
+            updateEnergyBarLB4();
+        }
+
+        function updatePredictionUILB4(mainPrediction, subPrediction) {
+            playSound('lb4_predict', "C2", "8n");
+            const shockwave = document.createElement('div');
+            shockwave.className = 'shockwave';
+            DOMElements.shockwaveContainer.appendChild(shockwave);
+            setTimeout(() => shockwave.remove(), 700);
+
+            DOMElements.mainPredictionText.classList.remove('predict-enter');
+            void DOMElements.mainPredictionText.offsetWidth;
+            DOMElements.mainPredictionText.className = 'text-5xl sm:text-6xl font-bold transition-all duration-300 predict-enter';
+            DOMElements.mainPredictionText.textContent = mainPrediction;
+            DOMElements.mainPredictionText.classList.add(...(mainPredictionStyles[mainPrediction] || '').split(' '));
+
+            DOMElements.subPredictionText.classList.remove('predict-enter');
+            void DOMElements.subPredictionText.offsetWidth;
+            DOMElements.subPredictionText.className = 'text-base sm:text-xl font-semibold mt-2 h-8 predict-enter';
+            DOMElements.subPredictionText.textContent = `+ ${subPrediction}`;
+            DOMElements.subPredictionText.classList.add('glow-text-gold');
+        }
+
+        function animateCounter(el, end) {
+            const start = parseInt(el.innerText) || 0;
+            if (start === end) return;
+            const duration = 500;
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                el.innerText = Math.floor(progress * (end - start) + start);
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        function updateStatsUILB4(lastResult, useAnimation = true) {
+            if (useAnimation) {
+                animateCounter(DOMElements.roundCountEl, lb4State.round);
+                animateCounter(DOMElements.totalWinsEl, lb4State.wins);
+                animateCounter(DOMElements.totalLossesEl, lb4State.losses);
+            } else {
+                DOMElements.roundCountEl.innerText = lb4State.round;
+                DOMElements.totalWinsEl.innerText = lb4State.wins;
+                DOMElements.totalLossesEl.innerText = lb4State.losses;
+            }
+        }
+
+        function updateFluctuatingWinRateLB4() {
+            const fluctuatingRate = Math.floor(Math.random() * (90 - 80 + 1)) + 80;
+            DOMElements.progressValue.textContent = `${fluctuatingRate}%`;
+            DOMElements.progressCircle.style.setProperty('--progress', `${fluctuatingRate * 3.6}deg`);
+        }
+        
+        function updateEnergyBarLB4() {
+            if (!currentUserData) return;
+            const energyPercent = Math.max(0, (currentUserData.energy / MAX_ENERGY) * 100);
+            DOMElements.energyBar.style.width = `${energyPercent}%`;
+            DOMElements.energyTextLB4.textContent = `${Math.round(energyPercent)}%`;
+            DOMElements.energyBar.classList.remove('energy-bar-pulsing');
+
+            if (energyPercent > 60) {
+                DOMElements.energyBar.style.background = 'linear-gradient(90deg, var(--neon-green), var(--neon-blue))';
+            } else if (energyPercent > 30) {
+                DOMElements.energyBar.style.background = 'linear-gradient(90deg, #facc15, #fb923c)';
+            } else {
+                DOMElements.energyBar.style.background = 'linear-gradient(90deg, #fb923c, #ef4444)';
+                if (energyPercent > 0) {
+                     DOMElements.energyBar.classList.add('energy-bar-pulsing');
+                     playSound('lb4_lowEnergy', "C2", "0.1n");
+                }
+            }
+        }
+
+        function addDotToHistoryLB4(result) {
+            const dot = document.createElement('div');
+            dot.className = `history-dot ${outcomeClasses[result]}`;
+            DOMElements.historyGrid.appendChild(dot);
+            if (DOMElements.historyGrid.children.length > 150) {
+                DOMElements.historyGrid.removeChild(DOMElements.historyGrid.firstChild);
+            }
+        }
+
+        function resetCountdownLB4() {
+            DOMElements.countdownBar.style.transition = 'none';
+            DOMElements.countdownBar.style.width = '100%';
+            void DOMElements.countdownBar.offsetWidth; 
+            DOMElements.countdownBar.style.transition = `width ${PREDICTION_INTERVAL / 1000}s linear`;
+            DOMElements.countdownBar.style.width = '0%';
+        }
+        
+        function typeEffectLB4(element, text, i = 0) {
+            if (i === 0) element.textContent = '';
+            if (i < text.length) {
+                element.textContent += text[i];
+                setTimeout(() => typeEffectLB4(element, text, i + 1), 50);
+            }
+        }
+
+        function updateSuggestedTableLB4() {
+            const randomIndex = Math.floor(Math.random() * tableNames.length);
+            const randomTable = tableNames[randomIndex];
+            const winRate = Math.floor(Math.random() * (95 - 70 + 1)) + 70;
+            currentSuggestion = { name: randomTable, winRate: winRate / 100 };
+            typeEffectLB4(DOMElements.suggestedTableNameEl, randomTable);
+        }
+
+        // --- LongBao IV Background Canvas Animation ---
+        function initLongBaoIVBackground() {
+            const canvas = DOMElements.longbaoIVBackgroundCanvas;
+            const ctx = canvas.getContext('2d');
+            
+            function setupCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                initParticles();
+            }
+
+            class Particle {
+                constructor(x, y) {
+                    this.x = x; this.y = y; this.size = Math.random() * 1.5 + 1;
+                    this.speedX = Math.random() * 1 - 0.5; this.speedY = Math.random() * 1 - 0.5;
+                    this.color = 'rgba(0, 255, 155, 0.7)';
+                }
+                update() {
+                    if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+                    if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+                    this.x += this.speedX; this.y += this.speedY;
+                }
+                draw() {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function initParticles() {
+                lb4Particles = [];
+                const numParticles = Math.floor(canvas.width / (canvas.width < 768 ? 40 : 25));
+                for (let i = 0; i < numParticles; i++) {
+                    lb4Particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
+                }
+            }
+
+            function connectParticles() {
+                for (let a = 0; a < lb4Particles.length; a++) {
+                    for (let b = a; b < lb4Particles.length; b++) {
+                        const distance = Math.sqrt((lb4Particles[a].x - lb4Particles[b].x) ** 2 + (lb4Particles[a].y - lb4Particles[b].y) ** 2);
+                        if (distance < 100) {
+                            ctx.strokeStyle = `rgba(0, 255, 155, ${1 - distance / 100})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.beginPath();
+                            ctx.moveTo(lb4Particles[a].x, lb4Particles[a].y);
+                            ctx.lineTo(lb4Particles[b].x, lb4Particles[b].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animate() {
+                if(DOMElements.longbaoIVScreen.classList.contains('hidden')) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (const particle of lb4Particles) { particle.update(); particle.draw(); }
+                connectParticles();
+                requestAnimationFrame(animate);
+            }
+            
+            setupCanvas();
+            animate();
+            window.addEventListener('resize', setupCanvas);
         }
 
         // --- EVENT LISTENERS ---
@@ -1157,7 +1374,7 @@
                         uid: userCredential.user.uid, 
                         username: username, 
                         phoneNumber: phone, 
-                        energy: 0,
+                        energy: 100, // Start with 100 energy
                         createdAt: Timestamp.now(),
                         avatarUrl: '',
                         f168Username: '',
@@ -1192,18 +1409,15 @@
 
             DOMElements.mainNextBtn.addEventListener('click', () => {
                 playSound('confirm');
-                // Nếu lõi Yian được chọn (index 1), chuyển hướng ngay lập tức.
-                if (currentCoreIndex === 1) {
+                if (currentCoreIndex === 0) { // LongBao IV
+                    launchLongBaoIV();
+                } 
+                else if (currentCoreIndex === 1) { // Yian
                     window.location.href = 'https://www.soilabai.site/';
                 } 
-                // Nếu lõi Aquarius được chọn (index 2), hiển thị modal nhập code.
-                else if (currentCoreIndex === 2) {
+                else if (currentCoreIndex === 2) { // Aquarius
                     DOMElements.aquariusModal.classList.remove('hidden');
                     playSound('open', 'G4');
-                } 
-                // Đối với các lõi khác, vẫn hiển thị màn hình kích hoạt.
-                else {
-                    startActivationSequence(currentCoreIndex);
                 }
             });
 
@@ -1211,7 +1425,8 @@
                 if (DOMElements.aquariusCodeInput.value.trim() !== '') {
                     playSound('confirm');
                     DOMElements.aquariusModal.classList.add('hidden');
-                    startActivationSequence(2); // Start Aquarius loading
+                    // Placeholder for Aquarius activation
+                    showNotification("Lõi Aquarius đang được bảo trì.", "info");
                     DOMElements.aquariusCodeInput.value = '';
                     DOMElements.aquariusError.textContent = '';
                 } else {
@@ -1230,17 +1445,6 @@
                 playSound('navigate', 'C4');
                 currentCoreIndex = (currentCoreIndex - 1 + DOMElements.coreOptions.length) % DOMElements.coreOptions.length;
                 showCore(currentCoreIndex);
-            });
-
-            DOMElements.cancelActivationBtn.addEventListener('click', () => {
-                clearTimeout(activationTimeout);
-                clearInterval(dataStreamInterval);
-                cancelAnimationFrame(coreAnimationId);
-                DOMElements.activationScreen.classList.remove('visible');
-                setTimeout(() => {
-                    DOMElements.activationScreen.classList.add('hidden');
-                    DOMElements.aiCoreSelectionScreen.classList.remove('hidden');
-                }, 500);
             });
 
             DOMElements.logoutBtn.addEventListener('click', () => {
@@ -1274,28 +1478,7 @@
                 });
             });
 
-            DOMElements.profileForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                // ... Profile update logic
-            });
-
-            DOMElements.changePasswordForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const user = auth.currentUser;
-                const currentPassword = document.getElementById('current-password').value;
-                const newPassword = document.getElementById('new-password').value;
-                if (!user || !currentPassword || !newPassword) return;
-                const credential = EmailAuthProvider.credential(user.email, currentPassword);
-                try {
-                    await reauthenticateWithCredential(user, credential);
-                    await updatePassword(user, newPassword);
-                    await logActivity("Đổi mật khẩu thành công.");
-                    showNotification("Mật khẩu đã được thay đổi!", "success");
-                    DOMElements.changePasswordForm.reset();
-                } catch (error) {
-                    showNotification("Lỗi: Mật khẩu cũ không đúng?", "error");
-                }
-            });
+            // Profile save and password change logic would go here...
             
             document.querySelectorAll('.close-modal-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -1304,41 +1487,25 @@
                 });
             });
 
-            DOMElements.yianScanButton.addEventListener('click', async () => {
-                if (!currentUserData || !auth.currentUser) return;
-                const cost = 5; // Yian cost
-                if (currentUserData.energy < cost) {
-                    showNotification("Không đủ năng lượng!", "error");
-                    playSound('error');
-                    return;
-                }
-                
-                playSound('confirm');
-                const newEnergy = currentUserData.energy - cost;
-                const userDocRef = doc(db, "users", auth.currentUser.uid);
-                await updateDoc(userDocRef, { energy: newEnergy });
-                await logActivity(`Sử dụng Lõi Yian, năng lượng còn lại: ${newEnergy}`);
-
-                DOMElements.yianResultText.textContent = "ĐANG PHÂN TÍCH...";
-                DOMElements.yianSecondaryResultText.textContent = "";
-
-                setTimeout(() => {
-                    const results = ["CÁI", "CON", "TÀI", "XỈU"];
-                    const secondaryResults = ["Long Bảo", "Con Đôi", "Cái Đôi", "Hòa"];
-                    const randomResult = results[Math.floor(Math.random() * results.length)];
-                    const randomSecondary = secondaryResults[Math.floor(Math.random() * secondaryResults.length)];
-                    DOMElements.yianResultText.textContent = `${randomResult}`;
-                    DOMElements.yianSecondaryResultText.textContent = `+ ${randomSecondary}`;
-                }, 2000);
+            // --- LongBao IV Event Listeners ---
+            DOMElements.exitLongbaoBtn.addEventListener('click', () => {
+                playSound('click', 'A4', '8n');
+                exitLongBaoIV();
             });
-
-            DOMElements.yianExitButton.addEventListener('click', () => {
-                DOMElements.yianCoreScreen.classList.remove('visible');
-                setTimeout(() => {
-                    DOMElements.yianCoreScreen.classList.add('hidden');
-                    DOMElements.aiCoreSelectionScreen.classList.remove('hidden');
-                    DOMElements.aiCoreSelectionScreen.classList.add('fade-in');
-                }, 500);
+            DOMElements.backToTablesBtn.addEventListener('click', () => {
+                playSound('lb4_click', 'A4', '8n');
+                showTableSelectionScreenLB4();
+            });
+            DOMElements.modalConfirmBtnLB4.addEventListener('click', () => {
+                playSound('lb4_click', 'A4', '8n');
+                DOMElements.energyModalLB4.classList.add('hidden');
+                exitLongBaoIV();
+            });
+            DOMElements.suggestedTableContainer.addEventListener('click', () => {
+                if (currentSuggestion.name) {
+                    playSound('lb4_click', 'E5', '8n');
+                    startToolForTableLB4(currentSuggestion.name, currentSuggestion.winRate);
+                }
             });
         }
 
@@ -1346,7 +1513,7 @@
         function init() {
             initializeMedia();
             setupEventListeners(); 
-            setupMatrixRain(); // Bắt đầu hiệu ứng Matrix Rain
+            setupMatrixRain();
         }
 
         init();

@@ -687,7 +687,7 @@
             projectId: "long-bao-tool-ai",
             storageBucket: "long-bao-tool-ai.appspot.com",
             messagingSenderId: "259613170671",
-            appId: "1:259613170671:web:6fe22467879c01da52b41a",
+            appId: "1:259613170671:web:6fe2467879c01da52b41a",
             measurementId: "G-PS060CSDBC"
         };
 
@@ -839,6 +839,7 @@
         function onPlayerReady(event) {
             event.target.setVolume(50);
             event.target.mute();
+            // The music will be unmuted on the first user interaction in startMedia()
             event.target.playVideo();
         }
 
@@ -852,11 +853,18 @@
         }
 
         const startMedia = async () => {
-            if (soundsReady) return;
+            if (soundsReady) {
+                 if (isYtReady && ytPlayer && ytPlayer.isMuted()) {
+                    ytPlayer.unMute();
+                }
+                return;
+            }
             await Tone.start();
+            console.log("Audio Context started.");
             soundsReady = true;
             if (isYtReady && ytPlayer && ytPlayer.isMuted()) {
                 ytPlayer.unMute();
+                console.log("YouTube player unmuted.");
             }
         };
         document.body.addEventListener('click', startMedia, { once: true });
@@ -1006,16 +1014,11 @@
         }
         
         // --- LONGBAO IV INTEGRATED LOGIC ---
-        let lb4State = {};
-        let predictionIntervalId = null;
-        let suggestionIntervalId = null;
-        let lastExecutionTime = Date.now();
-        let currentSuggestion = {};
-        let lb4Particles = [];
+        let allTablesState = {};
+        let globalUpdateInterval = null;
+        let currentVisibleTable = null;
 
         const PREDICTION_INTERVAL = 25000;
-        const RESET_AFTER_ROUNDS = 50;
-        const SUGGESTION_INTERVAL = 180000;
         const ENERGY_PER_ROUND = 5;
         const MAX_ENERGY = 100; // Used for percentage calculation
 
@@ -1031,22 +1034,87 @@
             'NHÀ CÁI': 'text-[var(--neon-red)] glow-text-banker',
         };
 
+        function initializeAllTablesState() {
+            const now = Date.now();
+            for (const name of tableNames) {
+                allTablesState[name] = {
+                    name: name,
+                    round: 0,
+                    wins: 0,
+                    losses: 0,
+                    history: [],
+                    winRateChance: (Math.floor(Math.random() * (95 - 70 + 1)) + 70) / 100,
+                    lastPrediction: null,
+                    nextUpdateTime: now + Math.random() * PREDICTION_INTERVAL // Stagger initial updates
+                };
+            }
+        }
+
+        function runPredictionLogicForTable(tableName) {
+            const tableState = allTablesState[tableName];
+            const mainPrediction = mainOutcomes[Math.floor(Math.random() * mainOutcomes.length)];
+            const subPrediction = subOutcomes[Math.floor(Math.random() * subOutcomes.length)];
+            const isWin = Math.random() < tableState.winRateChance;
+            const actualResult = isWin ? mainPrediction : mainOutcomes.find(o => o !== mainPrediction);
+            
+            tableState.round++;
+            if (isWin) { tableState.wins++; } else { tableState.losses++; }
+            if(tableState.history.length > 150) tableState.history.shift();
+            tableState.history.push(actualResult);
+            tableState.lastPrediction = { main: mainPrediction, sub: subPrediction, result: actualResult };
+        }
+
+        async function updateAllTables() {
+            const now = Date.now();
+            for (const tableName of tableNames) {
+                const tableState = allTablesState[tableName];
+                if (now >= tableState.nextUpdateTime) {
+                    runPredictionLogicForTable(tableName);
+                    tableState.nextUpdateTime = now + PREDICTION_INTERVAL;
+
+                    if (tableName === currentVisibleTable) {
+                        if (currentUserData && currentUserData.energy >= ENERGY_PER_ROUND) {
+                            const newEnergy = currentUserData.energy - ENERGY_PER_ROUND;
+                            const userDocRef = doc(db, "users", auth.currentUser.uid);
+                            await updateDoc(userDocRef, { energy: newEnergy });
+                            logActivity(`Sử dụng Lõi LongBao IV (-${ENERGY_PER_ROUND} năng lượng) tại bàn ${tableName}. Năng lượng còn lại: ${newEnergy}`);
+                            
+                            updateVisibleTableUI();
+                        } else {
+                            playSound('lb4_lowEnergy', "C2", "0.2n");
+                            DOMElements.energyModalLB4.classList.remove('hidden');
+                            currentVisibleTable = null; // Stop tracking this table
+                        }
+                    }
+                }
+            }
+        }
+        
+        function startGlobalUpdater() {
+            if (globalUpdateInterval) return;
+            globalUpdateInterval = setInterval(updateAllTables, 1000); // Check every second
+        }
+
         function launchLongBaoIV() {
             logActivity("Khởi chạy Lõi LongBao IV.");
             DOMElements.aiCoreSelectionScreen.classList.add('hidden');
             DOMElements.longbaoIVScreen.classList.remove('hidden');
             DOMElements.tableSelectionScreen.classList.remove('hidden');
             DOMElements.toolScreen.classList.add('hidden');
+            
+            if (Object.keys(allTablesState).length === 0) {
+                initializeAllTablesState();
+            }
+            if (!globalUpdateInterval) {
+                startGlobalUpdater();
+            }
+            
             generateTableListLB4();
             initLongBaoIVBackground();
         }
 
         function exitLongBaoIV() {
-            if (predictionIntervalId) clearInterval(predictionIntervalId);
-            if (suggestionIntervalId) clearInterval(suggestionIntervalId);
-            predictionIntervalId = null;
-            suggestionIntervalId = null;
-            
+            currentVisibleTable = null;
             DOMElements.longbaoIVScreen.classList.add('hidden');
             DOMElements.aiCoreSelectionScreen.classList.remove('hidden');
         }
@@ -1054,95 +1122,111 @@
         function generateTableListLB4() {
             DOMElements.tableListContainer.innerHTML = '';
             tableNames.forEach((name, index) => {
-                const winRate = Math.floor(Math.random() * (95 - 70 + 1)) + 70;
+                const tableState = allTablesState[name];
                 const tableElement = document.createElement('div');
                 tableElement.className = 'table-item-ultimate p-3 flex items-center gap-3';
                 tableElement.style.animationDelay = `${index * 50}ms`;
                 tableElement.innerHTML = `
                     <div class="flex-grow text-left">
                         <span class="font-bold text-lg tracking-wider">${name}</span>
-                        <div class="text-xs text-gray-400">TÍN HIỆU CẦU: <span class="font-bold text-white">${Math.floor(Math.random() * 20 + 75)}%</span></div>
+                        <div class="text-xs text-gray-400">Vòng: <span class="font-bold text-white">${tableState.round}</span></div>
                     </div>
                     <div class="flex-shrink-0 text-center px-3 py-1 bg-black/30 rounded-md border border-slate-600">
                         <p class="text-xs text-gray-400">Tỷ lệ thắng</p>
-                        <p class="font-bold text-xl win-rate-text-ultimate">${winRate}%</p>
+                        <p class="font-bold text-xl win-rate-text-ultimate">${Math.round(tableState.winRateChance * 100)}%</p>
                     </div>
                 `;
                 tableElement.addEventListener('mouseenter', () => playSound('lb4_hover', 'C5', '8n'));
                 tableElement.addEventListener('click', () => {
                     playSound('lb4_click', 'E5', '8n');
-                    startToolForTableLB4(name, winRate / 100);
+                    startToolForTableLB4(name);
                 });
                 DOMElements.tableListContainer.appendChild(tableElement);
             });
         }
+        
+        function updateVisibleTableUI() {
+            if (!currentVisibleTable) return;
+            const tableState = allTablesState[currentVisibleTable];
 
-        function startToolForTableLB4(tableName, winRateChance) {
+            updatePredictionUILB4(tableState.lastPrediction.main, tableState.lastPrediction.sub);
+            updateBetOptionsUILB4(tableState.lastPrediction.main, tableState.lastPrediction.sub);
+            updateStatsUILB4();
+            addDotToHistoryLB4(tableState.lastPrediction.result);
+            updateFluctuatingWinRateLB4();
+            updateEnergyBarLB4();
+            resetCountdownLB4();
+        }
+
+        function renderFullTableState(tableName) {
+            const tableState = allTablesState[tableName];
+            
+            DOMElements.historyGrid.innerHTML = '';
+            tableState.history.forEach(result => addDotToHistoryLB4(result, false));
+            
+            updateStatsUILB4(false);
+            
+            if (tableState.lastPrediction) {
+                updatePredictionUILB4(tableState.lastPrediction.main, tableState.lastPrediction.sub, false);
+                updateBetOptionsUILB4(tableState.lastPrediction.main, tableState.lastPrediction.sub);
+            } else {
+                DOMElements.mainPredictionText.textContent = 'CHỜ...';
+                DOMElements.subPredictionText.textContent = '';
+                DOMElements.mainPredictionText.className = 'text-5xl sm:text-6xl font-bold text-gray-500';
+                DOMElements.betOptionsGrid.querySelectorAll('.bet-option-box').forEach(opt => opt.classList.remove('active'));
+            }
+            
+            updateFluctuatingWinRateLB4();
+            updateEnergyBarLB4();
+            
+            const timeRemaining = tableState.nextUpdateTime - Date.now();
+            const percentageRemaining = Math.max(0, timeRemaining / PREDICTION_INTERVAL);
+            DOMElements.countdownBar.style.transition = 'none';
+            DOMElements.countdownBar.style.width = `${percentageRemaining * 100}%`;
+            void DOMElements.countdownBar.offsetWidth;
+            DOMElements.countdownBar.style.transition = `width ${timeRemaining / 1000}s linear`;
+            DOMElements.countdownBar.style.width = '0%';
+        }
+
+        function startToolForTableLB4(tableName) {
             DOMElements.tableSelectionScreen.classList.add('hidden');
             DOMElements.toolScreen.classList.remove('hidden');
 
             DOMElements.toolTitle.textContent = `DỰ ĐOÁN - ${tableName}`;
-            lb4State = {
-                round: 0, wins: 0, losses: 0, history: [],
-                winRateChance: winRateChance
-            };
+            currentVisibleTable = tableName;
             
-            if (predictionIntervalId) clearInterval(predictionIntervalId);
-            if (suggestionIntervalId) clearInterval(suggestionIntervalId);
-
-            resetToolUILB4();
-            mainLoopLB4();
-            predictionIntervalId = setInterval(mainLoopLB4, PREDICTION_INTERVAL);
-            updateSuggestedTableLB4();
-            suggestionIntervalId = setInterval(updateSuggestedTableLB4, SUGGESTION_INTERVAL);
+            renderFullTableState(tableName);
         }
 
         function showTableSelectionScreenLB4() {
+            currentVisibleTable = null;
             DOMElements.toolScreen.classList.add('hidden');
             DOMElements.tableSelectionScreen.classList.remove('hidden');
-            if (predictionIntervalId) clearInterval(predictionIntervalId);
-            if (suggestionIntervalId) clearInterval(suggestionIntervalId);
+            generateTableListLB4(); // Refresh table list with latest round counts
         }
 
-        async function mainLoopLB4() {
-            if (!currentUserData || currentUserData.energy < ENERGY_PER_ROUND) {
-                if(predictionIntervalId) clearInterval(predictionIntervalId);
-                playSound('lb4_lowEnergy', "C2", "0.2n");
-                DOMElements.energyModalLB4.classList.remove('hidden');
-                return;
+        function updatePredictionUILB4(mainPrediction, subPrediction, animate = true) {
+            if(animate) {
+                playSound('lb4_predict', "C2", "8n");
+                const shockwave = document.createElement('div');
+                shockwave.className = 'shockwave';
+                DOMElements.shockwaveContainer.appendChild(shockwave);
+                setTimeout(() => shockwave.remove(), 700);
             }
-            lastExecutionTime = Date.now();
-            
-            // Deduct energy first
-            const newEnergy = currentUserData.energy - ENERGY_PER_ROUND;
-            const userDocRef = doc(db, "users", auth.currentUser.uid);
-            await updateDoc(userDocRef, { energy: newEnergy });
-            logActivity(`Sử dụng Lõi LongBao IV (-${ENERGY_PER_ROUND} năng lượng). Năng lượng còn lại: ${newEnergy}`);
-            
-            runPredictionRoundLB4();
-        }
 
-        function runPredictionRoundLB4(isCatchUp = false) {
-            if (lb4State.round > 0 && lb4State.round % RESET_AFTER_ROUNDS === 0) resetToolUILB4();
+            DOMElements.mainPredictionText.classList.remove('predict-enter');
+            void DOMElements.mainPredictionText.offsetWidth;
+            DOMElements.mainPredictionText.className = 'text-5xl sm:text-6xl font-bold transition-all duration-300';
+            if(animate) DOMElements.mainPredictionText.classList.add('predict-enter');
+            DOMElements.mainPredictionText.textContent = mainPrediction;
+            DOMElements.mainPredictionText.classList.add(...(mainPredictionStyles[mainPrediction] || '').split(' '));
 
-            const mainPrediction = mainOutcomes[Math.floor(Math.random() * mainOutcomes.length)];
-            const subPrediction = subOutcomes[Math.floor(Math.random() * subOutcomes.length)];
-            const isWin = Math.random() < lb4State.winRateChance;
-            const actualResult = isWin ? mainPrediction : mainOutcomes.find(o => o !== mainPrediction);
-            
-            lb4State.round++;
-            if (isWin) { lb4State.wins++; } else { lb4State.losses++; }
-            lb4State.history.push(actualResult);
-            
-            if (!isCatchUp) {
-                updatePredictionUILB4(mainPrediction, subPrediction);
-                updateBetOptionsUILB4(mainPrediction, subPrediction);
-                updateStatsUILB4(actualResult);
-                updateFluctuatingWinRateLB4();
-                resetCountdownLB4();
-                updateEnergyBarLB4(); // This will now read from currentUserData
-            }
-            addDotToHistoryLB4(actualResult);
+            DOMElements.subPredictionText.classList.remove('predict-enter');
+            void DOMElements.subPredictionText.offsetWidth;
+            DOMElements.subPredictionText.className = 'text-base sm:text-xl font-semibold mt-2 h-8';
+            if(animate) DOMElements.subPredictionText.classList.add('predict-enter');
+            DOMElements.subPredictionText.textContent = `+ ${subPrediction}`;
+            DOMElements.subPredictionText.classList.add('glow-text-gold');
         }
 
         function updateBetOptionsUILB4(mainPrediction, subPrediction) {
@@ -1151,35 +1235,6 @@
             document.getElementById(mainId)?.classList.add('active');
             const subId = `bet-option-${subPrediction.toLowerCase().replace(/ /g, '-')}`;
             document.getElementById(subId)?.classList.add('active');
-        }
-
-        function resetToolUILB4() {
-            lb4State = { ...lb4State, round: 0, wins: 0, losses: 0, history: [] };
-            DOMElements.historyGrid.innerHTML = '';
-            DOMElements.roundCountEl.innerText = '0';
-            DOMElements.totalWinsEl.innerText = '0';
-            DOMElements.totalLossesEl.innerText = '0';
-            updateEnergyBarLB4();
-        }
-
-        function updatePredictionUILB4(mainPrediction, subPrediction) {
-            playSound('lb4_predict', "C2", "8n");
-            const shockwave = document.createElement('div');
-            shockwave.className = 'shockwave';
-            DOMElements.shockwaveContainer.appendChild(shockwave);
-            setTimeout(() => shockwave.remove(), 700);
-
-            DOMElements.mainPredictionText.classList.remove('predict-enter');
-            void DOMElements.mainPredictionText.offsetWidth;
-            DOMElements.mainPredictionText.className = 'text-5xl sm:text-6xl font-bold transition-all duration-300 predict-enter';
-            DOMElements.mainPredictionText.textContent = mainPrediction;
-            DOMElements.mainPredictionText.classList.add(...(mainPredictionStyles[mainPrediction] || '').split(' '));
-
-            DOMElements.subPredictionText.classList.remove('predict-enter');
-            void DOMElements.subPredictionText.offsetWidth;
-            DOMElements.subPredictionText.className = 'text-base sm:text-xl font-semibold mt-2 h-8 predict-enter';
-            DOMElements.subPredictionText.textContent = `+ ${subPrediction}`;
-            DOMElements.subPredictionText.classList.add('glow-text-gold');
         }
 
         function animateCounter(el, end) {
@@ -1196,15 +1251,17 @@
             window.requestAnimationFrame(step);
         }
 
-        function updateStatsUILB4(lastResult, useAnimation = true) {
+        function updateStatsUILB4(useAnimation = true) {
+            if(!currentVisibleTable) return;
+            const tableState = allTablesState[currentVisibleTable];
             if (useAnimation) {
-                animateCounter(DOMElements.roundCountEl, lb4State.round);
-                animateCounter(DOMElements.totalWinsEl, lb4State.wins);
-                animateCounter(DOMElements.totalLossesEl, lb4State.losses);
+                animateCounter(DOMElements.roundCountEl, tableState.round);
+                animateCounter(DOMElements.totalWinsEl, tableState.wins);
+                animateCounter(DOMElements.totalLossesEl, tableState.losses);
             } else {
-                DOMElements.roundCountEl.innerText = lb4State.round;
-                DOMElements.totalWinsEl.innerText = lb4State.wins;
-                DOMElements.totalLossesEl.innerText = lb4State.losses;
+                DOMElements.roundCountEl.innerText = tableState.round;
+                DOMElements.totalWinsEl.innerText = tableState.wins;
+                DOMElements.totalLossesEl.innerText = tableState.losses;
             }
         }
 
@@ -1229,14 +1286,14 @@
                 DOMElements.energyBar.style.background = 'linear-gradient(90deg, #fb923c, #ef4444)';
                 if (energyPercent > 0) {
                      DOMElements.energyBar.classList.add('energy-bar-pulsing');
-                     playSound('lb4_lowEnergy', "C2", "0.1n");
                 }
             }
         }
 
-        function addDotToHistoryLB4(result) {
+        function addDotToHistoryLB4(result, animate = true) {
             const dot = document.createElement('div');
             dot.className = `history-dot ${outcomeClasses[result]}`;
+            if(!animate) dot.style.animation = 'none';
             DOMElements.historyGrid.appendChild(dot);
             if (DOMElements.historyGrid.children.length > 150) {
                 DOMElements.historyGrid.removeChild(DOMElements.historyGrid.firstChild);
@@ -1262,8 +1319,6 @@
         function updateSuggestedTableLB4() {
             const randomIndex = Math.floor(Math.random() * tableNames.length);
             const randomTable = tableNames[randomIndex];
-            const winRate = Math.floor(Math.random() * (95 - 70 + 1)) + 70;
-            currentSuggestion = { name: randomTable, winRate: winRate / 100 };
             typeEffectLB4(DOMElements.suggestedTableNameEl, randomTable);
         }
 
@@ -1271,6 +1326,7 @@
         function initLongBaoIVBackground() {
             const canvas = DOMElements.longbaoIVBackgroundCanvas;
             const ctx = canvas.getContext('2d');
+            let animationFrameId;
             
             function setupCanvas() {
                 canvas.width = window.innerWidth;
@@ -1322,11 +1378,14 @@
             }
 
             function animate() {
-                if(DOMElements.longbaoIVScreen.classList.contains('hidden')) return;
+                if(DOMElements.longbaoIVScreen.classList.contains('hidden')) {
+                    cancelAnimationFrame(animationFrameId);
+                    return;
+                };
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 for (const particle of lb4Particles) { particle.update(); particle.draw(); }
                 connectParticles();
-                requestAnimationFrame(animate);
+                animationFrameId = requestAnimationFrame(animate);
             }
             
             setupCanvas();
@@ -1502,9 +1561,10 @@
                 exitLongBaoIV();
             });
             DOMElements.suggestedTableContainer.addEventListener('click', () => {
-                if (currentSuggestion.name) {
+                const tableName = DOMElements.suggestedTableNameEl.textContent;
+                if (tableName && tableName !== '...') {
                     playSound('lb4_click', 'E5', '8n');
-                    startToolForTableLB4(currentSuggestion.name, currentSuggestion.winRate);
+                    startToolForTableLB4(tableName);
                 }
             });
         }

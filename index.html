@@ -24,7 +24,7 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            height: 100%;
+            height: 100vh; /* Use vh to prevent address bar issues on mobile */
             font-family: 'Rajdhani', sans-serif;
             color: var(--text-light);
             overflow: hidden;
@@ -33,7 +33,7 @@
         }
         .hidden { display: none !important; }
 
-        /* --- NỀN NÂNG CẤP --- */
+        /* --- BACKGROUND CANVAS --- */
         .background-canvas {
             position: fixed;
             top: 0;
@@ -43,7 +43,7 @@
             z-index: -1; 
         }
         
-        /* --- AUTH SCREEN - CYBERPUNK STYLE --- */
+        /* --- AUTH SCREEN --- */
         #authScreen {
             position: fixed;
             top: 0;
@@ -72,7 +72,7 @@
             position: relative;
         }
         
-        /* --- UI DETAILS: CORNER BRACKETS --- */
+        /* --- CORNER BRACKETS --- */
         .corner-bracket {
             position: absolute;
             width: 25px;
@@ -213,17 +213,6 @@
         .auth-switch a { color: var(--cyan); text-decoration: none; cursor: pointer; transition: all 0.3s ease; }
         .auth-switch a:hover { color: var(--yellow); text-decoration: underline;}
 
-        #showRegisterLink {
-            font-weight: 700;
-            color: var(--yellow);
-            animation: register-glow 2s infinite alternate;
-        }
-        #showRegisterLink:hover { text-shadow: 0 0 8px var(--yellow); }
-        @keyframes register-glow {
-            from { text-shadow: 0 0 5px var(--yellow); opacity: 0.8; }
-            to { text-shadow: 0 0 15px var(--yellow), 0 0 5px var(--yellow); opacity: 1; }
-        }
-        
         .f168-banner {
             display: block; text-decoration: none; color: var(--error-red); font-weight: 700;
             margin-top: 15px; padding: 10px; border: 1px solid var(--error-red);
@@ -241,53 +230,89 @@
         #aiCoreSelectionScreen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 3; padding: 20px; box-sizing: border-box;
+            z-index: 3; padding: 15px; box-sizing: border-box;
         }
         #aiCoreSelectionScreen h1 {
-            color: var(--cyan); text-shadow: 0 0 15px var(--cyan); font-size: 2em; margin-bottom: 30px; text-align: center;
+            color: var(--cyan); text-shadow: 0 0 15px var(--cyan); 
+            font-size: 1.5em; margin-bottom: 20px; text-align: center;
         }
+        
+        #core-selector {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 400px; /* Limit width on larger screens */
+        }
+
+        .core-nav-btn {
+            background: transparent;
+            border: 2px solid var(--cyan);
+            color: var(--cyan);
+            font-size: 2em;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1;
+            padding: 0;
+            border-radius: 50%;
+            text-shadow: 0 0 8px var(--cyan);
+        }
+        .core-nav-btn:hover {
+             background: var(--cyan);
+             color: var(--dark-blue);
+        }
+
         #core-options-container {
-            display: flex; flex-direction: column; gap: 25px;
-            width: 100%; max-width: 1000px;
+            width: calc(100% - 100px); /* Adjust width to account for nav buttons */
+            height: 350px; /* Set a fixed height to contain the element */
+            position: relative;
+            overflow: hidden;
         }
+
         .core-option {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
             background: var(--container-bg);
             border: 2px solid var(--border-color);
             box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2), 0 0 15px var(--border-color);
-            padding: 20px; text-align: center; flex: 1;
+            padding: 15px;
+            text-align: center;
             backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-            transition: all 0.3s ease;
-            cursor: pointer;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            opacity: 0;
+            transform: scale(0.9);
+            display: none; /* Hide by default */
         }
-        .core-option:hover {
-            border-color: var(--yellow);
-            box-shadow: inset 0 0 15px rgba(252, 238, 10, 0.3), 0 0 25px var(--yellow);
+        .core-option.active {
+            opacity: 1;
+            transform: scale(1);
+            z-index: 2;
+            display: flex; /* Use flexbox for alignment */
+            flex-direction: column;
+            justify-content: center;
         }
-        .core-option.selected {
-            border-color: var(--yellow);
-            box-shadow: inset 0 0 20px rgba(252, 238, 10, 0.5), 0 0 35px var(--yellow);
-            transform: scale(1.03);
-        }
+
         .core-option h3 {
-            color: var(--yellow); font-size: 1.4em; margin-top: 0; margin-bottom: 15px;
+            color: var(--yellow); font-size: 1.2em; margin: 0 0 10px 0;
         }
         .gif-container {
-            width: 100%; height: 0; padding-bottom: 100%; /* 1:1 Aspect Ratio */
-            position: relative; margin: 15px 0; background-color: rgba(0,0,0,0.3);
+            width: 100%;
+            flex-grow: 1; /* Allow gif to take remaining space */
+            position: relative;
+            background-color: rgba(0,0,0,0.3);
             border: 1px solid var(--border-color);
-            pointer-events: none; /* Prevent clicks on iframe */
         }
         .gif-container iframe {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         }
         #main-next-btn {
-            margin-top: 30px;
+            margin-top: 20px;
             max-width: 400px;
-        }
-        /* Responsive layout for larger screens */
-        @media (min-width: 800px) {
-            #core-options-container { flex-direction: row; }
-            #aiCoreSelectionScreen h1 { font-size: 2.5em; }
         }
 
         /* --- MÀN HÌNH LOADING --- */
@@ -360,27 +385,31 @@
     <!-- Màn hình chọn lõi A.I -->
     <div id="aiCoreSelectionScreen" class="hidden">
         <h1 data-text="CHỌN LÕI A.I"></h1>
-        <div id="core-options-container">
-            <div class="core-option boot-anim" style="animation-delay: 0.2s;">
-                <h3>LongBao Thế Hệ IV</h3>
-                <div class="gif-container">
-                    <iframe src="https://giphy.com/embed/ws8l2aiUiFudsACu5u" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+        <div id="core-selector">
+            <button id="prev-core-btn" class="core-nav-btn">&lt;</button>
+            <div id="core-options-container">
+                <div class="core-option">
+                    <h3>LongBao Thế Hệ IV</h3>
+                    <div class="gif-container">
+                        <iframe src="https://giphy.com/embed/ws8l2aiUiFudsACu5u" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+                    </div>
+                </div>
+                <div class="core-option">
+                    <h3>Yian Soi Lá Bài</h3>
+                    <div class="gif-container">
+                        <iframe src="https://giphy.com/embed/3Ipz588z9HiqP5sD5t" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+                    </div>
+                </div>
+                <div class="core-option">
+                    <h3>Siêu Lõi Aquarius</h3>
+                    <div class="gif-container">
+                        <iframe src="https://giphy.com/embed/h88FMNUACANfKcsXFq" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+                    </div>
                 </div>
             </div>
-            <div class="core-option boot-anim" style="animation-delay: 0.4s;">
-                <h3>Yian Soi Lá Bài</h3>
-                <div class="gif-container">
-                    <iframe src="https://giphy.com/embed/3Ipz588z9HiqP5sD5t" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
-                </div>
-            </div>
-            <div class="core-option boot-anim" style="animation-delay: 0.6s;">
-                <h3>Siêu Lõi Aquarius</h3>
-                <div class="gif-container">
-                    <iframe src="https://giphy.com/embed/h88FMNUACANfKcsXFq" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
-                </div>
-            </div>
+            <button id="next-core-btn" class="core-nav-btn">&gt;</button>
         </div>
-        <button id="main-next-btn" class="btn-next hidden">KÍCH HOẠT LÕI</button>
+        <button id="main-next-btn" class="btn-next">KÍCH HOẠT LÕI</button>
     </div>
 
     <!-- Màn hình Loading -->
@@ -437,6 +466,8 @@
         const loginPasswordInput = document.getElementById('login-password');
         const loginBtn = document.getElementById('loginBtn');
         const coreOptions = document.querySelectorAll('.core-option');
+        const prevCoreBtn = document.getElementById('prev-core-btn');
+        const nextCoreBtn = document.getElementById('next-core-btn');
         const mainNextBtn = document.getElementById('main-next-btn');
         const loadingText = document.getElementById('loading-text');
 
@@ -461,9 +492,7 @@
             const fontSize = 16;
             const columns = canvas.width / fontSize;
             const rainDrops = Array.from({ length: Math.ceil(columns) }).fill(1);
-            let mouseX = -100, mouseY = -100;
-            window.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; }, { passive: true });
-
+            
             return () => {
                 ctx.fillStyle = 'rgba(10, 25, 47, 0.05)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -471,8 +500,7 @@
                 rainDrops.forEach((y, i) => {
                     const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
                     const x = i * fontSize;
-                    const dist = Math.hypot(x - mouseX, y * fontSize - mouseY);
-                    ctx.fillStyle = dist < 50 ? `rgba(252, 238, 10, ${1 - dist / 50})` : 'rgba(0, 255, 255, 0.8)';
+                    ctx.fillStyle = 'rgba(0, 255, 255, 0.8)';
                     ctx.fillText(text, x, y * fontSize);
                     if (y * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
                     rainDrops[i]++;
@@ -480,7 +508,6 @@
             };
         };
 
-        // Grid
         let time = 0;
         function drawGrid() {
             gctx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
@@ -498,11 +525,9 @@
         }
         drawGrid();
 
-        // Background Matrix
         const drawBgMatrix = createMatrixDrawer(mctx, matrixCanvas);
         setInterval(drawBgMatrix, 33);
 
-        // Loading Matrix
         const drawLoadingMatrix = createMatrixDrawer(lctx, loadingMatrixCanvas);
         let loadingAnimationId;
 
@@ -548,25 +573,30 @@
         loginPasswordInput.addEventListener('input', checkLoginInputs);
 
         // --- CORE SELECTION & LOADING SEQUENCE ---
-        let selectedCore = null;
+        let currentCoreIndex = 0;
 
-        coreOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                coreOptions.forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
-                selectedCore = option.querySelector('h3').textContent;
-                mainNextBtn.classList.remove('hidden');
+        function showCore(index) {
+            coreOptions.forEach((option, i) => {
+                option.classList.toggle('active', i === index);
             });
+        }
+
+        nextCoreBtn.addEventListener('click', () => {
+            currentCoreIndex = (currentCoreIndex + 1) % coreOptions.length;
+            showCore(currentCoreIndex);
+        });
+
+        prevCoreBtn.addEventListener('click', () => {
+            currentCoreIndex = (currentCoreIndex - 1 + coreOptions.length) % coreOptions.length;
+            showCore(currentCoreIndex);
         });
 
         mainNextBtn.addEventListener('click', () => {
-            if (selectedCore) {
-                startLoadingSequence(selectedCore);
-            }
+            const selectedCoreName = coreOptions[currentCoreIndex].querySelector('h3').textContent;
+            startLoadingSequence(selectedCoreName);
         });
 
         const startLoadingSequence = (coreName) => {
-            authScreen.classList.add('hidden');
             aiCoreSelectionScreen.classList.add('hidden');
             loadingScreen.classList.remove('hidden');
 
@@ -608,7 +638,7 @@
             try {
                 const fakeEmail = `${username}@longbao-tool.ai`;
                 const userCredential = await createUserWithEmailAndPassword(auth, fakeEmail, password);
-                const userDocRef = doc(db, "users", username);
+                const userDocRef = doc(db, "users", userCredential.user.uid);
                 await setDoc(userDocRef, { uid: userCredential.user.uid, username, phoneNumber: phone, energy: 0, createdAt: new Date() });
                 errorMsg.textContent = '';
             } catch (error) {
@@ -641,6 +671,7 @@
                 authScreen.classList.add('hidden');
                 aiCoreSelectionScreen.classList.remove('hidden');
                 decodeText(aiCoreSelectionScreen.querySelector('h1'));
+                showCore(currentCoreIndex); // Show the first core by default
             } else {
                 aiCoreSelectionScreen.classList.add('hidden');
                 loadingScreen.classList.add('hidden');

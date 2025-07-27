@@ -6,7 +6,7 @@
     <title>LONG BẢO A.I - Cyberpunk Terminal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@400;700&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@400;700&family=Fira+Code:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
@@ -323,6 +323,91 @@
         .system-check-item.online {
             opacity: 1; color: var(--success-green);
         }
+        
+        /* --- YIAN CORE SCREEN --- */
+        #yianCoreScreen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--yian-bg-color); z-index: 25;
+            padding: 15px; box-sizing: border-box;
+            opacity: 0; transition: opacity 0.5s ease;
+            display: none; /* Hidden by default */
+        }
+        #yianCoreScreen.visible { 
+            display: block;
+            opacity: 1; 
+        }
+        #yian-app-container {
+            width: 100%;
+            height: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            gap: 20px;
+            grid-template-columns: 300px 1fr 300px;
+            grid-template-rows: auto 1fr auto;
+            grid-template-areas:
+                "yian-header yian-header yian-header"
+                "yian-left yian-main yian-right"
+                "yian-footer yian-footer yian-footer";
+        }
+        .yian-panel {
+            background: var(--yian-container-bg);
+            border-radius: 15px;
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 
+                        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid transparent;
+        }
+        .yian-panel-title {
+            font-size: 1.2em; font-weight: 700; color: var(--yian-secondary);
+            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;
+            text-shadow: 0 0 4px rgba(0,0,0,0.5); border-bottom: 1px solid var(--yian-border);
+            padding-bottom: 10px;
+        }
+        #yian-header { grid-area: yian-header; text-align: center; }
+        #yian-header h1 {
+            font-size: 2.5em; font-weight: 700; letter-spacing: 8px;
+            background: linear-gradient(45deg, var(--yian-prism-1), var(--yian-prism-2), var(--yian-prism-3));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px var(--yian-prism-1));
+        }
+        #yian-left-panel { grid-area: yian-left; }
+        #yian-main-panel { grid-area: yian-main; }
+        #yian-right-panel { grid-area: yian-right; }
+        #yian-footer { grid-area: yian-footer; text-align: center; color: rgba(193, 215, 224, 0.4); }
+        #yian-scan-button {
+            width: 80%; max-width: 400px; padding: 15px; font-size: 1.5em;
+            font-weight: 700; letter-spacing: 3px; color: #fff;
+            background: linear-gradient(45deg, var(--yian-prism-1), var(--yian-prism-2), var(--yian-prism-3));
+            background-size: 200% 200%; border: none; border-radius: 10px;
+            cursor: pointer; transition: all 0.3s ease;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.4); position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.2);
+            animation: gradient-pan 5s ease infinite;
+        }
+        @keyframes gradient-pan {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        #yian-result-display { background: rgba(0,0,0,0.3); border: 1px solid var(--yian-border); border-radius: 10px; padding: 15px; text-align: center; min-height: 150px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #yian-result-text { font-family: 'Share Tech Mono', monospace; font-size: 2.2em; font-weight: 700; letter-spacing: 2px; color: var(--success-green); text-shadow: 0 0 10px var(--success-green); min-height: 40px; }
+        #yian-secondary-result-text { font-family: 'Rajdhani', sans-serif; font-size: 1.2em; font-weight: 500; color: var(--warning-color); text-shadow: 0 0 8px var(--warning-color); margin-top: 5px; min-height: 20px; }
+        #yian-energy-bar-outer { width: 100%; height: 15px; background: rgba(0,0,0,0.4); border: 1px solid var(--yian-border); border-radius: 8px; padding: 2px; }
+        #yian-energy-bar-inner { width: 100%; height: 100%; background: linear-gradient(45deg, var(--yian-prism-1), var(--yian-prism-2), var(--yian-prism-3)); border-radius: 5px; transition: width 0.5s, background 0.5s; box-shadow: 0 0 8px var(--success-green); }
+        #yian-energy-percent-text { font-family: 'Share Tech Mono', monospace; font-size: 1.2em; margin-top: 8px; color: var(--yian-secondary); }
+        #yian-exit-button {
+            position: absolute; top: 20px; right: 20px;
+            background: transparent; border: 1px solid var(--error-red); color: var(--error-red);
+            padding: 5px 10px; z-index: 1000;
+        }
 
         /* --- MODALS --- */
         .modal-overlay {
@@ -427,7 +512,6 @@
 </head>
 <body>
     <!-- Nền hiệu ứng -->
-    <canvas id="grid-bg" class="background-canvas"></canvas>
     <canvas id="matrix-bg" class="background-canvas"></canvas>
     <div id="youtube-player"></div>
     <div id="notification-container"></div>
@@ -541,6 +625,47 @@
             </footer>
         </div>
     </div>
+
+    <!-- Màn hình Lõi Yian -->
+    <div id="yianCoreScreen" class="hidden">
+        <button id="yian-exit-button" class="btn-style">THOÁT LÕI YIAN</button>
+        <div id="yian-app-container">
+            <header id="yian-header" class="yian-panel">
+                <h1>YIAN A.I. COMMAND CENTER</h1>
+            </header>
+            <div id="yian-left-panel" class="yian-panel">
+                <h2 class="yian-panel-title">LÕI PHÂN TÍCH</h2>
+                <div id="yian-core-selector"></div>
+                <div id="yian-energy-display">
+                    <h3 class="yian-panel-title" style="margin-top: 20px; border:none; padding:0; margin-bottom: 5px;">NĂNG LƯỢNG HỆ THỐNG</h3>
+                    <div id="yian-energy-bar-outer">
+                        <div id="yian-energy-bar-inner"></div>
+                    </div>
+                    <p id="yian-energy-percent-text">100%</p>
+                </div>
+            </div>
+            <div id="yian-main-panel" class="yian-panel">
+                 <div class="main-display-grid">
+                    <div id="yian-camera-view"></div>
+                    <div id="yian-holo-container"></div>
+                </div>
+                <div class="scan-controls">
+                    <div id="yian-result-display">
+                        <h2 id="yian-result-text">-- CHỜ LỆNH --</h2>
+                        <h3 id="yian-secondary-result-text"></h3>
+                    </div>
+                    <button id="yian-scan-button" class="btn-style">KHỞI TẠO QUÉT</button>
+                </div>
+            </div>
+            <div id="yian-right-panel" class="yian-panel">
+                <h3 class="yian-panel-title">NHẬT KÝ HỆ THỐNG</h3>
+                <div id="yian-system-log" class="data-stream"></div>
+            </div>
+            <footer id="yian-footer">
+                © Bản quyền thuộc về Long Bảo
+            </footer>
+        </div>
+    </div>
     
     <footer id="copyright">BẢN QUYỀN THUỘC VỀ LONG BẢO</footer>
     <a id="contact-link" href="https://t.me/longbaoF168" target="_blank"><span>LIÊN HỆ LONG BẢO</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M248,8C111.033,8,0,119.033,0,256S111.033,504,248,504,496,392.967,496,256,384.967,8,248,8ZM362.952,176.66c-3.732,39.215-19.881,134.378-28.1,178.3-3.476,18.584-10.322,24.816-16.948,25.425-14.4,1.326-25.338-9.517-39.287-18.661-21.827-14.308-34.158-23.215-55.346-37.177-24.485-16.135-8.612-25,5.342-39.5,3.652-3.793,67.2-61.756,68.973-66.107,2.174-5.327.34-8.28-2.063-10.423-2.403-2.143-5.48-1.922-8.262-.973l-73.22,47.052-37.424-11.948c-13.385-4.278-23.215-6.469-23.215-15.045,0-8.173,6.7-13.218,19.967-18.071,46.5-16.979,100.013-33.507,139.14-47.785,13.87-5.021,26.124,2.756,22.399,28.857Z"/></svg></a>
@@ -583,6 +708,7 @@
             authScreen: document.getElementById('authScreen'),
             aiCoreSelectionScreen: document.getElementById('aiCoreSelectionScreen'),
             activationScreen: document.getElementById('activationScreen'),
+            yianCoreScreen: document.getElementById('yianCoreScreen'),
             loginForm: document.getElementById('loginForm'),
             registerForm: document.getElementById('registerForm'),
             showRegisterLink: document.getElementById('showRegisterLink'),
@@ -604,6 +730,17 @@
             systemCheckList: document.getElementById('system-check-list'),
             dataStream: document.getElementById('data-stream'),
             
+            // Yian Core Screen
+            yianResultText: document.getElementById('yian-result-text'),
+            yianSecondaryResultText: document.getElementById('yian-secondary-result-text'),
+            yianScanButton: document.getElementById('yian-scan-button'),
+            yianExitButton: document.getElementById('yian-exit-button'),
+            yianEnergyBarInner: document.getElementById('yian-energy-bar-inner'),
+            yianEnergyPercentText: document.getElementById('yian-energy-percent-text'),
+            yianSystemLog: document.getElementById('yian-system-log'),
+            yianCoreSelector: document.getElementById('yian-core-selector'),
+            yianCameraView: document.getElementById('yian-camera-view'),
+
             // User Info
             userInfoBar: document.getElementById('user-info-bar'),
             userPilotSpan: document.getElementById('user-pilot'),
@@ -633,6 +770,49 @@
             // Controls
             logoutBtn: document.getElementById('logout-btn'),
         };
+
+        // --- BACKGROUND EFFECTS ---
+        function setupMatrixRain() {
+            const canvas = document.getElementById('matrix-bg');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            let w, h, cols;
+            let ypos = [];
+
+            const matrixChars = '日ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ1234567890';
+
+            function resizeCanvas() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+                cols = Math.floor(w / 20);
+                ypos = Array(cols).fill(0);
+            }
+
+            function matrix() {
+                ctx.fillStyle = 'rgba(10, 25, 47, 0.1)'; // Fading effect
+                ctx.fillRect(0, 0, w, h);
+
+                ctx.fillStyle = '#00ffff'; // Cyan text color
+                ctx.font = '15pt monospace';
+
+                ypos.forEach((y, ind) => {
+                    const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                    const x = ind * 20;
+                    ctx.fillText(text, x, y);
+
+                    if (y > 100 + Math.random() * 10000) {
+                        ypos[ind] = 0;
+                    } else {
+                        ypos[ind] = y + 20;
+                    }
+                });
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas(); // Initial setup
+            setInterval(matrix, 50);
+        }
 
         // --- YOUTUBE PLAYER & SOUND ENGINE ---
         let ytPlayer, isYtReady = false, soundsReady = false;
@@ -808,7 +988,10 @@
                 { text: "PHÂN TÍCH CẤU TRÚC LÕI...", duration: 2000, progress: 70, action: () => {} },
                 { text: "NẠP GIAO THỨC...", duration: 2000, progress: 90, action: () => {} },
                 { text: "KÍCH HOẠT!", duration: 1000, progress: 100, action: () => playSound('boot') },
-                { text: "KÍCH HOẠT HOÀN TẤT.", duration: 2000, progress: 100, action: () => {} }
+                { text: "KÍCH HOẠT HOÀN TẤT.", duration: 2000, progress: 100, action: () => {
+                     // Logic cho các lõi khác ở đây nếu cần
+                     showNotification("Kích hoạt lõi hoàn tất!", "success");
+                } }
             ];
 
             let currentStep = 0;
@@ -820,9 +1003,9 @@
                 const step = steps[currentStep];
                 DOMElements.activationStatusText.textContent = step.text;
                 DOMElements.activationProgressBar.style.width = `${step.progress}%`;
-                step.action();
                 
                 activationTimeout = setTimeout(() => {
+                    step.action();
                     currentStep++;
                     runStep();
                 }, step.duration);
@@ -917,6 +1100,7 @@
         
         function updateUIWithUserData(userData) {
             const energy = userData.energy || 0;
+            // Main UI
             DOMElements.userPilotSpan.textContent = `PILOT: ${userData.username.toUpperCase()}`;
             DOMElements.userEnergySpan.textContent = `ENERGY: ${energy}`;
             const avatarUrl = userData.avatarUrl || 'https://placehold.co/50x50/0A192F/00ffff?text=P';
@@ -925,6 +1109,11 @@
             DOMElements.userEnergySpan.classList.toggle('high', energy > 70);
             DOMElements.userEnergySpan.classList.toggle('low', energy < 30);
             DOMElements.userInfoBar.classList.toggle('low-energy', energy < 30);
+            
+            // Yian UI
+            DOMElements.yianEnergyBarInner.style.width = `${energy}%`;
+            DOMElements.yianEnergyPercentText.textContent = `${Math.round(energy)}%`;
+
             const isEnergyLow = energy < 30;
             if (isEnergyLow && !wasEnergyLow) {
                 DOMElements.lowEnergyModal.classList.remove('hidden');
@@ -1021,10 +1210,17 @@
 
             DOMElements.mainNextBtn.addEventListener('click', () => {
                 playSound('confirm');
-                if (currentCoreIndex === 2) { // Aquarius is at index 2
+                // Nếu lõi Yian được chọn (index 1), chuyển hướng ngay lập tức.
+                if (currentCoreIndex === 1) {
+                    window.location.href = 'https://www.soilabai.site/';
+                } 
+                // Nếu lõi Aquarius được chọn (index 2), hiển thị modal nhập code.
+                else if (currentCoreIndex === 2) {
                     DOMElements.aquariusModal.classList.remove('hidden');
                     playSound('open', 'G4');
-                } else {
+                } 
+                // Đối với các lõi khác, vẫn hiển thị màn hình kích hoạt.
+                else {
                     startActivationSequence(currentCoreIndex);
                 }
             });
@@ -1125,12 +1321,50 @@
                     btn.closest('.modal-overlay').classList.add('hidden');
                 });
             });
+
+            DOMElements.yianScanButton.addEventListener('click', async () => {
+                if (!currentUserData || !auth.currentUser) return;
+                const cost = 5; // Yian cost
+                if (currentUserData.energy < cost) {
+                    showNotification("Không đủ năng lượng!", "error");
+                    playSound('error');
+                    return;
+                }
+                
+                playSound('confirm');
+                const newEnergy = currentUserData.energy - cost;
+                const userDocRef = doc(db, "users", auth.currentUser.uid);
+                await updateDoc(userDocRef, { energy: newEnergy });
+                await logActivity(`Sử dụng Lõi Yian, năng lượng còn lại: ${newEnergy}`);
+
+                DOMElements.yianResultText.textContent = "ĐANG PHÂN TÍCH...";
+                DOMElements.yianSecondaryResultText.textContent = "";
+
+                setTimeout(() => {
+                    const results = ["CÁI", "CON", "TÀI", "XỈU"];
+                    const secondaryResults = ["Long Bảo", "Con Đôi", "Cái Đôi", "Hòa"];
+                    const randomResult = results[Math.floor(Math.random() * results.length)];
+                    const randomSecondary = secondaryResults[Math.floor(Math.random() * secondaryResults.length)];
+                    DOMElements.yianResultText.textContent = `${randomResult}`;
+                    DOMElements.yianSecondaryResultText.textContent = `+ ${randomSecondary}`;
+                }, 2000);
+            });
+
+            DOMElements.yianExitButton.addEventListener('click', () => {
+                DOMElements.yianCoreScreen.classList.remove('visible');
+                setTimeout(() => {
+                    DOMElements.yianCoreScreen.classList.add('hidden');
+                    DOMElements.aiCoreSelectionScreen.classList.remove('hidden');
+                    DOMElements.aiCoreSelectionScreen.classList.add('fade-in');
+                }, 500);
+            });
         }
 
         // --- INITIALIZATION ---
         function init() {
             initializeMedia();
             setupEventListeners(); 
+            setupMatrixRain(); // Bắt đầu hiệu ứng Matrix Rain
         }
 
         init();

@@ -242,7 +242,7 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            max-width: 400px; /* Limit width on larger screens */
+            max-width: 400px;
         }
 
         .core-nav-btn {
@@ -259,6 +259,7 @@
             padding: 0;
             border-radius: 50%;
             text-shadow: 0 0 8px var(--cyan);
+            flex-shrink: 0;
         }
         .core-nav-btn:hover {
              background: var(--cyan);
@@ -266,10 +267,11 @@
         }
 
         #core-options-container {
-            width: calc(100% - 100px); /* Adjust width to account for nav buttons */
-            height: 350px; /* Set a fixed height to contain the element */
+            width: calc(100% - 100px);
+            height: 450px; /* Increased height */
             position: relative;
             overflow: hidden;
+            margin: 0 10px;
         }
 
         .core-option {
@@ -280,35 +282,53 @@
             background: var(--container-bg);
             border: 2px solid var(--border-color);
             box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2), 0 0 15px var(--border-color);
-            padding: 15px;
+            padding: 20px;
             text-align: center;
             backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
             transition: transform 0.5s ease, opacity 0.5s ease;
             opacity: 0;
             transform: scale(0.9);
-            display: none; /* Hide by default */
+            display: none; 
+            box-sizing: border-box;
         }
         .core-option.active {
             opacity: 1;
             transform: scale(1);
             z-index: 2;
-            display: flex; /* Use flexbox for alignment */
+            display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
         }
 
         .core-option h3 {
-            color: var(--yellow); font-size: 1.2em; margin: 0 0 10px 0;
+            color: var(--yellow); 
+            font-size: 1.3em; 
+            margin: 0 0 15px 0;
+            flex-shrink: 0;
         }
         .gif-container {
             width: 100%;
-            flex-grow: 1; /* Allow gif to take remaining space */
+            padding-bottom: 75%; /* 4:3 Aspect Ratio */
+            height: 0;
             position: relative;
             background-color: rgba(0,0,0,0.3);
             border: 1px solid var(--border-color);
+            margin-bottom: 15px;
+            flex-shrink: 0;
         }
         .gif-container iframe {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        }
+        .core-description {
+            font-size: 0.9em;
+            color: var(--text-light);
+            line-height: 1.5;
+            opacity: 0.9;
+            font-weight: 400;
+            text-align: center;
+            margin: 0;
+            flex-grow: 1;
+            overflow-y: auto; /* Add scroll for overflow */
         }
         #main-next-btn {
             margin-top: 20px;
@@ -393,18 +413,21 @@
                     <div class="gif-container">
                         <iframe src="https://giphy.com/embed/ws8l2aiUiFudsACu5u" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
                     </div>
+                    <p class="core-description">Được phát triển từ các GPU Ndivia thế hệ mới, xâm nhập vô sảnh game để phân tích và đưa ra lựa chọn tốt nhất cho người dùng.</p>
                 </div>
                 <div class="core-option">
                     <h3>Yian Soi Lá Bài</h3>
                     <div class="gif-container">
                         <iframe src="https://giphy.com/embed/3Ipz588z9HiqP5sD5t" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
                     </div>
+                    <p class="core-description">Công nghệ tương lai độc quyền - được phát triển từ hệ thống SVB nổi tiếng của các hacker. Giờ đây soi lá bài không phải là tưởng tượng nữa!</p>
                 </div>
                 <div class="core-option">
                     <h3>Siêu Lõi Aquarius</h3>
                     <div class="gif-container">
                         <iframe src="https://giphy.com/embed/h88FMNUACANfKcsXFq" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
                     </div>
+                    <p class="core-description">Được tạo lên từ A.I thông minh nhất thế giới Grok IV - Tỉ lệ thắng 99%. X1000 lần tài khoản trong 1 đêm không còn là mơ.</p>
                 </div>
             </div>
             <button id="next-core-btn" class="core-nav-btn">&gt;</button>

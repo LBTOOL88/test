@@ -6,7 +6,7 @@
     <title>LONG BẢO A.I - Cyberpunk Terminal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@400;700&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <style>
         :root {
@@ -246,7 +246,7 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 3; padding: 15px; box-sizing: border-box;
-            padding-top: 70px; /* Make space for user info bar */
+            padding-top: 80px; /* Make space for user info bar */
             opacity: 0;
             transition: opacity 0.5s ease;
         }
@@ -263,10 +263,23 @@
             padding: 8px 15px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             font-family: 'Orbitron', sans-serif;
             font-size: 0.9em;
             box-shadow: 0 0 10px var(--cyan);
             transition: border-color 0.5s ease, box-shadow 0.5s ease;
+        }
+        #user-info-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--cyan);
+            object-fit: cover;
         }
         #user-info-bar span {
             text-shadow: 0 0 5px var(--cyan);
@@ -288,6 +301,18 @@
             border-color: var(--error-red);
             box-shadow: 0 0 15px var(--error-red);
             animation: warning-blink 1.2s infinite;
+        }
+        #profile-btn {
+            background: transparent;
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            padding: 5px 10px;
+            font-size: 0.8em;
+            margin-left: 15px;
+        }
+        #profile-btn:hover {
+            background: var(--cyan);
+            color: var(--dark-blue);
         }
 
         #aiCoreSelectionScreen h1 {
@@ -376,6 +401,7 @@
         }
         .gif-container iframe {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; /* Thêm dòng này để ẩn link Giphy */
         }
         .core-description {
             font-size: 0.85em;
@@ -477,29 +503,42 @@
             justify-content: center;
             align-items: center;
             z-index: 15;
+            padding: 15px;
+            box-sizing: border-box;
         }
         .modal-content {
             background: var(--container-bg);
             border: 2px solid var(--gold);
             box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.3), 0 0 35px var(--gold);
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             padding: 30px 25px;
             text-align: center;
             position: relative;
         }
+        /* Cập nhật style cho bảng cảnh báo năng lượng */
         .modal-content.warning {
             border-color: var(--error-red);
             box-shadow: inset 0 0 20px rgba(255, 60, 60, 0.3), 0 0 35px var(--error-red);
+            font-family: 'Fira Code', monospace; /* Font chữ hacker */
+        }
+        .modal-content.warning h3 {
+            color: var(--error-red);
+            text-shadow: 0 0 15px var(--error-red), 0 0 5px #fff; /* Hiệu ứng glow mạnh hơn */
+            animation: text-flicker 3s linear infinite; /* Hiệu ứng nhấp nháy */
+            font-size: 1.4em;
+            letter-spacing: 2px;
+        }
+        .modal-content.warning p {
+            font-size: 1em;
+            line-height: 1.6;
+            text-shadow: 0 0 5px var(--error-red);
+            opacity: 0.9;
         }
         .modal-content h3 {
             color: var(--gold);
             text-shadow: 0 0 10px var(--gold);
             margin-top: 0;
-        }
-        .modal-content.warning h3 {
-            color: var(--error-red);
-            text-shadow: 0 0 10px var(--error-red);
         }
         .modal-content p {
             margin-bottom: 20px;
@@ -549,8 +588,76 @@
             color: var(--text-light);
             font-size: 1.5em;
             padding: 5px;
+            line-height: 1;
         }
 
+        /* --- PROFILE MODAL STYLES --- */
+        #profile-modal .modal-content {
+            border-color: var(--cyan);
+            box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.3), 0 0 35px var(--cyan);
+        }
+        #profile-modal h3 {
+            color: var(--cyan);
+            text-shadow: 0 0 10px var(--cyan);
+        }
+        .profile-avatar-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        #profile-avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid var(--cyan);
+            box-shadow: 0 0 15px var(--cyan);
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+        .profile-form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+        .profile-form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9em;
+            color: var(--cyan);
+        }
+        .profile-form-group small {
+            font-size: 0.8em;
+            opacity: 0.7;
+            display: block;
+            margin-top: 4px;
+        }
+        #profile-message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        #lucky-spin-btn {
+            background: var(--gold);
+            color: var(--dark-blue);
+            box-shadow: 0 0 15px var(--gold);
+            animation: button-glow-yellow 1.5s infinite alternate;
+        }
+
+        /* Hiệu ứng nhấp nháy cho text cảnh báo */
+        @keyframes text-flicker {
+            0% { opacity: 0.1; text-shadow: 0 0 10px var(--error-red); }
+            2% { opacity: 1; text-shadow: 0 0 10px var(--error-red); }
+            8% { opacity: 0.1; text-shadow: 0 0 10px var(--error-red); }
+            9% { opacity: 1; text-shadow: 0 0 10px var(--error-red); }
+            12% { opacity: 0.2; text-shadow: 0 0 20px var(--error-red); }
+            20% { opacity: 1; text-shadow: 0 0 10px var(--error-red); }
+            25% { opacity: 0.3; }
+            30% { opacity: 1; }
+            70% { opacity: 0.7; }
+            72% { opacity: 0.2; }
+            77% { opacity: .9; text-shadow: 0 0 30px var(--error-red); }
+            100% { opacity: .9; }
+        }
 
         /* --- COPYRIGHT & TELEGRAM --- */
         #copyright, #contact-link { z-index: 5; }
@@ -606,8 +713,14 @@
     <!-- Màn hình chọn lõi A.I -->
     <div id="aiCoreSelectionScreen" class="hidden">
         <div id="user-info-bar" class="hidden">
-            <span id="user-pilot">PILOT:</span>
-            <span id="user-energy">ENERGY:</span>
+            <div id="user-info-left">
+                <img id="user-avatar" src="https://placehold.co/50x50/0A192F/00ffff?text=P" alt="User Avatar">
+                <div>
+                    <span id="user-pilot">PILOT:</span><br>
+                    <span id="user-energy">ENERGY:</span>
+                </div>
+            </div>
+            <button id="profile-btn">HỒ SƠ</button>
         </div>
         <h1 data-text="CHỌN LÕI A.I"></h1>
         <div id="core-selector">
@@ -695,6 +808,41 @@
         </div>
     </div>
 
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="close-modal-btn">X</button>
+            <h3>HỒ SƠ PILOT</h3>
+            <form id="profile-form">
+                <div class="profile-avatar-section">
+                    <img id="profile-avatar-preview" src="https://placehold.co/100x100/0A192F/00ffff?text=P" alt="Profile Avatar">
+                    <div class="profile-form-group" style="width: 100%;">
+                        <label for="profile-avatar-url">URL Ảnh Đại Diện</label>
+                        <input type="text" id="profile-avatar-url" placeholder="https://example.com/image.png">
+                    </div>
+                </div>
+                
+                <div class="profile-form-group">
+                    <label for="profile-f168-username">Tên Tài Khoản F168</label>
+                    <input type="text" id="profile-f168-username" placeholder="Nhập tên tài khoản F168">
+                    <small>Chỉ được đổi 2 lần/tháng, mỗi lần cách nhau 15 ngày.</small>
+                </div>
+
+                <div class="profile-form-group">
+                    <label for="profile-phone">Số Điện Thoại</label>
+                    <input type="tel" id="profile-phone" placeholder="Nhập số điện thoại">
+                </div>
+
+                <p id="profile-message" class="auth-error"></p>
+
+                <div class="modal-buttons">
+                    <button type="submit" id="save-profile-btn">LƯU THAY ĐỔI</button>
+                    <a href="https://vongxoaylongbao.site" target="_blank" id="lucky-spin-btn">VÒNG XOAY MAY MẮN</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
     <!-- Màn hình Loading -->
     <div id="loadingScreen" class="hidden">
@@ -721,7 +869,9 @@
             getFirestore,
             doc,
             setDoc,
-            onSnapshot
+            updateDoc,
+            onSnapshot,
+            Timestamp
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -737,6 +887,9 @@
         const fbApp = initializeApp(firebaseConfig);
         const auth = getAuth(fbApp);
         const db = getFirestore(fbApp);
+
+        // --- GLOBAL STATE ---
+        let currentUserData = null;
 
         // --- DOM Elements ---
         const authScreen = document.getElementById('authScreen');
@@ -761,7 +914,17 @@
         const userInfoBar = document.getElementById('user-info-bar');
         const userPilotSpan = document.getElementById('user-pilot');
         const userEnergySpan = document.getElementById('user-energy');
+        const userAvatarImg = document.getElementById('user-avatar');
         const lowEnergyModal = document.getElementById('low-energy-modal');
+        const profileBtn = document.getElementById('profile-btn');
+        const profileModal = document.getElementById('profile-modal');
+        const profileForm = document.getElementById('profile-form');
+        const profileAvatarPreview = document.getElementById('profile-avatar-preview');
+        const profileAvatarUrlInput = document.getElementById('profile-avatar-url');
+        const profileF168UsernameInput = document.getElementById('profile-f168-username');
+        const profilePhoneInput = document.getElementById('profile-phone');
+        const profileMessage = document.getElementById('profile-message');
+
         document.querySelectorAll('.close-modal-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 playSound('click');
@@ -1065,8 +1228,13 @@
                     uid: userCredential.user.uid, 
                     username: username, 
                     phoneNumber: phone, 
-                    energy: 100, // Starting energy
-                    createdAt: new Date() 
+                    energy: 0,
+                    createdAt: Timestamp.now(),
+                    // Initialize profile fields
+                    avatarUrl: '',
+                    f168Username: '',
+                    f168UsernameLastChanged: null,
+                    f168UsernameChangeCount: 0
                 });
                 playSound('confirm', 'G4');
                 errorMsg.textContent = '';
@@ -1107,36 +1275,15 @@
                 const userDocRef = doc(db, "users", user.uid);
                 unsubscribeUser = onSnapshot(userDocRef, (doc) => {
                     if (doc.exists()) {
-                        const userData = doc.data();
-                        const energy = userData.energy || 0;
-                        
-                        // Update UI
-                        userPilotSpan.textContent = `PILOT: ${userData.username.toUpperCase()}`;
-                        userEnergySpan.textContent = `ENERGY: ${energy}`;
-
-                        // Update energy bar color
-                        userEnergySpan.classList.remove('high', 'low');
-                        userInfoBar.classList.remove('low-energy');
-                        if (energy > 70) {
-                            userEnergySpan.classList.add('high');
-                        } else if (energy < 30) {
-                            userEnergySpan.classList.add('low');
-                            userInfoBar.classList.add('low-energy');
-                        }
-                        
-                        // Handle low energy warning
-                        const isEnergyLow = energy < 30;
-                        if (isEnergyLow && !wasEnergyLow) {
-                            lowEnergyModal.classList.remove('hidden');
-                            playSound('error');
-                        }
-                        wasEnergyLow = isEnergyLow;
-
+                        currentUserData = doc.data();
+                        updateUIWithUserData(currentUserData);
                     } else {
-                        console.log("No such user document!");
-                        userPilotSpan.textContent = `PILOT: UNKNOWN`;
-                        userEnergySpan.textContent = `ENERGY: 0`;
+                        console.error("User document does not exist for UID:", user.uid);
+                        // Handle case where user is authenticated but has no data
+                        signOut(auth);
                     }
+                }, (error) => {
+                    console.error("onSnapshot listener error:", error);
                 });
                 
                 authScreen.classList.add('fade-out');
@@ -1146,13 +1293,14 @@
                     aiCoreSelectionScreen.classList.add('fade-in');
                     userInfoBar.classList.remove('hidden');
                     decodeText(aiCoreSelectionScreen.querySelector('h1'));
-                    showCore(currentCoreIndex); // Show the first core by default
+                    showCore(currentCoreIndex);
                 }, 500);
 
 
             } else {
                 // User is signed out
-                if (unsubscribeUser) unsubscribeUser(); // Stop listening
+                if (unsubscribeUser) unsubscribeUser();
+                currentUserData = null;
                 authScreen.classList.remove('hidden', 'fade-out');
                 aiCoreSelectionScreen.classList.remove('fade-in');
                 aiCoreSelectionScreen.classList.add('hidden');
@@ -1161,6 +1309,36 @@
                 startBootSequence();
             }
         });
+
+        function updateUIWithUserData(userData) {
+            const energy = userData.energy || 0;
+            
+            // Update UI
+            userPilotSpan.textContent = `PILOT: ${userData.username.toUpperCase()}`;
+            userEnergySpan.textContent = `ENERGY: ${energy}`;
+            const avatarUrl = userData.avatarUrl || 'https://placehold.co/50x50/0A192F/00ffff?text=P';
+            userAvatarImg.src = avatarUrl;
+            userAvatarImg.onerror = () => { userAvatarImg.src = 'https://placehold.co/50x50/0A192F/00ffff?text=P'; };
+
+
+            // Update energy bar color
+            userEnergySpan.classList.remove('high', 'low');
+            userInfoBar.classList.remove('low-energy');
+            if (energy > 70) {
+                userEnergySpan.classList.add('high');
+            } else if (energy < 30) {
+                userEnergySpan.classList.add('low');
+                userInfoBar.classList.add('low-energy');
+            }
+            
+            // Handle low energy warning
+            const isEnergyLow = energy < 30;
+            if (isEnergyLow && !wasEnergyLow) {
+                lowEnergyModal.classList.remove('hidden');
+                playSound('error');
+            }
+            wasEnergyLow = isEnergyLow;
+        }
         
         function getFirebaseErrorMessage(errorCode) {
             switch (errorCode) {
@@ -1174,6 +1352,117 @@
                 default: return 'LỖI HỆ THỐNG';
             }
         }
+
+        // --- PROFILE MODAL LOGIC ---
+        profileBtn.addEventListener('click', () => {
+            if (!currentUserData) return;
+            playSound('open');
+            
+            // Populate form with current data
+            profileAvatarUrlInput.value = currentUserData.avatarUrl || '';
+            profileAvatarPreview.src = currentUserData.avatarUrl || 'https://placehold.co/100x100/0A192F/00ffff?text=P';
+            profileAvatarPreview.onerror = () => { profileAvatarPreview.src = 'https://placehold.co/100x100/0A192F/00ffff?text=P'; };
+            profileF168UsernameInput.value = currentUserData.f168Username || '';
+            profilePhoneInput.value = currentUserData.phoneNumber || '';
+            profileMessage.textContent = '';
+            
+            profileModal.classList.remove('hidden');
+        });
+
+        profileAvatarUrlInput.addEventListener('input', (e) => {
+            profileAvatarPreview.src = e.target.value || 'https://placehold.co/100x100/0A192F/00ffff?text=P';
+        });
+
+        profileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUserData || !auth.currentUser) return;
+
+            playSound('click');
+            const saveBtn = document.getElementById('save-profile-btn');
+            saveBtn.disabled = true;
+            profileMessage.textContent = 'ĐANG CẬP NHẬT...';
+            profileMessage.style.color = 'var(--yellow)';
+
+            const userDocRef = doc(db, "users", auth.currentUser.uid);
+            const updates = {};
+
+            // --- Handle F168 Username Change ---
+            const newF168Username = profileF168UsernameInput.value.trim();
+            if (newF168Username !== (currentUserData.f168Username || '')) {
+                const now = new Date();
+                const lastChanged = currentUserData.f168UsernameLastChanged ? currentUserData.f168UsernameLastChanged.toDate() : null;
+                let changeCount = currentUserData.f168UsernameChangeCount || 0;
+
+                if (lastChanged) {
+                    // Reset count if new month
+                    if (lastChanged.getMonth() !== now.getMonth() || lastChanged.getFullYear() !== now.getFullYear()) {
+                        changeCount = 0;
+                    }
+
+                    // Check 15-day rule
+                    const fifteenDaysInMillis = 15 * 24 * 60 * 60 * 1000;
+                    if (now.getTime() - lastChanged.getTime() < fifteenDaysInMillis) {
+                        const daysLeft = Math.ceil((fifteenDaysInMillis - (now.getTime() - lastChanged.getTime())) / (1000 * 60 * 60 * 24));
+                        profileMessage.textContent = `BẠN CẦN CHỜ ${daysLeft} NGÀY NỮA ĐỂ ĐỔI TÊN.`;
+                        profileMessage.style.color = 'var(--error-red)';
+                        saveBtn.disabled = false;
+                        playSound('error');
+                        return;
+                    }
+                }
+
+                // Check 2 changes per month rule
+                if (changeCount >= 2) {
+                    profileMessage.textContent = 'BẠN ĐÃ HẾT LƯỢT ĐỔI TÊN TRONG THÁNG NÀY.';
+                    profileMessage.style.color = 'var(--error-red)';
+                    saveBtn.disabled = false;
+                    playSound('error');
+                    return;
+                }
+
+                // If all checks pass
+                updates.f168Username = newF168Username;
+                updates.f168UsernameLastChanged = Timestamp.now();
+                updates.f168UsernameChangeCount = changeCount + 1;
+            }
+
+            // --- Handle other fields ---
+            const newAvatarUrl = profileAvatarUrlInput.value.trim();
+            if (newAvatarUrl !== (currentUserData.avatarUrl || '')) {
+                updates.avatarUrl = newAvatarUrl;
+            }
+
+            const newPhone = profilePhoneInput.value.trim();
+            if (newPhone !== (currentUserData.phoneNumber || '')) {
+                updates.phoneNumber = newPhone;
+            }
+
+            // --- Perform Update ---
+            if (Object.keys(updates).length > 0) {
+                try {
+                    await updateDoc(userDocRef, updates);
+                    profileMessage.textContent = 'CẬP NHẬT HỒ SƠ THÀNH CÔNG!';
+                    profileMessage.style.color = 'var(--success-green)';
+                    playSound('confirm');
+                } catch (error) {
+                    console.error("Error updating profile: ", error);
+                    profileMessage.textContent = 'LỖI CẬP NHẬT. VUI LÒNG THỬ LẠI.';
+                    profileMessage.style.color = 'var(--error-red)';
+                    playSound('error');
+                }
+            } else {
+                profileMessage.textContent = 'KHÔNG CÓ THAY ĐỔI NÀO.';
+                profileMessage.style.color = 'var(--yellow)';
+            }
+
+            saveBtn.disabled = false;
+            setTimeout(() => {
+                if(profileMessage.style.color !== 'var(--error-red)') {
+                    profileModal.classList.add('hidden');
+                }
+            }, 2000);
+        });
+
     </script>
 </body>
 </html>

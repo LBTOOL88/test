@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@400;700&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         :root {
             --cyan: #00ffff;
@@ -41,7 +42,6 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; 
             transition: opacity 0.5s ease;
         }
-        .background-canvas.effects-off { opacity: 0; }
         #youtube-player {
             position: absolute; top: -9999px; left: -9999px; opacity: 0; pointer-events: none;
         }
@@ -253,24 +253,76 @@
         #promo-spinner:hover .spinner-wheel { animation-duration: 1s; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* --- MÀN HÌNH LOADING --- */
-        #loadingScreen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark-blue);
-            z-index: 20; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: background-color 0.5s ease;
+        /* --- MÀN HÌNH KÍCH HOẠT ULTIMATE --- */
+        #activationScreen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000;
+            z-index: 20; display: flex; justify-content: center; align-items: center;
+            font-family: 'Fira Code', monospace;
+            padding: 15px; box-sizing: border-box;
+            opacity: 0; transition: opacity 0.5s ease;
         }
-        #loading-matrix-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 21; }
-        #loading-text {
-            font-family: 'Orbitron', sans-serif; font-size: 1.5em; color: var(--yellow);
-            text-shadow: 0 0 20px var(--yellow); z-index: 22; text-align: center;
-            line-height: 1.5; padding: 20px;
+        #activationScreen.visible { opacity: 1; }
+        #activation-hud {
+            width: 100%; height: 100%;
+            max-width: 800px; max-height: 1200px;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 15px;
+            position: relative;
         }
-        #back-to-selection-btn {
-            position: absolute; bottom: 30px; z-index: 23; background: transparent;
-            border: 1px solid var(--cyan); color: var(--cyan); padding: 10px 20px;
+        .hud-panel {
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 10px;
+            position: relative;
+            background: rgba(10, 25, 47, 0.3);
         }
-        #back-to-selection-btn:hover { background: var(--cyan); color: var(--dark-blue); }
-        #loadingScreen.loading-aquarius { background: #000; }
+        #hud-header { grid-column: 1 / 4; text-align: center; }
+        #hud-header h1 {
+            font-size: clamp(1.5em, 5vw, 2.5em);
+            color: var(--yellow); text-shadow: 0 0 15px var(--yellow);
+            margin: 0; animation: text-flicker 4s linear infinite;
+        }
+        #hud-left-panel, #hud-right-panel {
+            display: flex; flex-direction: column; gap: 10px;
+            font-size: clamp(0.7em, 2vw, 0.9em);
+        }
+        .data-stream {
+            height: 100%; overflow: hidden;
+            white-space: pre;
+        }
+        .data-stream span { display: block; }
+        #hud-center-panel {
+            grid-row: 2 / 3; grid-column: 2 / 3;
+            display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+        }
+        #core-3d-container {
+            width: 100%;
+            flex-grow: 1;
+            min-height: 150px;
+        }
+        #activation-status { text-align: center; width: 100%; padding-bottom: 10px; }
+        #activation-status-text { font-size: 1.2em; height: 1.5em; color: var(--text-light); }
+        .progress-bar-container { width: 100%; height: 10px; border: 1px solid var(--cyan); margin-top: 10px; padding: 2px; }
+        .progress-bar-fill { width: 0%; height: 100%; background: var(--cyan); transition: width 0.5s ease-out; box-shadow: 0 0 10px var(--cyan); }
+
+        #hud-footer {
+            grid-column: 1 / 4;
+            display: flex; justify-content: center;
+        }
+        #cancel-activation-btn {
+            background: transparent; border: 1px solid var(--error-red); color: var(--error-red);
+            padding: 10px 30px;
+        }
+        #cancel-activation-btn:hover { background: var(--error-red); color: var(--dark-blue); }
+
+        .system-check-item {
+            opacity: 0.5; transition: opacity 0.5s, color 0.5s;
+        }
+        .system-check-item.online {
+            opacity: 1; color: var(--success-green);
+        }
 
         /* --- MODALS --- */
         .modal-overlay {
@@ -345,21 +397,6 @@
         }
         .log-entry { margin-bottom: 8px; }
         .log-timestamp { color: var(--yellow); opacity: 0.8; margin-right: 10px; }
-
-        /* --- SETTINGS MODAL --- */
-        #settings-modal .modal-content {
-            border-color: var(--gold); box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.3), 0 0 35px var(--gold);
-        }
-        #settings-modal h3 { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
-        .settings-group { margin-bottom: 20px; text-align: left; }
-        .settings-group label { display: block; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; }
-        .theme-options { display: flex; gap: 10px; }
-        .theme-option {
-            width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
-            border: 2px solid transparent;
-        }
-        .theme-option.active { border-color: var(--yellow); }
-        input[type="range"] { width: 100%; }
 
         /* --- NOTIFICATION SYSTEM --- */
         #notification-container {
@@ -436,9 +473,6 @@
                 <button id="profile-btn" class="control-btn" title="Hồ sơ">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></svg>
                 </button>
-                <button id="settings-btn" class="control-btn" title="Cài đặt">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9.9 15.9-19.4 15.9H181.8c-9.5 0-17.4-6.8-19.4-15.9l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L49.8 429.3c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9.9-15.9 19.4-15.9h148.5c9.5 0 17.4 6.8 19.4 15.9l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z"/></svg>
-                </button>
                 <button id="logout-btn" class="control-btn" title="Đăng xuất">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/></svg>
                 </button>
@@ -477,13 +511,35 @@
     <div id="aquarius-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>Kích hoạt Siêu Lõi Aquarius</h3><p>VUI LÒNG NHẬP MÃ KÍCH HOẠT AQUARIUS</p><input type="text" id="aquarius-code-input" placeholder="MÃ KÍCH HOẠT"><p id="aquarius-error" class="auth-error"></p><div class="modal-buttons"><button id="confirm-aquarius-code" class="btn-style">XÁC NHẬN NHẬP MÃ</button><a href="https://t.me/longbaoF168" target="_blank" id="contact-for-code" class="btn-style">LIÊN HỆ LONG BẢO</a></div></div></div>
     <div id="low-energy-modal" class="modal-overlay hidden"><div class="modal-content warning"><button class="close-modal-btn">X</button><h3>CẢNH BÁO NĂNG LƯỢNG THẤP</h3><p>LÕI A.I ĐANG HẾT NĂNG LƯỢNG - HÃY RÚT RA NẠP LẠI ĐỂ HỒI PHỤC LÕI</p><div class="modal-buttons"><button class="close-modal-btn btn-style" style="position: static;">ĐÃ HIỂU</button></div></div></div>
     <div id="profile-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>HỒ SƠ PILOT</h3><div class="profile-tabs"><button class="profile-tab active" data-tab="profile-info">Thông tin</button><button class="profile-tab" data-tab="profile-security">Bảo mật</button><button class="profile-tab" data-tab="profile-log">Nhật ký</button></div><div id="profile-info" class="profile-tab-content active"><form id="profile-form"><div class="profile-avatar-section"><img id="profile-avatar-preview" src="https://placehold.co/100x100/0A192F/00ffff?text=P" alt="Profile Avatar"><div class="profile-form-group" style="width: 100%;"><label for="profile-avatar-url">URL Ảnh Đại Diện</label><input type="text" id="profile-avatar-url" placeholder="https://example.com/image.png"></div></div><div class="profile-form-group"><label for="profile-f168-username">Tên Tài Khoản F168</label><input type="text" id="profile-f168-username" placeholder="Nhập tên tài khoản F168"><small>Chỉ được đổi 2 lần/tháng, mỗi lần cách nhau 15 ngày.</small></div><div class="profile-form-group"><label for="profile-phone">Số Điện Thoại</label><input type="tel" id="profile-phone" placeholder="Nhập số điện thoại"></div><div class="modal-buttons"><button type="submit" id="save-profile-btn" class="btn-primary">LƯU THAY ĐỔI</button><a href="https://vongxoaylongbao.site" target="_blank" id="lucky-spin-btn" class="btn-style">VÒNG XOAY MAY MẮN</a></div></form></div><div id="profile-security" class="profile-tab-content"><form id="change-password-form"><div class="profile-form-group"><label for="current-password">Mật khẩu hiện tại</label><input type="password" id="current-password" required></div><div class="profile-form-group"><label for="new-password">Mật khẩu mới</label><input type="password" id="new-password" required></div><div class="modal-buttons"><button type="submit" class="btn-primary">ĐỔI MẬT KHẨU</button></div></form></div><div id="profile-log" class="profile-tab-content"><div id="activity-log-container"><p>Đang tải nhật ký...</p></div></div></div></div>
-    <div id="settings-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>CÀI ĐẶT HỆ THỐNG</h3><div class="settings-group"><label>Chủ đề màu sắc</label><div id="theme-options" class="theme-options"></div></div><div class="settings-group"><label for="bgm-volume">Âm lượng nhạc nền</label><input type="range" id="bgm-volume" min="0" max="100" step="1"></div><div class="settings-group"><label for="sfx-volume">Âm lượng hiệu ứng</label><input type="range" id="sfx-volume" min="0" max="1" step="0.1"></div><div class="settings-group"><label for="effects-toggle">Hiệu ứng nền</label><input type="checkbox" id="effects-toggle"></div><div class="modal-buttons"><button id="save-settings-btn" class="btn-primary">LƯU CÀI ĐẶT</button></div></div></div>
 
-    <!-- Màn hình Loading -->
-    <div id="loadingScreen" class="hidden">
-        <canvas id="loading-matrix-bg"></canvas>
-        <div id="loading-text"></div>
-        <button id="back-to-selection-btn">QUAY LẠI</button>
+    <!-- Màn hình Kích hoạt Ultimate -->
+    <div id="activationScreen" class="hidden">
+        <div id="activation-hud">
+            <header id="hud-header">
+                <h1>A.I. CORE ACTIVATION</h1>
+            </header>
+            <aside id="hud-left-panel" class="hud-panel">
+                <h3>SYSTEM CHECK</h3>
+                <div id="system-check-list"></div>
+            </aside>
+            <main id="hud-center-panel" class="hud-panel">
+                <div id="core-3d-container"></div>
+                <div id="activation-status">
+                    <h2 id="activation-core-name"></h2>
+                    <p id="activation-status-text"></p>
+                    <div class="progress-bar-container">
+                        <div id="activation-progress-bar" class="progress-bar-fill"></div>
+                    </div>
+                </div>
+            </main>
+            <aside id="hud-right-panel" class="hud-panel">
+                <h3>DATA STREAM</h3>
+                <div id="data-stream" class="data-stream"></div>
+            </aside>
+            <footer id="hud-footer">
+                <button id="cancel-activation-btn" class="btn-style">HỦY BỎ</button>
+            </footer>
+        </div>
     </div>
     
     <footer id="copyright">BẢN QUYỀN THUỘC VỀ LONG BẢO</footer>
@@ -518,13 +574,15 @@
         let currentUserData = null;
         let unsubscribeUser;
         let wasEnergyLow = false;
-        let loadingAnimationId, progressInterval;
+        let activationTimeout;
+        let dataStreamInterval;
+        let three, coreAnimationId;
 
         // --- DOM Elements ---
         const DOMElements = {
             authScreen: document.getElementById('authScreen'),
             aiCoreSelectionScreen: document.getElementById('aiCoreSelectionScreen'),
-            loadingScreen: document.getElementById('loadingScreen'),
+            activationScreen: document.getElementById('activationScreen'),
             loginForm: document.getElementById('loginForm'),
             registerForm: document.getElementById('registerForm'),
             showRegisterLink: document.getElementById('showRegisterLink'),
@@ -536,8 +594,15 @@
             prevCoreBtn: document.getElementById('prev-core-btn'),
             nextCoreBtn: document.getElementById('next-core-btn'),
             mainNextBtn: document.getElementById('main-next-btn'),
-            loadingText: document.getElementById('loading-text'),
-            backToSelectionBtn: document.getElementById('back-to-selection-btn'),
+            
+            // Activation Screen
+            core3dContainer: document.getElementById('core-3d-container'),
+            activationCoreName: document.getElementById('activation-core-name'),
+            activationStatusText: document.getElementById('activation-status-text'),
+            activationProgressBar: document.getElementById('activation-progress-bar'),
+            cancelActivationBtn: document.getElementById('cancel-activation-btn'),
+            systemCheckList: document.getElementById('system-check-list'),
+            dataStream: document.getElementById('data-stream'),
             
             // User Info
             userInfoBar: document.getElementById('user-info-bar'),
@@ -552,7 +617,6 @@
             aquariusError: document.getElementById('aquarius-error'),
             lowEnergyModal: document.getElementById('low-energy-modal'),
             profileModal: document.getElementById('profile-modal'),
-            settingsModal: document.getElementById('settings-modal'),
 
             // Profile
             profileBtn: document.getElementById('profile-btn'),
@@ -565,14 +629,6 @@
             profileTabContents: document.querySelectorAll('.profile-tab-content'),
             activityLogContainer: document.getElementById('activity-log-container'),
             changePasswordForm: document.getElementById('change-password-form'),
-
-            // Settings
-            settingsBtn: document.getElementById('settings-btn'),
-            saveSettingsBtn: document.getElementById('save-settings-btn'),
-            themeOptionsContainer: document.getElementById('theme-options'),
-            bgmVolumeSlider: document.getElementById('bgm-volume'),
-            sfxVolumeSlider: document.getElementById('sfx-volume'),
-            effectsToggle: document.getElementById('effects-toggle'),
 
             // Controls
             logoutBtn: document.getElementById('logout-btn'),
@@ -600,10 +656,13 @@
             sound.confirm = new Tone.MetalSynth({ frequency: 200, envelope: { attack: 0.001, decay: 0.1, release: 0.05 }, harmonicity: 3.1, modulationIndex: 32, resonance: 4000, octaves: 1.5 }).toDestination();
             sound.error = new Tone.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.2 } }).toDestination();
             sound.open = new Tone.PluckSynth({ attackNoise: 1, dampening: 4000, resonance: 0.7 }).toDestination();
+            sound.typing = new Tone.NoiseSynth({ noise: { type: 'pink' }, envelope: { attack: 0.001, decay: 0.05, sustain: 0 } }).toDestination();
+            sound.success = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.001, decay: 0.2, sustain: 0.1, release: 0.2 } }).toDestination();
+            sound.boot = new Tone.Synth({ oscillator: { type: 'sawtooth' }, envelope: { attack: 0.5, decay: 0.5, sustain: 0.2, release: 1 } }).toDestination();
         }
 
         function onPlayerReady(event) {
-            event.target.setVolume(DOMElements.bgmVolumeSlider.value);
+            event.target.setVolume(50);
             event.target.mute();
             event.target.playVideo();
         }
@@ -611,7 +670,13 @@
         function playSound(type, note = 'C4', duration = '8n') {
             if (!soundsReady || !sound[type]) return;
             try {
-                sound[type].triggerAttackRelease(note, duration);
+                if (type === 'typing') {
+                    sound[type].triggerAttack();
+                } else if (type === 'boot') {
+                    sound[type].triggerAttackRelease('C3', '1s');
+                } else {
+                    sound[type].triggerAttackRelease(note, duration);
+                }
             } catch (e) { console.error("Sound play error:", e); }
         }
 
@@ -635,35 +700,7 @@
             container.appendChild(notification);
             setTimeout(() => notification.remove(), 5000);
         }
-
-        // --- SETTINGS ---
-        const themes = {
-            'Cyberpunk': { '--cyan': '#00ffff', '--yellow': '#fcee0a' },
-            'Outrun': { '--cyan': '#ff00ff', '--yellow': '#00c7ff' },
-            'Glitch': { '--cyan': '#ff003c', '--yellow': '#7dfc00' },
-        };
-
-        function applySettings(settings) {
-            const theme = themes[settings.theme] || themes['Cyberpunk'];
-            Object.keys(theme).forEach(key => document.documentElement.style.setProperty(key, theme[key]));
-            document.querySelectorAll('.theme-option').forEach(el => {
-                el.classList.toggle('active', el.dataset.theme === settings.theme);
-            });
-            if (ytPlayer && typeof ytPlayer.setVolume === 'function') ytPlayer.setVolume(settings.bgmVolume);
-            Object.values(sound).forEach(s => s.volume.value = Tone.gainToDb(settings.sfxVolume));
-            document.querySelectorAll('.background-canvas').forEach(c => c.classList.toggle('effects-off', !settings.effects));
-            DOMElements.bgmVolumeSlider.value = settings.bgmVolume;
-            DOMElements.sfxVolumeSlider.value = settings.sfxVolume;
-            DOMElements.effectsToggle.checked = settings.effects;
-        }
-
-        function loadSettings() {
-            let settings = JSON.parse(localStorage.getItem('userSettings')) || {
-                theme: 'Cyberpunk', bgmVolume: 50, sfxVolume: 0.5, effects: true
-            };
-            applySettings(settings);
-        }
-
+        
         // --- ACTIVITY LOG ---
         async function logActivity(message) {
             if (!auth.currentUser) return;
@@ -728,61 +765,121 @@
         let currentCoreIndex = 0;
         function showCore(index) { DOMElements.coreOptions.forEach((o, i) => o.classList.toggle('active', i === index)); }
         
-        const startLoadingSequence = (coreIndex) => {
+        const startActivationSequence = (coreIndex) => {
             DOMElements.aiCoreSelectionScreen.classList.add('hidden');
-            DOMElements.loadingScreen.classList.remove('hidden');
+            DOMElements.activationScreen.classList.remove('hidden');
+            DOMElements.activationScreen.classList.add('visible');
+
             const coreName = DOMElements.coreOptions[coreIndex].querySelector('h3').textContent;
-            logActivity(`Kích hoạt lõi "${coreName}".`);
+            logActivity(`Bắt đầu kích hoạt lõi "${coreName}".`);
+            DOMElements.activationCoreName.textContent = `LÕI: ${coreName.toUpperCase()}`;
             
-            // SỬA LỖI: Khôi phục lại logic animation ma trận
-            const loadingMatrixCanvas = document.getElementById('loading-matrix-bg');
-            const lctx = loadingMatrixCanvas.getContext('2d');
-            const drawLoadingMatrix = createMatrixDrawer(lctx, loadingMatrixCanvas);
-            const runAnimation = () => {
-                drawLoadingMatrix();
-                loadingAnimationId = requestAnimationFrame(runAnimation);
-            }
-            runAnimation();
-
-            let progress = 0;
-            DOMElements.loadingText.innerHTML = `Đang kích hoạt ${coreName}...<br>${progress}%`;
-            progressInterval = setInterval(() => {
-                progress += Math.floor(Math.random() * 3) + 1;
-                if (progress > 100) progress = 100;
-                DOMElements.loadingText.innerHTML = `Đang kích hoạt ${coreName}...<br>${progress}%`;
-                if (progress === 100) {
-                    clearInterval(progressInterval);
-                    setTimeout(() => {
-                        DOMElements.loadingText.textContent = 'NẠP HOÀN TẤT';
-                        cancelAnimationFrame(loadingAnimationId);
-                    }, 1000);
-                }
-            }, 80);
-        };
-
-        const createMatrixDrawer = (ctx, canvas, color = 'rgba(0, 255, 255, 0.8)') => {
-            const alphabet = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン01';
-            const fontSize = 16;
-            const columns = canvas.width / fontSize;
-            const rainDrops = Array.from({ length: Math.ceil(columns) }).fill(1);
+            // System Check
+            const systems = ['MEMORY', 'GPU CLUSTER', 'QUANTUM CPU', 'NETWORK', 'FIREWALL'];
+            DOMElements.systemCheckList.innerHTML = systems.map(s => `<div class="system-check-item">${s}... OFFLINE</div>`).join('');
             
-            return () => {
-                ctx.fillStyle = 'rgba(10, 25, 47, 0.05)';
-                if (canvas.parentElement.classList.contains('loading-aquarius')) {
-                     ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            // Data Stream
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            dataStreamInterval = setInterval(() => {
+                let line = '';
+                for (let i = 0; i < 30; i++) line += chars.charAt(Math.floor(Math.random() * chars.length));
+                const span = document.createElement('span');
+                span.textContent = line;
+                DOMElements.dataStream.appendChild(span);
+                if (DOMElements.dataStream.children.length > 20) DOMElements.dataStream.firstChild.remove();
+                playSound('typing');
+            }, 100);
+
+            // 3D Animation
+            startCoreAnimation(coreIndex);
+
+            const steps = [
+                { text: "KHỞI TẠO KIỂM TRA HỆ THỐNG...", duration: 1500, progress: 10, action: () => {} },
+                ...systems.map((sys, i) => ({
+                    text: `KIỂM TRA ${sys}...`,
+                    duration: 800,
+                    progress: 10 + (i + 1) * 10,
+                    action: () => {
+                        const item = document.querySelector(`#system-check-list .system-check-item:nth-child(${i+1})`);
+                        if(item) item.innerHTML = `${sys}... <span style="color:var(--success-green)">ONLINE</span>`;
+                        playSound('success', 'C5', '16n');
+                    }
+                })),
+                { text: "PHÂN TÍCH CẤU TRÚC LÕI...", duration: 2000, progress: 70, action: () => {} },
+                { text: "NẠP GIAO THỨC...", duration: 2000, progress: 90, action: () => {} },
+                { text: "KÍCH HOẠT!", duration: 1000, progress: 100, action: () => playSound('boot') },
+                { text: "KÍCH HOẠT HOÀN TẤT.", duration: 2000, progress: 100, action: () => {} }
+            ];
+
+            let currentStep = 0;
+            const runStep = () => {
+                if (currentStep >= steps.length) {
+                    clearInterval(dataStreamInterval);
+                    return;
                 }
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.font = fontSize + 'px monospace';
-                rainDrops.forEach((y, i) => {
-                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                    const x = i * fontSize;
-                    ctx.fillStyle = color;
-                    ctx.fillText(text, x, y * fontSize);
-                    if (y * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
-                    rainDrops[i]++;
-                });
+                const step = steps[currentStep];
+                DOMElements.activationStatusText.textContent = step.text;
+                DOMElements.activationProgressBar.style.width = `${step.progress}%`;
+                step.action();
+                
+                activationTimeout = setTimeout(() => {
+                    currentStep++;
+                    runStep();
+                }, step.duration);
             };
+
+            runStep();
         };
+
+        function startCoreAnimation(coreIndex) {
+            if (three) {
+                cancelAnimationFrame(coreAnimationId);
+                while(three.scene.children.length > 0){ 
+                    three.scene.remove(three.scene.children[0]); 
+                }
+            }
+
+            const container = DOMElements.core3dContainer;
+            container.innerHTML = '';
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+
+            let coreObject;
+            const light1 = new THREE.PointLight(0x00ffff, 2, 100);
+            light1.position.set(0, 5, 5);
+            scene.add(light1);
+
+            const light2 = new THREE.PointLight(0xfcee0a, 2, 100);
+            light2.position.set(0, -5, -5);
+            scene.add(light2);
+
+            if (coreIndex === 0) { // LongBao IV
+                const geometry = new THREE.IcosahedronGeometry(1.5, 0);
+                const material = new THREE.MeshStandardMaterial({ color: 0xfcee0a, metalness: 0.8, roughness: 0.2, wireframe: true });
+                coreObject = new THREE.Mesh(geometry, material);
+            } else { // Yian & Aquarius
+                const geometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
+                const material = new THREE.MeshStandardMaterial({ color: 0xff00ff, metalness: 0.9, roughness: 0.1 });
+                coreObject = new THREE.Mesh(geometry, material);
+                light1.color.set(0xff00ff);
+                light2.color.set(0x00c7ff);
+            }
+            scene.add(coreObject);
+            camera.position.z = 5;
+
+            three = { scene, camera, renderer, coreObject };
+
+            function animate() {
+                coreAnimationId = requestAnimationFrame(animate);
+                three.coreObject.rotation.x += 0.005;
+                three.coreObject.rotation.y += 0.01;
+                three.renderer.render(three.scene, three.camera);
+            }
+            animate();
+        }
         
         // --- FIREBASE AUTH & DATA ---
         onAuthStateChanged(auth, (user) => {
@@ -812,7 +909,7 @@
                 currentUserData = null;
                 DOMElements.authScreen.classList.remove('hidden', 'fade-out');
                 DOMElements.aiCoreSelectionScreen.classList.add('hidden');
-                DOMElements.loadingScreen.classList.add('hidden');
+                DOMElements.activationScreen.classList.add('hidden');
                 DOMElements.userInfoBar.classList.add('hidden');
                 startBootSequence();
             }
@@ -928,7 +1025,7 @@
                     DOMElements.aquariusModal.classList.remove('hidden');
                     playSound('open', 'G4');
                 } else {
-                    startLoadingSequence(currentCoreIndex);
+                    startActivationSequence(currentCoreIndex);
                 }
             });
 
@@ -936,7 +1033,7 @@
                 if (DOMElements.aquariusCodeInput.value.trim() !== '') {
                     playSound('confirm');
                     DOMElements.aquariusModal.classList.add('hidden');
-                    startLoadingSequence(2); // Start Aquarius loading
+                    startActivationSequence(2); // Start Aquarius loading
                     DOMElements.aquariusCodeInput.value = '';
                     DOMElements.aquariusError.textContent = '';
                 } else {
@@ -957,11 +1054,15 @@
                 showCore(currentCoreIndex);
             });
 
-            DOMElements.backToSelectionBtn.addEventListener('click', () => {
-                clearInterval(progressInterval);
-                cancelAnimationFrame(loadingAnimationId);
-                DOMElements.loadingScreen.classList.add('hidden');
-                DOMElements.aiCoreSelectionScreen.classList.remove('hidden');
+            DOMElements.cancelActivationBtn.addEventListener('click', () => {
+                clearTimeout(activationTimeout);
+                clearInterval(dataStreamInterval);
+                cancelAnimationFrame(coreAnimationId);
+                DOMElements.activationScreen.classList.remove('visible');
+                setTimeout(() => {
+                    DOMElements.activationScreen.classList.add('hidden');
+                    DOMElements.aiCoreSelectionScreen.classList.remove('hidden');
+                }, 500);
             });
 
             DOMElements.logoutBtn.addEventListener('click', () => {
@@ -970,11 +1071,6 @@
                 showNotification("Đã đăng xuất.", "info");
             });
             
-            DOMElements.settingsBtn.addEventListener('click', () => {
-                playSound('open');
-                DOMElements.settingsModal.classList.remove('hidden');
-            });
-
             DOMElements.profileBtn.addEventListener('click', () => {
                 if (!currentUserData) return;
                 playSound('open');
@@ -1033,20 +1129,8 @@
 
         // --- INITIALIZATION ---
         function init() {
-            Object.keys(themes).forEach(name => {
-                const option = document.createElement('div');
-                option.className = 'theme-option';
-                option.dataset.theme = name;
-                option.style.background = `linear-gradient(45deg, ${themes[name]['--cyan']}, ${themes[name]['--yellow']})`;
-                option.addEventListener('click', () => {
-                    document.querySelectorAll('.theme-option').forEach(el => el.classList.remove('active'));
-                    option.classList.add('active');
-                });
-                DOMElements.themeOptionsContainer.appendChild(option);
-            });
-            loadSettings();
             initializeMedia();
-            setupEventListeners(); // Khôi phục lại hàm này
+            setupEventListeners(); 
         }
 
         init();

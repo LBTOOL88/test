@@ -511,12 +511,13 @@
     </style>
 </head>
 <body>
-    <!-- Nền hiệu ứng -->
     <canvas id="matrix-bg" class="background-canvas"></canvas>
-    <div id="youtube-player"></div>
+    <audio id="background-audio" loop>
+        <source src="-The Final Battle- - Epic Choir Version - Elden Ring - Tai Tomisawa.mp4" type="video/mp4">
+        Trình duyệt của bạn không hỗ trợ phát âm thanh.
+    </audio>
     <div id="notification-container"></div>
     
-    <!-- Màn hình đăng nhập / đăng ký -->
     <div id="authScreen" class="hidden">
         <div id="auth-content">
             <div class="corner-bracket top-left"></div> <div class="corner-bracket top-right"></div>
@@ -543,7 +544,6 @@
         </div>
     </div>
 
-    <!-- Màn hình chọn lõi A.I -->
     <div id="aiCoreSelectionScreen" class="hidden">
         <div id="user-info-bar" class="hidden">
             <div id="user-info-left">
@@ -564,7 +564,7 @@
         </div>
         <h1 data-text="CHỌN LÕI A.I"></h1>
         <div id="core-selector">
-            <button id="prev-core-btn" class="core-nav-btn">&lt;</button>
+            <button id="prev-core-btn" class="core-nav-btn"><</button>
             <div id="core-options-container">
                 <div class="core-option">
                     <h3>LongBao Thế Hệ IV</h3>
@@ -578,11 +578,11 @@
                 </div>
                 <div class="core-option">
                     <h3>Siêu Lõi Aquarius</h3>
-                    <div class="gif-container"><iframe src="https://giphy.com/embed/h88FMNUACANfKcsXFq" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div>
+                    <div class="gif-container"><iframe src="https://giphy.com/embed/h88FMNUACanfKcsXFq" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div>
                     <p class="core-description">Được tạo lên từ A.I thông minh nhất thế giới Grok IV - Tỉ lệ thắng 99%. X1000 lần tài khoản trong 1 đêm không còn là mơ.</p>
                 </div>
             </div>
-            <button id="next-core-btn" class="core-nav-btn">&gt;</button>
+            <button id="next-core-btn" class="core-nav-btn">></button>
         </div>
         <button id="main-next-btn" class="btn-next">KÍCH HOẠT LÕI</button>
         <div id="promo-banner">
@@ -591,12 +591,10 @@
         </div>
     </div>
 
-    <!-- Modals -->
     <div id="aquarius-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>Kích hoạt Siêu Lõi Aquarius</h3><p>VUI LÒNG NHẬP MÃ KÍCH HOẠT AQUARIUS</p><input type="text" id="aquarius-code-input" placeholder="MÃ KÍCH HOẠT"><p id="aquarius-error" class="auth-error"></p><div class="modal-buttons"><button id="confirm-aquarius-code" class="btn-style">XÁC NHẬN NHẬP MÃ</button><a href="https://t.me/longbaoF168" target="_blank" id="contact-for-code" class="btn-style">LIÊN HỆ LONG BẢO</a></div></div></div>
     <div id="low-energy-modal" class="modal-overlay hidden"><div class="modal-content warning"><button class="close-modal-btn">X</button><h3>CẢNH BÁO NĂNG LƯỢNG THẤP</h3><p>LÕI A.I ĐANG HẾT NĂNG LƯỢNG - HÃY RÚT RA NẠP LẠI ĐỂ HỒI PHỤC LÕI</p><div class="modal-buttons"><button class="close-modal-btn btn-style" style="position: static;">ĐÃ HIỂU</button></div></div></div>
     <div id="profile-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>HỒ SƠ PILOT</h3><div class="profile-tabs"><button class="profile-tab active" data-tab="profile-info">Thông tin</button><button class="profile-tab" data-tab="profile-security">Bảo mật</button><button class="profile-tab" data-tab="profile-log">Nhật ký</button></div><div id="profile-info" class="profile-tab-content active"><form id="profile-form"><div class="profile-avatar-section"><img id="profile-avatar-preview" src="https://placehold.co/100x100/0A192F/00ffff?text=P" alt="Profile Avatar"><div class="profile-form-group" style="width: 100%;"><label for="profile-avatar-url">URL Ảnh Đại Diện</label><input type="text" id="profile-avatar-url" placeholder="https://example.com/image.png"></div></div><div class="profile-form-group"><label for="profile-f168-username">Tên Tài Khoản F168</label><input type="text" id="profile-f168-username" placeholder="Nhập tên tài khoản F168"><small>Chỉ được đổi 2 lần/tháng, mỗi lần cách nhau 15 ngày.</small></div><div class="profile-form-group"><label for="profile-phone">Số Điện Thoại</label><input type="tel" id="profile-phone" placeholder="Nhập số điện thoại"></div><div class="modal-buttons"><button type="submit" id="save-profile-btn" class="btn-primary">LƯU THAY ĐỔI</button><a href="https://vongxoaylongbao.site" target="_blank" id="lucky-spin-btn" class="btn-style">VÒNG XOAY MAY MẮN</a></div></form></div><div id="profile-security" class="profile-tab-content"><form id="change-password-form"><div class="profile-form-group"><label for="current-password">Mật khẩu hiện tại</label><input type="password" id="current-password" required></div><div class="profile-form-group"><label for="new-password">Mật khẩu mới</label><input type="password" id="new-password" required></div><div class="modal-buttons"><button type="submit" class="btn-primary">ĐỔI MẬT KHẨU</button></div></form></div><div id="profile-log" class="profile-tab-content"><div id="activity-log-container"><p>Đang tải nhật ký...</p></div></div></div></div>
 
-    <!-- Màn hình Kích hoạt Ultimate -->
     <div id="activationScreen" class="hidden">
         <div id="activation-hud">
             <header id="hud-header">
@@ -626,7 +624,6 @@
         </div>
     </div>
 
-    <!-- Màn hình Lõi Yian -->
     <div id="yianCoreScreen" class="hidden">
         <button id="yian-exit-button" class="btn-style">THOÁT LÕI YIAN</button>
         <div id="yian-app-container">
@@ -814,22 +811,12 @@
             setInterval(matrix, 50);
         }
 
-        // --- YOUTUBE PLAYER & SOUND ENGINE ---
-        let ytPlayer, isYtReady = false, soundsReady = false;
+        // --- BACKGROUND AUDIO & SOUND ENGINE ---
+        let bgAudio, soundsReady = false;
         const sound = {};
 
         function initializeMedia() {
-            window.onYouTubeIframeAPIReady = () => {
-                isYtReady = true;
-                ytPlayer = new YT.Player('youtube-player', {
-                    height: '360', width: '640', videoId: '16GcpkR3rMM',
-                    playerVars: { 'autoplay': 1, 'controls': 0, 'loop': 1, 'playlist': '16GcpkR3rMM' },
-                    events: { 'onReady': onPlayerReady }
-                });
-            };
-            const tag = document.createElement('script');
-            tag.src = "https://www.youtube.com/iframe_api";
-            document.head.appendChild(tag);
+            bgAudio = document.getElementById('background-audio');
 
             sound.click = new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.05, release: 0.1 } }).toDestination();
             sound.navigate = new Tone.MembraneSynth({ pitchDecay: 0.01, octaves: 2, envelope: { attack: 0.001, decay: 0.2, sustain: 0.01, release: 0.1 } }).toDestination();
@@ -839,12 +826,6 @@
             sound.typing = new Tone.NoiseSynth({ noise: { type: 'pink' }, envelope: { attack: 0.001, decay: 0.05, sustain: 0 } }).toDestination();
             sound.success = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.001, decay: 0.2, sustain: 0.1, release: 0.2 } }).toDestination();
             sound.boot = new Tone.Synth({ oscillator: { type: 'sawtooth' }, envelope: { attack: 0.5, decay: 0.5, sustain: 0.2, release: 1 } }).toDestination();
-        }
-
-        function onPlayerReady(event) {
-            event.target.setVolume(50);
-            event.target.mute();
-            event.target.playVideo();
         }
 
         function playSound(type, note = 'C4', duration = '8n') {
@@ -864,8 +845,9 @@
             if (soundsReady) return;
             await Tone.start();
             soundsReady = true;
-            if (isYtReady && ytPlayer && ytPlayer.isMuted()) {
-                ytPlayer.unMute();
+            if (bgAudio) {
+                bgAudio.volume = 0.5;
+                bgAudio.play().catch(e => console.error("Audio play failed:", e));
             }
         };
         document.body.addEventListener('click', startMedia, { once: true });

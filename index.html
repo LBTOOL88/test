@@ -96,8 +96,18 @@
         .f168-banner { display: block; text-decoration: none; color: var(--error-red); font-weight: 700; margin-top: 15px; padding: 10px; border: 1px solid var(--error-red); text-shadow: 0 0 5px var(--error-red); font-size: 0.9em; line-height: 1.4; cursor: pointer; transition: all 0.2s ease; animation: boot-up 0.6s ease-out forwards, warning-blink 1.2s infinite 0.6s; }
         .f168-banner:hover { background-color: rgba(255, 60, 60, 0.5); color: var(--text-light); text-shadow: 0 0 10px var(--text-light); animation-play-state: paused; }
 
-        /* --- MÀN HÌNH CHỌN LÕI A.I --- */
-        #aiCoreSelectionScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 3; padding: 15px; box-sizing: border-box; padding-top: 80px; padding-bottom: 150px; opacity: 0; transition: opacity 0.5s ease; }
+        /* --- MÀN HÌNH CHỌN LÕI A.I (FIXED LAYOUT) --- */
+        #aiCoreSelectionScreen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px; /* Spacing between elements */
+            padding: 80px 15px 150px 15px;
+            box-sizing: border-box;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
         #aiCoreSelectionScreen.fade-in { opacity: 1; }
         #user-info-bar { position: absolute; top: 15px; left: 15px; right: 15px; background: var(--container-bg); border: 1px solid var(--cyan); padding: 8px 15px; display: flex; justify-content: space-between; align-items: center; font-family: 'Orbitron', sans-serif; font-size: 0.9em; box-shadow: 0 0 10px var(--cyan); transition: border-color 0.5s ease, box-shadow 0.5s ease; }
         #user-info-left { display: flex; align-items: center; gap: 10px; }
@@ -111,57 +121,109 @@
         .control-btn { background: transparent; border: 1px solid var(--cyan); color: var(--cyan); padding: 8px; font-size: 0.8em; line-height: 1; border-radius: 5px; }
         .control-btn:hover { background: var(--cyan); color: var(--dark-blue); }
         .control-btn svg { width: 16px; height: 16px; fill: currentColor; }
-        #aiCoreSelectionScreen h1 { color: var(--cyan); text-shadow: 0 0 15px var(--cyan); font-size: 1.5em; margin-bottom: 20px; text-align: center; }
+        
+        .title-vip {
+            font-size: 2em !important;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--gold), var(--cyan), #ff00c1, var(--gold));
+            background-size: 400%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: aurora-flow-vip 5s linear infinite;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.8), 0 0 15px rgba(0, 255, 255, 0.6), 0 0 30px rgba(255, 0, 193, 0.5);
+        }
+
         #core-selector { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 400px; }
         .core-nav-btn { background: transparent; border: 2px solid var(--cyan); color: var(--cyan); font-size: 2em; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; line-height: 1; padding: 0; border-radius: 50%; text-shadow: 0 0 8px var(--cyan); flex-shrink: 0; }
         .core-nav-btn:hover { background: var(--cyan); color: var(--dark-blue); }
-        #core-options-container { width: calc(100% - 100px); height: 400px; position: relative; overflow: hidden; margin: 0 10px; }
+        #core-options-container { width: calc(100% - 100px); height: 320px; position: relative; overflow: hidden; margin: 0 10px; }
         .core-option { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--container-bg); border: 2px solid var(--border-color); box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2), 0 0 15px var(--border-color); padding: 15px; text-align: center; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); transition: transform 0.5s ease, opacity 0.5s ease; opacity: 0; transform: scale(0.9); display: none; box-sizing: border-box; }
         .core-option.active { opacity: 1; transform: scale(1); z-index: 2; display: flex; flex-direction: column; justify-content: flex-start; }
         .core-option h3 { color: var(--yellow); font-size: 1.2em; margin: 0 0 10px 0; flex-shrink: 0; }
         .gif-container { width: 100%; padding-bottom: 75%; height: 0; position: relative; background-color: rgba(0,0,0,0.3); border: 1px solid var(--border-color); margin-bottom: 10px; flex-shrink: 0; }
         .gif-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; border: 0; }
         .core-description { font-size: 0.85em; color: var(--text-light); line-height: 1.4; opacity: 0.9; font-weight: 400; text-align: center; margin: 0; flex-grow: 1; overflow-y: auto; }
-        #main-next-btn { margin-top: 15px; max-width: 400px; }
-        #promo-banner { width: 100%; max-width: 400px; margin-top: 15px; padding: 10px; background: rgba(255, 215, 0, 0.1); border: 1px solid var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; animation: promo-glow 2s infinite alternate; }
+        #main-next-btn { max-width: 400px; }
+        #promo-banner { width: 100%; max-width: 400px; padding: 10px; background: rgba(255, 215, 0, 0.1); border: 1px solid var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; animation: promo-glow 2s infinite alternate; }
         #promo-text { color: var(--gold); text-decoration: none; font-weight: 700; font-size: 0.8em; text-align: left; flex-grow: 1; text-shadow: 0 0 5px var(--gold); }
         #promo-spinner-link { flex-shrink: 0; margin-left: 10px; }
         #promo-spinner { width: 40px; height: 40px; cursor: pointer; }
         .spinner-wheel { animation: spin 4s linear infinite; transform-origin: 50% 50%; }
         #promo-spinner:hover .spinner-wheel { animation-duration: 1s; }
 
-        /* --- CHATBOT FEATURE --- */
-        #chat-container {
+        /* --- DRAGGABLE ROBOT CHAT --- */
+        #chat-robot-container {
             position: fixed;
-            bottom: 10px;
-            left: 10px;
+            bottom: 20px;
+            right: 20px;
+            z-index: 99;
+            cursor: grab;
+            transition: transform 0.2s ease-out;
+        }
+        #chat-robot-container.dragging {
+            cursor: grabbing;
+            transform: scale(1.1);
+        }
+        #chat-robot-icon {
+            width: 80px;
+            height: 80px;
+            filter: drop-shadow(0 0 10px var(--cyan));
+            transition: filter 0.3s ease;
+            position: relative;
+        }
+        #chat-robot-icon:hover {
+            filter: drop-shadow(0 0 20px var(--yellow));
+        }
+        #robot-speech-bubble {
+            position: absolute;
+            bottom: 90px;
+            right: 0px;
+            background: var(--container-bg);
+            color: var(--yellow);
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--cyan);
+            font-size: 0.9em;
+            white-space: nowrap;
+            opacity: 0;
+            animation: bubble-fade-in 1s ease 1s forwards;
+            pointer-events: none;
+        }
+        #robot-speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-top-color: var(--cyan);
+            border-bottom: 0;
+        }
+
+        /* --- CHAT WINDOW --- */
+        #chat-window-container {
+            position: fixed;
+            bottom: 110px; /* Position above the robot */
+            right: 20px;
             width: 320px;
-            z-index: 20;
+            z-index: 98;
             transition: all 0.3s ease-out;
+            transform-origin: bottom right;
         }
-        #chat-container.collapsed {
-            transform: translateY(calc(100% - 50px));
-        }
-        #chat-toggle {
-            background: var(--cyan);
-            color: var(--dark-blue);
-            border: none;
-            width: 100%;
-            padding: 12px;
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            cursor: pointer;
-            box-shadow: 0 0 10px var(--cyan);
-            border-radius: 8px 8px 0 0;
+        #chat-window-container.hidden {
+            transform: scale(0);
+            opacity: 0;
         }
         #chat-window {
             height: 350px;
             background: var(--container-bg);
             border: 1px solid var(--cyan);
-            border-top: none;
             display: flex;
             flex-direction: column;
-            border-radius: 0 0 8px 8px;
+            border-radius: 8px;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
         }
         #chat-messages { flex-grow: 1; padding: 10px; overflow-y: auto; font-size: 0.9em; display: flex; flex-direction: column; gap: 8px; }
         .chat-message { line-height: 1.4; max-width: 90%; }
@@ -193,6 +255,11 @@
         .modal-buttons button, .modal-buttons a { width: 100%; box-sizing: border-box; }
         .close-modal-btn { position: absolute; top: 10px; right: 10px; background: transparent; border: none; color: var(--text-light); font-size: 1.5em; padding: 5px; line-height: 1; }
         
+        /* Loading Modal */
+        #loading-progress-bar-container { width: 100%; background-color: rgba(0,0,0,0.5); border: 1px solid var(--cyan); border-radius: 10px; padding: 3px; margin-top: 20px; }
+        #loading-progress-bar { height: 20px; background: linear-gradient(90deg, var(--cyan), var(--yellow)); border-radius: 7px; transition: width 0.1s linear; }
+        #loading-percentage { font-family: 'Orbitron', sans-serif; font-size: 1.5em; color: var(--yellow); text-shadow: 0 0 10px var(--yellow); margin-top: 15px; }
+
         /* Profile Modal */
         #profile-modal .modal-content { border-color: var(--cyan); box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.3), 0 0 35px var(--cyan); }
         #profile-modal h3 { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
@@ -346,6 +413,7 @@
         @keyframes pulse-red { 50% { box-shadow: 0 0 15px var(--neon-red); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translate3d(0, 40px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
         @keyframes aurora-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes aurora-flow-vip { 0% { background-position: 0% 50%; } 50% { background-position: 200% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes vip-glow { 0%, 100% { border-color: #00bfff; box-shadow: 0 0 5px #00bfff, 0 0 10px #00bfff, 0 0 15px #00bfff; } 50% { border-color: #ffb300; box-shadow: 0 0 5px #ffb300, 0 0 15px #ffb300, 0 0 25px #ffb300; } }
         @keyframes vip-chat-glow { 0%, 100% { border-color: var(--vip-color); box-shadow: 0 0 8px var(--vip-color); } 50% { border-color: #ff00c1; box-shadow: 0 0 16px #ff00c1; } }
         @keyframes pulse { from { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); } to { transform: scale(1.02); box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); } }
@@ -363,6 +431,10 @@
                 box-shadow: 0 0 5px var(--cyan), 0 0 10px var(--cyan);
             }
         }
+        @keyframes bubble-fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         
         /* --- RESPONSIVE DESIGN --- */
         @media (max-width: 480px) {
@@ -377,22 +449,17 @@
                 font-size: 1.5em;
             }
             #aiCoreSelectionScreen {
-                padding-top: 70px;
-                padding-bottom: 180px; /* More space for footer and chat */
+                padding: 70px 15px 160px 15px;
+                gap: 10px;
             }
             #core-options-container {
-                height: 350px;
+                height: 300px;
             }
             .core-description {
                 font-size: 0.8em;
             }
-            #chat-container {
-                left: auto;
-                right: 10px;
-                width: 280px; /* Smaller chat window */
-            }
-            #chat-window {
-                height: 300px;
+            #chat-window-container {
+                width: calc(100vw - 40px); /* Adjust chat window size for mobile */
             }
             #main-footer {
                 font-size: 0.9em; /* Make footer text slightly smaller if needed */
@@ -452,7 +519,7 @@
                 </button>
             </div>
         </div>
-        <h1 data-text="CHỌN LÕI A.I"></h1>
+        <h1 data-text="CHỌN LÕI A.I" class="title-vip"></h1>
         <div id="core-selector">
             <button id="prev-core-btn" class="core-nav-btn" aria-label="Lõi trước">&lt;</button>
             <div id="core-options-container">
@@ -465,18 +532,25 @@
             <a href="https://www.f168a2.net/home/register?id=409098214&currency=VND" target="_blank" id="promo-text">ĐĂNG KÍ NẠP ĐẦU 8888K - TẶNG VÒNG XOAY MAY MẮN</a>
             <a href="https://vongxoaylongbao.site/" target="_blank" id="promo-spinner-link"><svg id="promo-spinner" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color: #fcee0a; stop-opacity: 1" /><stop offset="100%" style="stop-color: #ffd700; stop-opacity: 1" /></linearGradient></defs><g class="spinner-wheel"><circle cx="50" cy="50" r="25" fill="transparent" stroke="#E74C3C" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(-90 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#F1C40F" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(-30 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#2ECC71" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(30 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#3498DB" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(90 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#9B59B6" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(150 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#1ABC9C" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(210 50 50)"/></g><circle cx="50" cy="50" r="48" fill="none" stroke="url(#gold-gradient)" stroke-width="4"/><path d="M50,0 L45,15 L55,15 Z" fill="var(--gold)" stroke="var(--dark-blue)" stroke-width="1" /><circle cx="50" cy="50" r="12" fill="var(--dark-blue)" stroke="var(--gold)" stroke-width="2"/><circle cx="50" cy="50" r="8" fill="var(--gold)"/></svg></a>
         </div>
-        <!-- Chatbot Feature -->
-        <div id="chat-container" class="collapsed hidden">
-            <button id="chat-toggle">CHAT VỚI A.I</button>
-            <div id="chat-window">
-                <div id="chat-messages"></div>
-                <form id="chat-form">
-                    <input type="text" id="chat-input" placeholder="Hỏi A.I LongBao... (-5 Năng Lượng)" autocomplete="off" required>
-                    <button type="submit" id="chat-send-btn">GỬI</button>
-                </form>
-            </div>
+    </div>
+    
+    <!-- Robot Chat Feature -->
+    <div id="chat-robot-container" class="hidden">
+        <div id="robot-speech-bubble">tôi là a.i long bảo</div>
+        <div id="chat-robot-icon">
+            <iframe src="https://giphy.com/embed/KOjYutEk4WwvXIwHH6" width="100%" height="100%" style="position:absolute; pointer-events: none;" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
         </div>
     </div>
+    <div id="chat-window-container" class="hidden">
+        <div id="chat-window">
+            <div id="chat-messages"></div>
+            <form id="chat-form">
+                <input type="text" id="chat-input" placeholder="Hỏi A.I LongBao... (-5 Năng Lượng)" autocomplete="off" required>
+                <button type="submit" id="chat-send-btn">GỬI</button>
+            </form>
+        </div>
+    </div>
+
 
     <!-- Màn hình Lõi LongBao IV -->
     <div id="longbaoIVScreen" class="hidden">
@@ -538,7 +612,7 @@
                     </div>
                     <div id="history-grid" class="history-grid box-panel"></div>
                     <div id="suggested-table-container" class="box-panel p-3 text-center cursor-pointer hover:border-amber-300 transition-colors">
-                        <h3 class="text-sm text-gray-400 uppercase tracking-wider">ĐỀ XUẤT BÀN CHƠI TỈ LỆ WIN 80-90%</h3>
+                        <h3 class="text-sm text-gray-400 uppercase tracking-wider">ĐỀ XUẤT BÀN CHƠI TỈ LỆ WIN CAO NHẤT</h3>
                         <p id="suggested-table-name" class="text-2xl font-bold text-[var(--neon-gold)] glow-text-gold">...</p>
                     </div>
                 </div>
@@ -631,6 +705,15 @@
     </div>
     
     <!-- Modals -->
+    <div id="core-loading-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 id="loading-status-text">ĐANG NẠP LÕI...</h3>
+            <div id="loading-progress-bar-container">
+                <div id="loading-progress-bar" style="width: 0%;"></div>
+            </div>
+            <p id="loading-percentage">0%</p>
+        </div>
+    </div>
     <div id="aquarius-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>Kích hoạt Siêu Lõi Aquarius</h3><p>VUI LÒNG NHẬP MÃ KÍCH HOẠT AQUARIUS</p><input type="text" id="aquarius-code-input" placeholder="MÃ KÍCH HOẠT"><p id="aquarius-error" class="auth-error"></p><div class="modal-buttons"><button id="confirm-aquarius-code" class="btn-primary">XÁC NHẬN</button><a href="https://t.me/longbaoF168" target="_blank" class="btn-style" style="border: 1px solid var(--cyan); color: var(--cyan);">LIÊN HỆ</a></div></div></div>
     <div id="low-energy-modal" class="modal-overlay hidden"><div class="modal-content warning"><button class="close-modal-btn">X</button><h3>CẢNH BÁO NĂNG LƯỢNG THẤP</h3><p>LÕI A.I ĐANG HẾT NĂNG LƯỢNG - HÃY RÚT RA NẠP LẠI ĐỂ HỒI PHỤC LÕI</p><div class="modal-buttons"><button class="close-modal-btn btn-primary" style="position: static;">ĐÃ HIỂU</button></div></div></div>
     <div id="profile-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>HỒ SƠ PILOT</h3><div class="profile-tabs"><button class="profile-tab active" data-tab="profile-info">Thông tin</button><button class="profile-tab" data-tab="profile-security">Bảo mật</button><button class="profile-tab" data-tab="profile-log">Nhật ký</button></div><div id="profile-info" class="profile-tab-content active"><form id="profile-form"><div class="profile-avatar-section"><img id="profile-avatar-preview" src="https://placehold.co/100x100/0A192F/00ffff?text=P" alt="Profile Avatar"><div class="profile-form-group" style="width: 100%;"><label for="profile-avatar-url">URL Ảnh Đại Diện</label><input type="text" id="profile-avatar-url" placeholder="https://example.com/image.png"></div></div><div class="profile-form-group"><label for="profile-f168-username">Tên Tài Khoản F168</label><input type="text" id="profile-f168-username" placeholder="Nhập tên tài khoản F168"><small>Chỉ được đổi 2 lần/tháng, mỗi lần cách nhau 15 ngày.</small></div><div class="profile-form-group"><label for="profile-phone">Số Điện Thoại</label><input type="tel" id="profile-phone" placeholder="Nhập số điện thoại"></div><div class="modal-buttons"><button type="submit" id="save-profile-btn" class="btn-primary">LƯU THAY ĐỔI</button></div></form></div><div id="profile-security" class="profile-tab-content"><form id="change-password-form"><div class="profile-form-group"><label for="current-password">Mật khẩu hiện tại</label><input type="password" id="current-password" required></div><div class="profile-form-group"><label for="new-password">Mật khẩu mới</label><input type="password" id="new-password" required></div><div class="modal-buttons"><button type="submit" class="btn-primary">ĐỔI MẬT KHẨU</button></div></form></div><div id="profile-log" class="profile-tab-content"><div id="activity-log-container"><div class="loading-spinner"></div></div></div></div></div>
@@ -740,8 +823,9 @@
             userEnergySpan: document.getElementById('user-energy'),
             userAvatarImg: document.getElementById('user-avatar'),
             logoutBtn: document.getElementById('logout-btn'),
-            chatContainer: document.getElementById('chat-container'),
-            chatToggle: document.getElementById('chat-toggle'),
+            chatRobotContainer: document.getElementById('chat-robot-container'),
+            robotSpeechBubble: document.getElementById('robot-speech-bubble'),
+            chatWindowContainer: document.getElementById('chat-window-container'),
             chatMessages: document.getElementById('chat-messages'),
             chatForm: document.getElementById('chat-form'),
             chatInput: document.getElementById('chat-input'),
@@ -750,6 +834,10 @@
             aquariusCodeInput: document.getElementById('aquarius-code-input'),
             aquariusError: document.getElementById('aquarius-error'),
             lowEnergyModal: document.getElementById('low-energy-modal'),
+            coreLoadingModal: document.getElementById('core-loading-modal'),
+            loadingStatusText: document.getElementById('loading-status-text'),
+            loadingProgressBar: document.getElementById('loading-progress-bar'),
+            loadingPercentage: document.getElementById('loading-percentage'),
             profileModal: document.getElementById('profile-modal'),
             profileBtn: document.getElementById('profile-btn'),
             profileTabs: document.querySelectorAll('.profile-tab'),
@@ -837,7 +925,12 @@
 
         const decodeText = (element) => {
             const originalText = element.dataset.text;
-            if (!originalText) { element.textContent = element.textContent || ''; return; }
+            if (!originalText) { return; }
+            // Don't decode the VIP title, it has its own animation
+            if (element.classList.contains('title-vip')) {
+                element.textContent = originalText;
+                return;
+            }
             const chars = '!<>-_\\/[]{}—=+*^?#_';
             let frame = 0;
             const interval = setInterval(() => {
@@ -1078,7 +1171,6 @@
         }
 
         function handleActivateCore() {
-            playSound('confirm');
             const selectedCore = CONFIG.ai_cores[currentCoreIndex];
             switch (selectedCore.id) {
                 case 'longbao_iv':
@@ -1095,6 +1187,35 @@
                     launchSoiHu();
                     break;
             }
+        }
+
+        function showCoreLoadingAnimation() {
+            const modal = DOMElements.coreLoadingModal;
+            const bar = DOMElements.loadingProgressBar;
+            const text = DOMElements.loadingPercentage;
+            
+            modal.classList.remove('hidden');
+            let percentage = 0;
+            
+            const interval = setInterval(() => {
+                percentage++;
+                bar.style.width = `${percentage}%`;
+                text.textContent = `${percentage}%`;
+                
+                if (percentage >= 100) {
+                    clearInterval(interval);
+                    DOMElements.loadingStatusText.textContent = "NẠP LÕI THÀNH CÔNG!";
+                    setTimeout(() => {
+                        modal.classList.add('hidden');
+                        // Reset for next time
+                        bar.style.width = '0%';
+                        text.textContent = '0%';
+                        DOMElements.loadingStatusText.textContent = "ĐANG NẠP LÕI...";
+                        // Finally, activate the core
+                        handleActivateCore();
+                    }, 1000);
+                }
+            }, 30); // 30ms * 100 = 3 seconds total load time
         }
 
         // --- CHATBOT LOGIC (GEMINI INTEGRATED) ---
@@ -1214,6 +1335,103 @@
                  DOMElements.chatInput.focus();
             }
         }
+        
+        // --- DRAGGABLE CHAT ROBOT LOGIC ---
+        function initDraggableRobot() {
+            const robot = DOMElements.chatRobotContainer;
+            let isDragging = false;
+            let offsetX, offsetY;
+
+            const move = (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                
+                let newX = clientX - offsetX;
+                let newY = clientY - offsetY;
+
+                // Constrain to viewport
+                const rect = robot.getBoundingClientRect();
+                newX = Math.max(0, Math.min(newX, window.innerWidth - rect.width));
+                newY = Math.max(0, Math.min(newY, window.innerHeight - rect.height));
+
+                robot.style.left = `${newX}px`;
+                robot.style.top = `${newY}px`;
+                
+                // Adjust chat window position
+                const chatWindow = DOMElements.chatWindowContainer;
+                chatWindow.style.left = 'auto';
+                chatWindow.style.right = 'auto';
+                chatWindow.style.bottom = 'auto';
+                chatWindow.style.top = 'auto';
+
+                if (newY + rect.height / 2 < window.innerHeight / 2) { // Robot is in top half
+                    chatWindow.style.top = `${newY + rect.height + 10}px`;
+                    chatWindow.style.transformOrigin = 'top';
+                } else { // Robot is in bottom half
+                    chatWindow.style.top = `${newY - chatWindow.offsetHeight - 10}px`;
+                    chatWindow.style.transformOrigin = 'bottom';
+                }
+
+                if (newX + rect.width / 2 < window.innerWidth / 2) { // Robot is in left half
+                    chatWindow.style.left = `${newX}px`;
+                    chatWindow.style.transformOrigin += ' left';
+                } else { // Robot is in right half
+                    chatWindow.style.left = `${newX + rect.width - chatWindow.offsetWidth}px`;
+                    chatWindow.style.transformOrigin += ' right';
+                }
+            };
+
+            const startDrag = (e) => {
+                isDragging = true;
+                robot.classList.add('dragging');
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                const rect = robot.getBoundingClientRect();
+                offsetX = clientX - rect.left;
+                offsetY = clientY - rect.top;
+                
+                // Set initial position style to allow dragging
+                robot.style.right = 'auto';
+                robot.style.bottom = 'auto';
+                robot.style.left = `${rect.left}px`;
+                robot.style.top = `${rect.top}px`;
+
+                document.addEventListener('mousemove', move);
+                document.addEventListener('touchmove', move, { passive: false });
+            };
+
+            const stopDrag = () => {
+                isDragging = false;
+                robot.classList.remove('dragging');
+                document.removeEventListener('mousemove', move);
+                document.removeEventListener('touchmove', move);
+            };
+            
+            robot.addEventListener('mousedown', startDrag);
+            document.addEventListener('mouseup', stopDrag);
+            robot.addEventListener('touchstart', startDrag);
+            document.addEventListener('touchend', stopDrag);
+
+            robot.addEventListener('click', (e) => {
+                if(robot.classList.contains('dragging-check')) {
+                     robot.classList.remove('dragging-check');
+                     return;
+                }
+                DOMElements.robotSpeechBubble.classList.add('hidden');
+                DOMElements.chatWindowContainer.classList.toggle('hidden');
+            });
+            
+            // A little hack to prevent click from firing after a drag
+            robot.addEventListener('mousemove', () => {
+                if(isDragging) robot.classList.add('dragging-check');
+            });
+            robot.addEventListener('mousedown', () => {
+                robot.classList.remove('dragging-check');
+            });
+        }
+
 
         // --- CORE: LONGBÃO IV LOGIC ---
         let allTablesState = {};
@@ -1513,9 +1731,26 @@
         }
 
         function updateSuggestedTableLB4() {
-            if (!lb4ConfigData || !lb4ConfigData.tables) return;
-            const randomIndex = Math.floor(Math.random() * lb4ConfigData.tables.length);
-            DOMElements.suggestedTableNameEl.textContent = lb4ConfigData.tables[randomIndex];
+            if (!lb4ConfigData || !lb4ConfigData.tables || lb4ConfigData.tables.length === 0) return;
+            
+            let bestTable = '';
+            let highestRate = 0;
+
+            for (const tableName in allTablesState) {
+                const tableState = allTablesState[tableName];
+                if (tableState.winRateChance > highestRate) {
+                    highestRate = tableState.winRateChance;
+                    bestTable = tableName;
+                }
+            }
+
+            if (bestTable === '') {
+                bestTable = lb4ConfigData.tables[Math.floor(Math.random() * lb4ConfigData.tables.length)];
+                highestRate = allTablesState[bestTable]?.winRateChance || (Math.random() * (0.9 - 0.8) + 0.8);
+            }
+
+            const winPercentage = (highestRate * 100).toFixed(0);
+            DOMElements.suggestedTableNameEl.innerHTML = `${bestTable} <span style="color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green);">~${winPercentage}%</span>`;
         }
 
         function initLongBaoIVBackground() {
@@ -1723,11 +1958,15 @@
             DOMElements.registerForm.addEventListener('submit', handleRegister);
             DOMElements.showRegisterLink.addEventListener('click', () => { playSound('click'); DOMElements.loginForm.classList.add('hidden'); DOMElements.registerForm.classList.remove('hidden'); decodeText(DOMElements.registerForm.querySelector('h2')); });
             DOMElements.showLoginLink.addEventListener('click', () => { playSound('click'); DOMElements.registerForm.classList.add('hidden'); DOMElements.loginForm.classList.remove('hidden'); decodeText(DOMElements.loginForm.querySelector('h2')); });
-            DOMElements.mainNextBtn.addEventListener('click', handleActivateCore);
+            
+            DOMElements.mainNextBtn.addEventListener('click', () => {
+                playSound('confirm');
+                showCoreLoadingAnimation();
+            });
+
             DOMElements.nextCoreBtn.addEventListener('click', () => { playSound('navigate', 'E4'); currentCoreIndex = (currentCoreIndex + 1) % CONFIG.ai_cores.length; showCore(currentCoreIndex); });
             DOMElements.prevCoreBtn.addEventListener('click', () => { playSound('navigate', 'C4'); currentCoreIndex = (currentCoreIndex - 1 + CONFIG.ai_cores.length) % CONFIG.ai_cores.length; showCore(currentCoreIndex); });
             DOMElements.logoutBtn.addEventListener('click', () => { logActivity("Đăng xuất."); signOut(auth); showNotification("Đã đăng xuất.", "info"); });
-            DOMElements.chatToggle.addEventListener('click', () => DOMElements.chatContainer.classList.toggle('collapsed'));
             DOMElements.chatForm.addEventListener('submit', handleSendMessage);
             document.querySelectorAll('.close-modal-btn').forEach(btn => btn.addEventListener('click', () => { playSound('click'); btn.closest('.modal-overlay').classList.add('hidden'); }));
             DOMElements.profileBtn.addEventListener('click', () => {
@@ -1750,6 +1989,8 @@
                 DOMElements.soiHu_gameSelectionContainer.classList.add('hidden');
                 DOMElements.soiHu_menuContainer.classList.remove('hidden');
             });
+            
+            initDraggableRobot();
         }
         
         function init() {
@@ -1773,7 +2014,7 @@
                         DOMElements.aiCoreSelectionScreen.classList.remove('hidden');
                         DOMElements.aiCoreSelectionScreen.classList.add('fade-in');
                         DOMElements.userInfoBar.classList.remove('hidden');
-                        DOMElements.chatContainer.classList.remove('hidden');
+                        DOMElements.chatRobotContainer.classList.remove('hidden');
                         decodeText(DOMElements.aiCoreSelectionScreen.querySelector('h1'));
                         initChatbot();
                     }, 500);
@@ -1785,7 +2026,9 @@
                     DOMElements.longbaoIVScreen.classList.add('hidden');
                     DOMElements.soiHuScreen.classList.add('hidden');
                     DOMElements.userInfoBar.classList.add('hidden');
-                    DOMElements.chatContainer.classList.add('hidden');
+                    DOMElements.chatRobotContainer.classList.add('hidden');
+                    DOMElements.chatWindowContainer.classList.add('hidden');
+                    DOMElements.robotSpeechBubble.classList.remove('hidden');
                     decodeText(DOMElements.loginForm.querySelector('h2'));
                 }
             });

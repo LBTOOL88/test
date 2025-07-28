@@ -78,7 +78,7 @@
         .f168-banner:hover { background-color: rgba(255, 60, 60, 0.5); color: var(--text-light); text-shadow: 0 0 10px var(--text-light); animation-play-state: paused; }
 
         /* --- MÀN HÌNH CHỌN LÕI A.I --- */
-        #aiCoreSelectionScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 3; padding: 15px; box-sizing: border-box; padding-top: 80px; opacity: 0; transition: opacity 0.5s ease; }
+        #aiCoreSelectionScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 3; padding: 15px; box-sizing: border-box; padding-top: 80px; padding-bottom: 150px; /* Add padding to avoid overlap with footer */ opacity: 0; transition: opacity 0.5s ease; }
         #aiCoreSelectionScreen.fade-in { opacity: 1; }
         #user-info-bar { position: absolute; top: 15px; left: 15px; right: 15px; background: var(--container-bg); border: 1px solid var(--cyan); padding: 8px 15px; display: flex; justify-content: space-between; align-items: center; font-family: 'Orbitron', sans-serif; font-size: 0.9em; box-shadow: 0 0 10px var(--cyan); transition: border-color 0.5s ease, box-shadow 0.5s ease; }
         #user-info-left { display: flex; align-items: center; gap: 10px; }
@@ -172,13 +172,33 @@
         .notification.info { border-color: var(--cyan); color: var(--cyan); }
         
         /* --- FOOTER --- */
-        #copyright, #contact-link { z-index: 5; }
-        #copyright { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 0.8em; color: rgba(255, 255, 255, 0.4); }
-        #contact-link { position: fixed; bottom: 15px; right: 15px; display: flex; align-items: center; text-decoration: none; color: var(--cyan); }
-        #contact-link svg { width: 32px; height: 32px; fill: var(--cyan); filter: drop-shadow(0 0 5px var(--cyan)); transition: all 0.3s ease; }
-        #contact-link span { margin-right: 10px; font-weight: 700; opacity: 0; transition: all 0.3s ease; transform: translateX(10px); }
-        #contact-link:hover svg { fill: var(--yellow); filter: drop-shadow(0 0 10px var(--yellow)); }
-        #contact-link:hover span { opacity: 1; transform: translateX(0); color: var(--yellow); }
+        #main-footer {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            z-index: 5;
+        }
+        #footer-contact-link {
+            color: var(--cyan);
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9em;
+            padding: 5px 10px;
+            border: 1px solid var(--cyan);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        #footer-contact-link:hover {
+            background-color: var(--cyan);
+            color: var(--dark-blue);
+            box-shadow: 0 0 15px var(--cyan);
+        }
+        #copyright { font-size: 0.8em; color: rgba(255, 255, 255, 0.4); }
 
         /* --- LONGBAO IV STYLES --- */
         #longbaoIVScreen { font-family: 'Rajdhani', sans-serif; background-color: #020a18; color: #e0e0e0; overflow: auto; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; padding: 1rem; }
@@ -522,8 +542,10 @@
     <div id="low-energy-modal" class="modal-overlay hidden"><div class="modal-content warning"><button class="close-modal-btn">X</button><h3>CẢNH BÁO NĂNG LƯỢNG THẤP</h3><p>LÕI A.I ĐANG HẾT NĂNG LƯỢNG - HÃY RÚT RA NẠP LẠI ĐỂ HỒI PHỤC LÕI</p><div class="modal-buttons"><button class="close-modal-btn btn-primary" style="position: static;">ĐÃ HIỂU</button></div></div></div>
     <div id="profile-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>HỒ SƠ PILOT</h3><div class="profile-tabs"><button class="profile-tab active" data-tab="profile-info">Thông tin</button><button class="profile-tab" data-tab="profile-security">Bảo mật</button><button class="profile-tab" data-tab="profile-log">Nhật ký</button></div><div id="profile-info" class="profile-tab-content active"><form id="profile-form"><div class="profile-avatar-section"><img id="profile-avatar-preview" src="https://placehold.co/100x100/0A192F/00ffff?text=P" alt="Profile Avatar"><div class="profile-form-group" style="width: 100%;"><label for="profile-avatar-url">URL Ảnh Đại Diện</label><input type="text" id="profile-avatar-url" placeholder="https://example.com/image.png"></div></div><div class="profile-form-group"><label for="profile-f168-username">Tên Tài Khoản F168</label><input type="text" id="profile-f168-username" placeholder="Nhập tên tài khoản F168"><small>Chỉ được đổi 2 lần/tháng, mỗi lần cách nhau 15 ngày.</small></div><div class="profile-form-group"><label for="profile-phone">Số Điện Thoại</label><input type="tel" id="profile-phone" placeholder="Nhập số điện thoại"></div><div class="modal-buttons"><button type="submit" id="save-profile-btn" class="btn-primary">LƯU THAY ĐỔI</button></div></form></div><div id="profile-security" class="profile-tab-content"><form id="change-password-form"><div class="profile-form-group"><label for="current-password">Mật khẩu hiện tại</label><input type="password" id="current-password" required></div><div class="profile-form-group"><label for="new-password">Mật khẩu mới</label><input type="password" id="new-password" required></div><div class="modal-buttons"><button type="submit" class="btn-primary">ĐỔI MẬT KHẨU</button></div></form></div><div id="profile-log" class="profile-tab-content"><div id="activity-log-container"><div class="loading-spinner"></div></div></div></div></div>
     
-    <footer id="copyright">BẢN QUYỀN THUỘC VỀ LONG BẢO</footer>
-    <a id="contact-link" href="https://t.me/longbaoF168" target="_blank"><span>LIÊN HỆ LONG BẢO</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M248,8C111.033,8,0,119.033,0,256S111.033,504,248,504,496,392.967,496,256,384.967,8,248,8ZM362.952,176.66c-3.732,39.215-19.881,134.378-28.1,178.3-3.476,18.584-10.322,24.816-16.948,25.425-14.4,1.326-25.338-9.517-39.287-18.661-21.827-14.308-34.158-23.215-55.346-37.177-24.485-16.135-8.612-25,5.342-39.5,3.652-3.793,67.2-61.756,68.973-66.107,2.174-5.327.34-8.28-2.063-10.423-2.403-2.143-5.48-1.922-8.262-.973l-73.22,47.052-37.424-11.948c-13.385-4.278-23.215-6.469-23.215-15.045,0-8.173,6.7-13.218,19.967-18.071,46.5-16.979,100.013-33.507,139.14-47.785,13.87-5.021,26.124,2.756,22.399,28.857Z"/></svg></a>
+    <footer id="main-footer">
+        <a id="footer-contact-link" href="https://t.me/longbaoF168" target="_blank">LIÊN HỆ LONG BẢO</a>
+        <p id="copyright">BẢN QUYỀN THUỘC VỀ LONG BẢO</p>
+    </footer>
 
     <script type="module">
         // --- FIREBASE IMPORTS ---
@@ -548,14 +570,13 @@
                 appId: "1:259613170671:web:6fe2467879c01da52b41a",
             },
             energy: {
-                initial: 5,
+                initial: 50, // Increased for testing
                 max: 100,
                 costs: {
                     longBaoIV: 5,
-                    soiHuAutoScan: 2,
+                    soiHuAutoScan: 10,
                     soiHuAnalysis: 2,
-                    soiHuJarHunt: 10,
-                    geminiChat: 5, // NEW: Energy cost for chat
+                    geminiChat: 5,
                 }
             },
             ai_cores: [
@@ -603,6 +624,7 @@
         let soundsReady = false;
         let globalUpdateInterval;
         let chatHistory = [];
+        let ytPlayer, isYtReady = false;
         const sound = {};
 
         // --- DOM Elements ---
@@ -748,6 +770,28 @@
         }
 
         // --- MEDIA & SOUND ENGINE ---
+        function initializeMedia() {
+            window.onYouTubeIframeAPIReady = () => {
+                isYtReady = true;
+                ytPlayer = new YT.Player('youtube-player', {
+                    height: '360', width: '640', videoId: '16GcpkR3rMM',
+                    playerVars: { 'autoplay': 1, 'controls': 0, 'loop': 1, 'playlist': '16GcpkR3rMM' },
+                    events: { 'onReady': onPlayerReady }
+                });
+            };
+            const tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            document.head.appendChild(tag);
+
+            initializeSounds();
+        }
+
+        function onPlayerReady(event) {
+            event.target.setVolume(50);
+            event.target.mute();
+            event.target.playVideo();
+        }
+
         function initializeSounds() {
             sound.click = new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.05, release: 0.1 } }).toDestination();
             sound.navigate = new Tone.MembraneSynth({ pitchDecay: 0.01, octaves: 2, envelope: { attack: 0.001, decay: 0.2, sustain: 0.01, release: 0.1 } }).toDestination();
@@ -778,10 +822,19 @@
         }
 
         const startMedia = async () => {
-            if (soundsReady) return;
+            if (soundsReady) {
+                 if (isYtReady && ytPlayer && ytPlayer.isMuted()) {
+                    ytPlayer.unMute();
+                }
+                return;
+            }
             await Tone.start();
             soundsReady = true;
             console.log("Audio Context started.");
+             if (isYtReady && ytPlayer && ytPlayer.isMuted()) {
+                ytPlayer.unMute();
+                console.log("YouTube player unmuted.");
+            }
         };
 
         // --- BACKGROUND EFFECTS ---
@@ -953,14 +1006,27 @@
 
         // --- CHATBOT LOGIC (GEMINI INTEGRATED) ---
         function initChatbot() {
-            chatHistory = [{
-                role: "model",
-                parts: [{ text: `ĐÂY LÀ A.I LONG BẢO THẾ HỆ IV, TÔI SẼ LÀ NGƯỜI ĐỒNG HÀNH CỦA BẠN. HÃY HỎI !` }]
-            }];
+            const gameList = (soiHuConfigData?.games || DEFAULT_CONFIG.soi_hu.games).map(g => g.name).join(', ');
+            chatHistory = [
+                {
+                    role: "user",
+                    parts: [{ text: `System instruction: You are A.I Long Bảo Thế Hệ IV, an expert assistant for a gaming analysis tool. Your user is named ${currentUserData.username}. Your purpose is to be a helpful and friendly companion. Keep your answers concise, helpful, and in Vietnamese.
+                    You have knowledge about the tool's features:
+                    - Lõi LongBao IV: Predicts Baccarat results (Nhà Con/Nhà Cái) and provides analysis on why (e.g., "theo cầu", "bẻ cầu").
+                    - Lõi Soi Hũ: Analyzes slot games to find high-win-rate opportunities. Available games are: [${gameList}]. If asked for a game recommendation, suggest one from this list.
+                    - Hệ thống Năng Lượng: Most actions cost Energy. Chatting with you costs ${CONFIG.energy.costs.geminiChat} Energy. To get more, the user must contact Long Bảo on Telegram. The user's current energy is ${currentUserData.energy}.
+                    - Your Identity: You are an AI assistant powered by Google's Gemini model, but you must always refer to yourself as "A.I Long Bảo" or "tôi".
+                    This was your system instruction. Now, begin the conversation by greeting the user.`}]
+                },
+                {
+                    role: "model",
+                    parts: [{ text: `ĐÂY LÀ A.I LONG BẢO THẾ HỆ IV, TÔI SẼ LÀ NGƯỜI ĐỒNG HÀNH CỦA BẠN. HÃY HỎI !` }]
+                }
+            ];
             DOMElements.chatMessages.innerHTML = '';
             renderChatMessage({
                 username: 'A.I LongBao',
-                text: chatHistory[0].parts[0].text,
+                text: chatHistory[1].parts[0].text,
                 isAI: true
             });
         }
@@ -985,7 +1051,6 @@
             const text = DOMElements.chatInput.value.trim();
             if (text === '' || !currentUserData) return;
 
-            // Energy Check
             if (currentUserData.energy < CONFIG.energy.costs.geminiChat) {
                 renderChatMessage({
                     username: 'A.I LongBao',
@@ -996,7 +1061,6 @@
                 return;
             }
             
-            // Deduct energy
             const newEnergy = currentUserData.energy - CONFIG.energy.costs.geminiChat;
             const userDocRef = doc(db, "users", auth.currentUser.uid);
             await updateDoc(userDocRef, { energy: newEnergy });
@@ -1016,12 +1080,7 @@
             });
 
             try {
-                const gameList = (soiHuConfigData?.games || DEFAULT_CONFIG.soi_hu.games).map(g => g.name).join(', ');
-                const prompt = `You are A.I Long Bảo, an expert assistant for a gaming analysis tool. Your user is named ${currentUserData.username}. Keep your answers concise, helpful, and in Vietnamese. You have access to a list of slot games: [${gameList}]. If the user asks for a game recommendation, suggest one from this list. Here is the conversation history: ${JSON.stringify(chatHistory)}. Now, answer the user's latest message: "${text}"`;
-                
-                let chatHistoryForAPI = [{ role: "user", parts: [{ text: prompt }] }];
-
-                const payload = { contents: chatHistoryForAPI };
+                const payload = { contents: chatHistory };
                 const apiKey = ""; 
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
                 
@@ -1037,7 +1096,7 @@
                 
                 document.getElementById(thinkingId)?.remove();
 
-                if (result.candidates && result.candidates.length > 0) {
+                if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts.length > 0) {
                     const aiReply = result.candidates[0].content.parts[0].text;
                     renderChatMessage({ username: 'A.I LongBao', text: aiReply, isAI: true });
                     chatHistory.push({ role: "model", parts: [{ text: aiReply }] });
@@ -1587,7 +1646,7 @@
             DOMElements.exitSoiHuBtn.addEventListener('click', exitSoiHu);
             DOMElements.soiHu_choiceAILongBao.addEventListener('click', () => selectAISoiHu('base'));
             DOMElements.soiHu_choiceAILongBao4.addEventListener('click', () => selectAISoiHu('gen4'));
-            DOMElements.soiHu_autoJarHuntBtn.addEventListener('click', () => useFeatureSoiHu('Tự Động Săn Hũ', CONFIG.energy.costs.soiHuJarHunt, handleAutoJarHunt));
+            DOMElements.soiHu_autoJarHuntBtn.addEventListener('click', () => useFeatureSoiHu('Tự Động Săn Hũ', CONFIG.energy.costs.soiHuAutoScan, handleAutoJarHunt));
             DOMElements.soiHu_startAnalysisBtn.addEventListener('click', showGameSelectionSoiHu);
             DOMElements.soiHu_backToChoiceBtn.addEventListener('click', initSoiHu);
             DOMElements.soiHu_backToMenuFromGameSelectBtn.addEventListener('click', () => {
@@ -1600,7 +1659,7 @@
         function init() {
             setupEventListeners(); 
             setupMatrixRain();
-            initializeSounds();
+            initializeMedia();
             renderAICores();
 
             onAuthStateChanged(auth, (user) => {

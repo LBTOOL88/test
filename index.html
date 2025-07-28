@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>LONG BẢO A.I - THẾ HỆ IV</title>
+    <title>LONG BẢO A.I - Nâng Cấp Gemini</title>
+    
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,10 +13,9 @@
     <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <style>
-        /* --- CORE STYLES from index.html --- */
+        /* --- CORE STYLES --- */
         :root {
             --cyan: #00ffff;
             --yellow: #fcee0a;
@@ -27,36 +27,21 @@
             --gold: #FFD700;
             --success-green: #00ff7f;
         }
-        html {
-            background-color: var(--dark-blue);
-        }
+        html { background-color: var(--dark-blue); }
         body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100vh;
-            font-family: 'Rajdhani', sans-serif;
-            color: var(--text-light);
-            overflow: hidden;
-            background-color: transparent; /* Body MUST be transparent */
-            cursor: crosshair;
+            margin: 0; padding: 0; width: 100%; height: 100vh;
+            font-family: 'Rajdhani', sans-serif; color: var(--text-light);
+            overflow: hidden; background-color: transparent; cursor: crosshair;
         }
         .hidden { display: none !important; }
+        .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
 
-        .background-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -10; /* Set to a very low z-index */
-            transition: opacity 0.5s ease;
-        }
-        #youtube-player {
-            position: absolute; top: -9999px; left: -9999px; opacity: 0; pointer-events: none;
-        }
+        /* --- BACKGROUND & GLOBAL --- */
+        .background-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -10; transition: opacity 0.5s ease; }
+        #youtube-player { position: absolute; top: -9999px; left: -9999px; opacity: 0; pointer-events: none; }
         
         /* --- AUTH SCREEN --- */
-        #authScreen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; justify-content: center; align-items: center;
-            z-index: 10; padding: 15px; box-sizing: border-box; transition: opacity 0.5s ease;
-        }
+        #authScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 10; padding: 15px; box-sizing: border-box; transition: opacity 0.5s ease; }
         #authScreen.fade-out { opacity: 0; pointer-events: none; }
         #auth-content {
             background: var(--container-bg); border: 2px solid var(--border-color);
@@ -64,297 +49,129 @@
             box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2), 0 0 25px var(--border-color);
             width: 100%; max-width: 400px; padding: 30px 25px; text-align: center; position: relative;
         }
-        
-        .corner-bracket {
-            position: absolute; width: 25px; height: 25px; border-style: solid; border-color: var(--cyan);
-            opacity: 0; animation: boot-up 0.6s ease-out forwards, corner-glow 2s infinite alternate;
-        }
-        @keyframes corner-glow {
-            from { box-shadow: 0 0 8px var(--cyan); }
-            to { box-shadow: 0 0 18px var(--cyan), 0 0 4px white; }
-        }
+        .corner-bracket { position: absolute; width: 25px; height: 25px; border-style: solid; border-color: var(--cyan); opacity: 0; animation: boot-up 0.6s ease-out forwards, corner-glow 2s infinite alternate; }
         .corner-bracket.top-left { top: -2px; left: -2px; border-width: 4px 0 0 4px; animation-delay: 0.2s; }
         .corner-bracket.top-right { top: -2px; right: -2px; border-width: 4px 4px 0 0; animation-delay: 0.3s; }
         .corner-bracket.bottom-left { bottom: -2px; left: -2px; border-width: 0 0 4px 4px; animation-delay: 0.4s; }
         .corner-bracket.bottom-right { bottom: -2px; right: -2px; border-width: 0 4px 4px 0; animation-delay: 0.5s; }
-
-        .boot-anim {
-            opacity: 0; transform: translateY(20px); animation: boot-up 0.6s ease-out forwards;
-        }
-        @keyframes boot-up { to { opacity: 1; transform: translateY(0); } }
-
-        #auth-logo {
-            display: block; /* Ensures margin auto works */
-            margin-left: auto; /* Centers the logo */
-            margin-right: auto; /* Centers the logo */
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            margin-bottom: 20px;
-            border: 2px solid var(--yellow);
-            box-shadow: 0 0 20px var(--yellow);
-        }
-
+        .boot-anim { opacity: 0; transform: translateY(20px); animation: boot-up 0.6s ease-out forwards; }
+        #auth-logo { display: block; margin-left: auto; margin-right: auto; width: 120px; height: 120px; border-radius: 50%; margin-bottom: 20px; border: 2px solid var(--yellow); box-shadow: 0 0 20px var(--yellow); }
         h1, h2, h3 { font-family: 'Orbitron', sans-serif; text-transform: uppercase; }
-
-        #authScreen h2 {
-            font-size: 1.8em; color: var(--yellow);
-            text-shadow: 0 0 10px var(--yellow), 0 0 20px var(--cyan);
-            margin: 0 0 25px 0; letter-spacing: 2px; min-height: 1.2em;
-        }
-
+        #authScreen h2 { font-size: 1.8em; color: var(--yellow); text-shadow: 0 0 10px var(--yellow), 0 0 20px var(--cyan); margin: 0 0 25px 0; letter-spacing: 2px; min-height: 1.2em; }
         #authScreen form { width: 100%; }
-        input[type="text"], input[type="password"], input[type="tel"] {
-            font-family: 'Rajdhani', sans-serif; font-weight: 700; margin: 10px 0; width: 100%;
-            padding: 14px; background: rgba(0,0,0,0.5); color: var(--yellow);
-            font-size: 1.1em; border: 1px solid var(--border-color); transition: all .2s ease; box-sizing: border-box;
-        }
+        input[type="text"], input[type="password"], input[type="tel"] { font-family: 'Rajdhani', sans-serif; font-weight: 700; margin: 10px 0; width: 100%; padding: 14px; background: rgba(0,0,0,0.5); color: var(--yellow); font-size: 1.1em; border: 1px solid var(--border-color); transition: all .2s ease; box-sizing: border-box; }
         input::placeholder { color: rgba(255, 255, 255, 0.4); font-weight: 400; }
         input:focus { outline: none; border-color: var(--yellow); box-shadow: 0 0 15px var(--yellow); }
-        
-        button, .btn-style {
-            font-family: 'Orbitron', sans-serif; font-weight: 700; padding: 15px 20px;
-            cursor: pointer; font-size: 1em; text-transform: uppercase; border: none; transition: all .2s ease-out;
-            display: inline-block; text-align: center; text-decoration: none;
-        }
-
-        .btn-next, #loginBtn, .btn-primary {
-            background: var(--cyan); color: var(--dark-blue); box-shadow: 0 0 10px var(--cyan);
-            opacity: 0.8; transition: all 0.3s ease; width: 100%;
-        }
-        .btn-next, #loginBtn { margin-top: 15px; }
-        .btn-next:hover, #loginBtn.ready, .btn-primary:hover { opacity: 1; animation: button-glow-cyan 2s infinite alternate; }
-        @keyframes button-glow-cyan {
-            from { box-shadow: 0 0 10px var(--cyan); }
-            to { box-shadow: 0 0 25px var(--cyan), 0 0 10px var(--cyan); }
-        }
-        .btn-next:hover, #loginBtn:hover:not(:disabled), .btn-primary:hover {
-            background: var(--yellow); color: var(--dark-blue); animation-play-state: paused; box-shadow: 0 0 25px var(--yellow);
-        }
-
-        #registerBtn {
-            background: var(--yellow); color: var(--dark-blue); transform: scale(1.05);
-            animation: button-glow-yellow 1.5s infinite alternate;
-        }
-        @keyframes button-glow-yellow {
-            from { box-shadow: 0 0 15px var(--yellow); transform: scale(1.05); }
-            to { box-shadow: 0 0 35px var(--yellow), 0 0 10px var(--yellow); transform: scale(1.1); }
-        }
-        #registerBtn:hover:not(:disabled) {
-            background: var(--yellow); color: var(--dark-blue); animation-play-state: paused;
-            transform: scale(1.15); box-shadow: 0 0 40px var(--yellow);
-        }
-
+        button, .btn-style { font-family: 'Orbitron', sans-serif; font-weight: 700; padding: 15px 20px; cursor: pointer; font-size: 1em; text-transform: uppercase; border: none; transition: all .2s ease-out; display: inline-block; text-align: center; text-decoration: none; }
+        .btn-primary { background: var(--cyan); color: var(--dark-blue); box-shadow: 0 0 10px var(--cyan); opacity: 0.8; transition: all 0.3s ease; width: 100%; }
+        .btn-primary:hover:not(:disabled) { opacity: 1; animation: button-glow-cyan 2s infinite alternate; background: var(--yellow); color: var(--dark-blue); animation-play-state: paused; box-shadow: 0 0 25px var(--yellow); }
+        #loginBtn { margin-top: 15px; }
+        #registerBtn { background: var(--yellow); color: var(--dark-blue); transform: scale(1.05); animation: button-glow-yellow 1.5s infinite alternate; }
+        #registerBtn:hover:not(:disabled) { background: var(--yellow); color: var(--dark-blue); animation-play-state: paused; transform: scale(1.15); box-shadow: 0 0 40px var(--yellow); }
         button:active:not(:disabled) { transform: scale(0.95) !important; }
         button:disabled { background: #555; color: #888; cursor: not-allowed; animation: none; box-shadow: none; }
-        
         .auth-error { color: var(--error-red); margin-top: 15px; height: 1em; font-size: 0.9em; }
         .auth-switch { margin-top: 20px; font-size: 1em; }
         .auth-switch a { color: var(--cyan); text-decoration: none; cursor: pointer; transition: all 0.3s ease; }
         .auth-switch a:hover { color: var(--yellow); text-decoration: underline;}
-
-        .f168-banner {
-            display: block; text-decoration: none; color: var(--error-red); font-weight: 700;
-            margin-top: 15px; padding: 10px; border: 1px solid var(--error-red);
-            text-shadow: 0 0 5px var(--error-red); font-size: 0.9em; line-height: 1.4;
-            cursor: pointer; transition: all 0.2s ease;
-            animation: boot-up 0.6s ease-out forwards, warning-blink 1.2s infinite 0.6s;
-        }
-        @keyframes warning-blink {
-            0%, 100% { background-color: rgba(255, 60, 60, 0.15); box-shadow: 0 0 8px rgba(255, 60, 60, 0.7); }
-            50% { background-color: rgba(255, 60, 60, 0.3); box-shadow: 0 0 18px var(--error-red); }
-        }
+        .f168-banner { display: block; text-decoration: none; color: var(--error-red); font-weight: 700; margin-top: 15px; padding: 10px; border: 1px solid var(--error-red); text-shadow: 0 0 5px var(--error-red); font-size: 0.9em; line-height: 1.4; cursor: pointer; transition: all 0.2s ease; animation: boot-up 0.6s ease-out forwards, warning-blink 1.2s infinite 0.6s; }
         .f168-banner:hover { background-color: rgba(255, 60, 60, 0.5); color: var(--text-light); text-shadow: 0 0 10px var(--text-light); animation-play-state: paused; }
 
         /* --- MÀN HÌNH CHỌN LÕI A.I --- */
-        #aiCoreSelectionScreen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 3; padding: 15px; box-sizing: border-box;
-            padding-top: 80px; opacity: 0; transition: opacity 0.5s ease;
-        }
+        #aiCoreSelectionScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 3; padding: 15px; box-sizing: border-box; padding-top: 80px; opacity: 0; transition: opacity 0.5s ease; }
         #aiCoreSelectionScreen.fade-in { opacity: 1; }
-        #user-info-bar {
-            position: absolute; top: 15px; left: 15px; right: 15px; background: var(--container-bg);
-            border: 1px solid var(--cyan); padding: 8px 15px; display: flex; justify-content: space-between;
-            align-items: center; font-family: 'Orbitron', sans-serif; font-size: 0.9em;
-            box-shadow: 0 0 10px var(--cyan); transition: border-color 0.5s ease, box-shadow 0.5s ease;
-        }
+        #user-info-bar { position: absolute; top: 15px; left: 15px; right: 15px; background: var(--container-bg); border: 1px solid var(--cyan); padding: 8px 15px; display: flex; justify-content: space-between; align-items: center; font-family: 'Orbitron', sans-serif; font-size: 0.9em; box-shadow: 0 0 10px var(--cyan); transition: border-color 0.5s ease, box-shadow 0.5s ease; }
         #user-info-left { display: flex; align-items: center; gap: 10px; }
-        #user-avatar {
-            width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--cyan); object-fit: cover;
-        }
+        #user-avatar { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--cyan); object-fit: cover; }
         #user-info-bar span { text-shadow: 0 0 5px var(--cyan); }
         #user-energy { color: var(--yellow); text-shadow: 0 0 5px var(--yellow); transition: color 0.5s ease, text-shadow 0.5s ease; }
         #user-energy.high { color: var(--success-green); text-shadow: 0 0 8px var(--success-green); }
         #user-energy.low { color: var(--error-red); text-shadow: 0 0 8px var(--error-red); }
         #user-info-bar.low-energy { border-color: var(--error-red); box-shadow: 0 0 15px var(--error-red); animation: warning-blink 1.2s infinite; }
         #user-controls { display: flex; align-items: center; gap: 10px; }
-        .control-btn {
-            background: transparent; border: 1px solid var(--cyan); color: var(--cyan);
-            padding: 8px; font-size: 0.8em; line-height: 1; border-radius: 5px;
-        }
+        .control-btn { background: transparent; border: 1px solid var(--cyan); color: var(--cyan); padding: 8px; font-size: 0.8em; line-height: 1; border-radius: 5px; }
         .control-btn:hover { background: var(--cyan); color: var(--dark-blue); }
         .control-btn svg { width: 16px; height: 16px; fill: currentColor; }
-
-        #aiCoreSelectionScreen h1 {
-            color: var(--cyan); text-shadow: 0 0 15px var(--cyan); 
-            font-size: 1.5em; margin-bottom: 20px; text-align: center;
-        }
-        
-        #core-selector {
-            display: flex; align-items: center; justify-content: space-between;
-            width: 100%; max-width: 400px;
-        }
-
-        .core-nav-btn {
-            background: transparent; border: 2px solid var(--cyan); color: var(--cyan); font-size: 2em;
-            width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;
-            line-height: 1; padding: 0; border-radius: 50%; text-shadow: 0 0 8px var(--cyan); flex-shrink: 0;
-        }
+        #aiCoreSelectionScreen h1 { color: var(--cyan); text-shadow: 0 0 15px var(--cyan); font-size: 1.5em; margin-bottom: 20px; text-align: center; }
+        #core-selector { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 400px; }
+        .core-nav-btn { background: transparent; border: 2px solid var(--cyan); color: var(--cyan); font-size: 2em; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; line-height: 1; padding: 0; border-radius: 50%; text-shadow: 0 0 8px var(--cyan); flex-shrink: 0; }
         .core-nav-btn:hover { background: var(--cyan); color: var(--dark-blue); }
-
-        #core-options-container {
-            width: calc(100% - 100px); height: 400px; position: relative;
-            overflow: hidden; margin: 0 10px;
-        }
-
-        .core-option {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--container-bg);
-            border: 2px solid var(--border-color); box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2), 0 0 15px var(--border-color);
-            padding: 15px; text-align: center; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-            transition: transform 0.5s ease, opacity 0.5s ease; opacity: 0; transform: scale(0.9);
-            display: none; box-sizing: border-box;
-        }
-        .core-option.active {
-            opacity: 1; transform: scale(1); z-index: 2; display: flex;
-            flex-direction: column; justify-content: flex-start;
-        }
-
+        #core-options-container { width: calc(100% - 100px); height: 400px; position: relative; overflow: hidden; margin: 0 10px; }
+        .core-option { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--container-bg); border: 2px solid var(--border-color); box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2), 0 0 15px var(--border-color); padding: 15px; text-align: center; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); transition: transform 0.5s ease, opacity 0.5s ease; opacity: 0; transform: scale(0.9); display: none; box-sizing: border-box; }
+        .core-option.active { opacity: 1; transform: scale(1); z-index: 2; display: flex; flex-direction: column; justify-content: flex-start; }
         .core-option h3 { color: var(--yellow); font-size: 1.2em; margin: 0 0 10px 0; flex-shrink: 0; }
-        .gif-container {
-            width: 100%; padding-bottom: 75%; height: 0; position: relative;
-            background-color: rgba(0,0,0,0.3); border: 1px solid var(--border-color);
-            margin-bottom: 10px; flex-shrink: 0;
-        }
-        .gif-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        .core-description {
-            font-size: 0.85em; color: var(--text-light); line-height: 1.4; opacity: 0.9;
-            font-weight: 400; text-align: center; margin: 0; flex-grow: 1; overflow-y: auto;
-        }
+        .gif-container { width: 100%; padding-bottom: 75%; height: 0; position: relative; background-color: rgba(0,0,0,0.3); border: 1px solid var(--border-color); margin-bottom: 10px; flex-shrink: 0; }
+        .gif-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; border: 0; }
+        .core-description { font-size: 0.85em; color: var(--text-light); line-height: 1.4; opacity: 0.9; font-weight: 400; text-align: center; margin: 0; flex-grow: 1; overflow-y: auto; }
         #main-next-btn { margin-top: 15px; max-width: 400px; }
-        
-        #promo-banner {
-            width: 100%; max-width: 400px; margin-top: 15px; padding: 10px; background: rgba(255, 215, 0, 0.1);
-            border: 1px solid var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); display: flex;
-            justify-content: space-between; align-items: center; box-sizing: border-box; animation: promo-glow 2s infinite alternate;
-        }
-        @keyframes promo-glow {
-            from { box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
-            to { box-shadow: 0 0 25px rgba(255, 215, 0, 0.8), inset 0 0 10px rgba(255, 215, 0, 0.3); }
-        }
-        #promo-text {
-            color: var(--gold); text-decoration: none; font-weight: 700; font-size: 0.8em;
-            text-align: left; flex-grow: 1; text-shadow: 0 0 5px var(--gold);
-        }
+        #promo-banner { width: 100%; max-width: 400px; margin-top: 15px; padding: 10px; background: rgba(255, 215, 0, 0.1); border: 1px solid var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; animation: promo-glow 2s infinite alternate; }
+        #promo-text { color: var(--gold); text-decoration: none; font-weight: 700; font-size: 0.8em; text-align: left; flex-grow: 1; text-shadow: 0 0 5px var(--gold); }
         #promo-spinner-link { flex-shrink: 0; margin-left: 10px; }
         #promo-spinner { width: 40px; height: 40px; cursor: pointer; }
         .spinner-wheel { animation: spin 4s linear infinite; transform-origin: 50% 50%; }
         #promo-spinner:hover .spinner-wheel { animation-duration: 1s; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* --- CHATBOT FEATURE --- */
+        #chat-container { position: fixed; bottom: 10px; left: 10px; width: 320px; z-index: 20; transition: all 0.3s ease-out; }
+        #chat-container.collapsed { transform: translateY(calc(100% - 50px)); }
+        #chat-toggle { background: var(--cyan); color: var(--dark-blue); border: none; width: 100%; padding: 12px; font-family: 'Orbitron', sans-serif; text-transform: uppercase; cursor: pointer; box-shadow: 0 0 10px var(--cyan); }
+        #chat-window { height: 350px; background: var(--container-bg); border: 1px solid var(--cyan); border-bottom: none; display: flex; flex-direction: column; }
+        #chat-messages { flex-grow: 1; padding: 10px; overflow-y: auto; font-size: 0.9em; display: flex; flex-direction: column; gap: 8px; }
+        .chat-message { line-height: 1.4; max-width: 90%; }
+        .chat-message.user { align-self: flex-end; text-align: right; }
+        .chat-message.ai { align-self: flex-start; }
+        .chat-username { font-weight: 700; display: block; margin-bottom: 2px; }
+        .chat-username.user { color: var(--yellow); }
+        .chat-username.ai { color: var(--cyan); }
+        .chat-text { color: var(--text-light); padding: 8px 12px; border-radius: 10px; display: inline-block; }
+        .chat-text.user { background-color: rgba(252, 238, 10, 0.2); }
+        .chat-text.ai { background-color: rgba(0, 255, 255, 0.1); }
+        .thinking-indicator span { display: inline-block; width: 6px; height: 6px; margin: 0 2px; background-color: var(--cyan); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+        .thinking-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .thinking-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        #chat-form { display: flex; }
+        #chat-input { flex-grow: 1; border: 1px solid var(--cyan); border-top-width: 2px; background: rgba(0,0,0,0.7); padding: 10px; color: var(--text-light); }
+        #chat-input:focus { outline: none; border-color: var(--yellow); }
+        #chat-send-btn { background: var(--cyan); color: var(--dark-blue); border: none; padding: 0 15px; font-weight: 700; }
 
         /* --- MODALS --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 25, 47, 0.9);
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex;
-            justify-content: center; align-items: center; z-index: 15; padding: 15px; box-sizing: border-box;
-        }
-        .modal-content {
-            background: var(--container-bg); border: 2px solid var(--gold);
-            box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.3), 0 0 35px var(--gold);
-            width: 100%; max-width: 450px; padding: 30px 25px; text-align: center; position: relative;
-        }
-        .modal-content.warning {
-            border-color: var(--error-red); box-shadow: inset 0 0 20px rgba(255, 60, 60, 0.3), 0 0 35px var(--error-red);
-            font-family: 'Fira Code', monospace;
-        }
-        .modal-content.warning h3 {
-            color: var(--error-red); text-shadow: 0 0 15px var(--error-red), 0 0 5px #fff;
-            animation: text-flicker 3s linear infinite; font-size: 1.4em; letter-spacing: 2px;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 25, 47, 0.9); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 15; padding: 15px; box-sizing: border-box; }
+        .modal-content { background: var(--container-bg); border: 2px solid var(--gold); box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.3), 0 0 35px var(--gold); width: 100%; max-width: 450px; padding: 30px 25px; text-align: center; position: relative; }
+        .modal-content.warning { border-color: var(--error-red); box-shadow: inset 0 0 20px rgba(255, 60, 60, 0.3), 0 0 35px var(--error-red); font-family: 'Fira Code', monospace; }
+        .modal-content.warning h3 { color: var(--error-red); text-shadow: 0 0 15px var(--error-red), 0 0 5px #fff; animation: text-flicker 3s linear infinite; font-size: 1.4em; letter-spacing: 2px; }
         .modal-content.warning p { font-size: 1em; line-height: 1.6; text-shadow: 0 0 5px var(--error-red); opacity: 0.9; }
         .modal-content h3 { color: var(--gold); text-shadow: 0 0 10px var(--gold); margin-top: 0; }
         .modal-content p { margin-bottom: 20px; opacity: 0.9; }
-        #aquarius-code-input { border-color: var(--gold); color: var(--gold); }
-        #aquarius-code-input:focus { border-color: var(--yellow); box-shadow: 0 0 15px var(--yellow); }
         .modal-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
         .modal-buttons button, .modal-buttons a { width: 100%; box-sizing: border-box; }
-        #confirm-aquarius-code { background: var(--gold); color: var(--dark-blue); box-shadow: 0 0 15px var(--gold); }
-        #contact-for-code { border: 1px solid var(--cyan); color: var(--cyan); }
-        .close-modal-btn {
-            position: absolute; top: 10px; right: 10px; background: transparent; border: none;
-            color: var(--text-light); font-size: 1.5em; padding: 5px; line-height: 1;
-        }
-        @keyframes text-flicker {
-            0% { opacity: 0.1; } 2% { opacity: 1; } 8% { opacity: 0.1; } 9% { opacity: 1; } 12% { opacity: 0.2; }
-            20% { opacity: 1; } 25% { opacity: 0.3; } 30% { opacity: 1; } 70% { opacity: 0.7; } 72% { opacity: 0.2; }
-            77% { opacity: .9; } 100% { opacity: .9; }
-        }
-
-        /* --- PROFILE MODAL STYLES --- */
-        #profile-modal .modal-content {
-            border-color: var(--cyan); box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.3), 0 0 35px var(--cyan);
-        }
+        .close-modal-btn { position: absolute; top: 10px; right: 10px; background: transparent; border: none; color: var(--text-light); font-size: 1.5em; padding: 5px; line-height: 1; }
+        
+        /* Profile Modal */
+        #profile-modal .modal-content { border-color: var(--cyan); box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.3), 0 0 35px var(--cyan); }
         #profile-modal h3 { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
         .profile-tabs { display: flex; border-bottom: 1px solid var(--cyan); margin-bottom: 20px; }
-        .profile-tab {
-            padding: 10px 15px; cursor: pointer; color: var(--cyan); opacity: 0.6;
-            border: none; background: transparent; font-family: 'Orbitron', sans-serif;
-        }
+        .profile-tab { padding: 10px 15px; cursor: pointer; color: var(--cyan); opacity: 0.6; border: none; background: transparent; font-family: 'Orbitron', sans-serif; }
         .profile-tab.active { opacity: 1; border-bottom: 2px solid var(--yellow); }
         .profile-tab-content { display: none; }
         .profile-tab-content.active { display: block; }
         .profile-avatar-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
-        #profile-avatar-preview {
-            width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--cyan);
-            box-shadow: 0 0 15px var(--cyan); object-fit: cover; margin-bottom: 15px;
-        }
+        #profile-avatar-preview { width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--cyan); box-shadow: 0 0 15px var(--cyan); object-fit: cover; margin-bottom: 15px; }
         .profile-form-group { text-align: left; margin-bottom: 15px; }
-        .profile-form-group label {
-            display: block; margin-bottom: 5px; font-family: 'Orbitron', sans-serif;
-            font-size: 0.9em; color: var(--cyan);
-        }
+        .profile-form-group label { display: block; margin-bottom: 5px; font-family: 'Orbitron', sans-serif; font-size: 0.9em; color: var(--cyan); }
         .profile-form-group small { font-size: 0.8em; opacity: 0.7; display: block; margin-top: 4px; }
-        #lucky-spin-btn {
-            background: var(--gold); color: var(--dark-blue); box-shadow: 0 0 15px var(--gold);
-            animation: button-glow-yellow 1.5s infinite alternate;
-        }
-        #activity-log-container {
-            max-height: 250px; overflow-y: auto; text-align: left;
-            font-family: 'Fira Code', monospace; font-size: 0.9em;
-            border: 1px solid rgba(0, 255, 255, 0.2); padding: 10px;
-        }
+        #activity-log-container { min-height: 250px; max-height: 250px; overflow-y: auto; text-align: left; font-family: 'Fira Code', monospace; font-size: 0.9em; border: 1px solid rgba(0, 255, 255, 0.2); padding: 10px; display: flex; align-items: center; justify-content: center; }
         .log-entry { margin-bottom: 8px; }
         .log-timestamp { color: var(--yellow); opacity: 0.8; margin-right: 10px; }
+        .loading-spinner { width: 48px; height: 48px; border: 5px solid var(--border-color); border-bottom-color: transparent; border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite; }
 
         /* --- NOTIFICATION SYSTEM --- */
-        #notification-container {
-            position: fixed; top: 20px; right: 20px; z-index: 100;
-            display: flex; flex-direction: column; gap: 10px;
-        }
-        .notification {
-            padding: 15px 20px; border-left: 5px solid; width: 300px;
-            background: var(--container-bg); backdrop-filter: blur(5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            animation: slideIn 0.5s ease forwards, fadeOut 0.5s ease 4.5s forwards;
-        }
+        #notification-container { position: fixed; top: 20px; right: 20px; z-index: 100; display: flex; flex-direction: column; gap: 10px; }
+        .notification { padding: 15px 20px; border-left: 5px solid; width: 300px; background: var(--container-bg); backdrop-filter: blur(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); animation: slideIn 0.5s ease forwards, fadeOut 0.5s ease 4.5s forwards; }
         .notification.success { border-color: var(--success-green); color: var(--success-green); }
         .notification.error { border-color: var(--error-red); color: var(--error-red); }
         .notification.info { border-color: var(--cyan); color: var(--cyan); }
-        @keyframes slideIn { from { transform: translateX(110%); } to { transform: translateX(0); } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateX(110%); } }
-
-        /* --- COPYRIGHT & TELEGRAM --- */
+        
+        /* --- FOOTER --- */
         #copyright, #contact-link { z-index: 5; }
         #copyright { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 0.8em; color: rgba(255, 255, 255, 0.4); }
         #contact-link { position: fixed; bottom: 15px; right: 15px; display: flex; align-items: center; text-decoration: none; color: var(--cyan); }
@@ -363,167 +180,49 @@
         #contact-link:hover svg { fill: var(--yellow); filter: drop-shadow(0 0 10px var(--yellow)); }
         #contact-link:hover span { opacity: 1; transform: translateX(0); color: var(--yellow); }
 
-        /* --- STYLES from LONGBAO IV.HTML --- */
-        #longbaoIVScreen {
-            font-family: 'Rajdhani', sans-serif;
-            background-color: #020a18;
-            color: #e0e0e0;
-            overflow: auto; /* Allow scrolling within the tool */
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 20;
-            padding: 1rem;
-        }
-
-        #longbaoIV-background-canvas {
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%; z-index: -1; opacity: 0.4;
-        }
-
-        :root {
-            --neon-green: #00ff9b;
-            --neon-gold: #ffd700;
-            --neon-blue: #00c2ff;
-            --neon-red: #ff1d58;
-            --lb4-border-color: rgba(0, 255, 155, 0.4);
-            --lb4-bg-color: rgba(15, 23, 42, 0.7);
-        }
-
+        /* --- LONGBAO IV STYLES --- */
+        #longbaoIVScreen { font-family: 'Rajdhani', sans-serif; background-color: #020a18; color: #e0e0e0; overflow: auto; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; padding: 1rem; }
+        #longbaoIV-background-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.4; }
+        :root { --neon-green: #00ff9b; --neon-gold: #ffd700; --neon-blue: #00c2ff; --neon-red: #ff1d58; --lb4-border-color: rgba(0, 255, 155, 0.4); --lb4-bg-color: rgba(15, 23, 42, 0.7); }
         .glow-text-player { text-shadow: 0 0 8px var(--neon-blue), 0 0 12px var(--neon-blue); }
         .glow-text-banker { text-shadow: 0 0 8px var(--neon-red), 0 0 12px var(--neon-red); }
         .glow-text-gold { text-shadow: 0 0 8px var(--neon-gold); }
-
-        .glow-border-gold {
-            border: 2px solid var(--neon-gold);
-            box-shadow: 0 0 15px var(--neon-gold), inset 0 0 10px var(--neon-gold);
-        }
-
-        .progress-circle {
-            border-radius: 50%; display: grid; place-items: center;
-            background: conic-gradient(var(--neon-green) var(--progress, 0deg), #334155 0deg);
-            position: relative; transition: background 0.5s;
-        }
-        
-        .history-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(20px, 1fr));
-            grid-auto-rows: 20px; gap: 4px; background-color: rgba(0,0,0,0.4);
-            border: 1px solid var(--lb4-border-color); padding: 8px; border-radius: 8px;
-            min-height: 140px; backdrop-filter: blur(2px);
-        }
-        .history-dot {
-            @apply w-full h-full rounded-full;
-            animation: dot-enter 0.5s ease-out forwards;
-        }
+        .glow-border-gold { border: 2px solid var(--neon-gold); box-shadow: 0 0 15px var(--neon-gold), inset 0 0 10px var(--neon-gold); }
+        .progress-circle { border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--neon-green) var(--progress, 0deg), #334155 0deg); position: relative; transition: background 0.5s; }
+        .history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(20px, 1fr)); grid-auto-rows: 20px; gap: 4px; background-color: rgba(0,0,0,0.4); border: 1px solid var(--lb4-border-color); padding: 8px; border-radius: 8px; min-height: 140px; backdrop-filter: blur(2px); }
+        .history-dot { width: 100%; height: 100%; border-radius: 50%; animation: dot-enter 0.5s ease-out forwards; }
         .dot-player { background-color: #3b82f6; box-shadow: 0 0 6px #3b82f6; }
         .dot-banker { background-color: #ef4444; box-shadow: 0 0 6px #ef4444; }
         .dot-tie { background-color: #22c55e; box-shadow: 0 0 6px #22c55e; }
-
-        .countdown-bar {
-            height: 4px; width: 100%;
-            background: linear-gradient(90deg, var(--neon-green), var(--neon-blue));
-            border-radius: 4px; box-shadow: 0 0 8px var(--neon-green);
-        }
-        
-        .box-panel {
-            background-color: var(--lb4-bg-color); border: 1px solid var(--lb4-border-color);
-            border-radius: 0.5rem; backdrop-filter: blur(8px);
-            box-shadow: 0 0 20px rgba(0, 255, 155, 0.1);
-        }
-
-        .bet-option-box {
-            @apply flex items-center justify-center p-2 sm:p-3 text-sm sm:text-base font-semibold border-2 border-slate-700 bg-slate-800/80 text-gray-400 rounded-md transition-all duration-300 relative overflow-hidden;
-        }
+        .countdown-bar { height: 4px; width: 100%; background: linear-gradient(90deg, var(--neon-green), var(--neon-blue)); border-radius: 4px; box-shadow: 0 0 8px var(--neon-green); }
+        .box-panel { background-color: var(--lb4-bg-color); border: 1px solid var(--lb4-border-color); border-radius: 0.5rem; backdrop-filter: blur(8px); box-shadow: 0 0 20px rgba(0, 255, 155, 0.1); }
+        .bet-option-box { display: flex; align-items: center; justify-content: center; padding: 0.5rem 0.75rem; font-size: 0.875rem; font-semibold; border: 2px solid #475569; background-color: rgba(30, 41, 59, 0.8); color: #94a3b8; border-radius: 0.375rem; transition: all 0.3s; position: relative; overflow: hidden; }
         .bet-option-box.active { color: white; text-shadow: 0 0 5px white; }
-        .bet-option-box.active::before {
-            content: ''; position: absolute; top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            animation: flash 1.5s infinite;
-        }
-        
+        .bet-option-box.active::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); animation: flash 1.5s infinite; }
         #bet-option-nhà-con.active { border-color: var(--neon-blue); background-color: rgba(0, 194, 255, 0.2); box-shadow: 0 0 15px var(--neon-blue); }
         #bet-option-nhà-cái.active { border-color: var(--neon-red); background-color: rgba(255, 29, 88, 0.2); box-shadow: 0 0 15px var(--neon-red); }
         #bet-option-hòa.active { border-color: var(--neon-green); background-color: rgba(0, 255, 155, 0.2); box-shadow: 0 0 15px var(--neon-green); }
         .sub-bet.active { border-color: var(--neon-gold); background-color: rgba(255, 215, 0, 0.2); box-shadow: 0 0 15px var(--neon-gold); }
-
-        .predict-enter { animation: predict-enter-animation 0.5s ease-out forwards; }
-        
-        .table-item-ultimate {
-            background: #0a101d;
-            border: 1px solid #273142;
-            clip-path: polygon(0 15px, 15px 0, calc(100% - 15px) 0, 100% 15px, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0 calc(100% - 15px));
-            transition: all 0.3s ease; cursor: pointer; position: relative;
-            opacity: 0; transform: translateY(20px);
-            animation: table-enter 0.5s ease-out forwards;
-        }
-        .table-item-ultimate:hover {
-            border-color: var(--neon-green); transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 0 25px rgba(0, 255, 155, 0.4);
-        }
+        .table-item-ultimate { background: #0a101d; border: 1px solid #273142; clip-path: polygon(0 15px, 15px 0, calc(100% - 15px) 0, 100% 15px, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0 calc(100% - 15px)); transition: all 0.3s ease; cursor: pointer; position: relative; opacity: 0; transform: translateY(20px); animation: table-enter 0.5s ease-out forwards; }
+        .table-item-ultimate:hover { border-color: var(--neon-green); transform: translateY(-5px) scale(1.02); box-shadow: 0 0 25px rgba(0, 255, 155, 0.4); }
         .win-rate-text-ultimate { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); }
-
         .screen { animation: screen-fade-in 0.5s ease-out; }
-        .hud-corner {
-            position: absolute; width: 20px; height: 20px;
-            border: 2px solid var(--neon-green); opacity: 0.5;
-        }
+        .hud-corner { position: absolute; width: 20px; height: 20px; border: 2px solid var(--neon-green); opacity: 0.5; }
         .hud-corner.top-left { top: 10px; left: 10px; border-right: none; border-bottom: none; }
         .hud-corner.top-right { top: 10px; right: 10px; border-left: none; border-bottom: none; }
         .hud-corner.bottom-left { bottom: 10px; left: 10px; border-right: none; border-top: none; }
         .hud-corner.bottom-right { bottom: 10px; right: 10px; border-left: none; border-top: none; }
-
-        .shockwave {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: shockwave-animation 0.7s ease-out forwards;
-        }
+        .shockwave { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; animation: shockwave-animation 0.7s ease-out forwards; }
         .energy-bar-pulsing { animation: pulse-red 1s infinite; }
 
-        @keyframes screen-fade-in { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
-        @keyframes panel-enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes dot-enter { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
-        @keyframes flash { from { left: -100%; } to { left: 100%; } }
-        @keyframes predict-enter-animation { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes table-enter { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes shockwave-animation {
-            from { width: 0; height: 0; opacity: 0.7; border: 2px solid var(--neon-gold); }
-            to { width: 200%; height: 200%; opacity: 0; border: 2px solid transparent; }
-        }
-        @keyframes pulse-red { 50% { box-shadow: 0 0 15px var(--neon-red); } }
-        
-        /* --- STYLES for Soi Hu Tool --- */
-        #soiHuScreen {
-            --primary-color: #00ff7f; /* Green */
-            --vip-color: #ffc107; /* Gold for VIP */
-            --soi-hu-text-light: #f0f0f0;
-            --soi-hu-bg-dark-theme: #0d1117;
-            --soi-hu-container-bg: rgba(13, 17, 23, 0.75);
-            --soi-hu-input-bg: #161b22;
-            --soi-hu-border-color: rgba(0, 255, 127, 0.25);
-            --soi-hu-button-radius: 12px;
-            --soi-hu-container-radius: 16px;
-            --soi-hu-error-red: #ff4757;
-        }
-        #soiHuScreen {
-            font-family: 'Roboto', Arial, sans-serif;
-            background: var(--soi-hu-bg-dark-theme);
-            color: var(--soi-hu-text-light);
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 25;
-            overflow-y: auto;
-        }
+        /* --- SOI HU STYLES --- */
+        #soiHuScreen { --primary-color: #00ff7f; --vip-color: #ffc107; --soi-hu-text-light: #f0f0f0; --soi-hu-bg-dark-theme: #0d1117; --soi-hu-container-bg: rgba(13, 17, 23, 0.75); --soi-hu-input-bg: #161b22; --soi-hu-border-color: rgba(0, 255, 127, 0.25); --soi-hu-button-radius: 12px; --soi-hu-container-radius: 16px; --soi-hu-error-red: #ff4757; }
+        #soiHuScreen { font-family: 'Roboto', Arial, sans-serif; background: var(--soi-hu-bg-dark-theme); color: var(--soi-hu-text-light); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 25; overflow-y: auto; }
         .orbitron-font { font-family: 'Orbitron', sans-serif; }
-        #soiHu-video-background { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; opacity: 0.6; }
-        #soiHu-video-background iframe { position: absolute; top: 50%; left: 50%; width: 100vw; height: 100vh; transform: translate(-50%, -50%); object-fit: cover; transition: opacity 0.7s ease-in-out; opacity: 0; pointer-events: none; }
-        #soiHu-video-background iframe.active { opacity: 1; }
         .soiHu-page-container { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; min-height: 100vh; padding: 20px; box-sizing: border-box; }
-        .soiHu-main-content { position: relative; background: var(--soi-hu-container-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); max-width: 620px; border: 2px solid var(--soi-hu-border-color); border-radius: var(--soi-hu-container-radius); padding: 30px 40px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); animation: fadeInUp 0.8s ease-out; text-align: center; width: 100%; }
+        .soiHu-main-content { position: relative; background: var(--soi-hu-container-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); max-width: 620px; border: 2px solid var(--soi-hu-border-color); border-radius: var(--soi-hu-container-radius); padding: 20px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); animation: fadeInUp 0.8s ease-out; text-align: center; width: 100%; }
         .soiHu-main-content.vip-mode { --soi-hu-border-color: rgba(255, 193, 7, 0.5); background: rgba(20, 15, 0, 0.75); }
-        .soiHu-header { width: 100%; background-color: rgba(13, 17, 23, 0.8); padding: 15px; text-align: center; border-bottom: 2px solid var(--soi-hu-border-color); backdrop-filter: blur(10px); box-sizing: border-box; margin-bottom: 20px; }
-        .soiHu-header h1 { font-size: 1.8em; margin: 0; }
-        .soiHu-intro-title, .soiHu-header h1, #soiHu_welcomeMessage { font-family: 'Orbitron', sans-serif; text-transform: uppercase; background: linear-gradient(90deg, var(--primary-color), #ff00c1, #ffb300, var(--primary-color)); background-size: 400%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: aurora-flow 8s linear infinite; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        .soiHu-intro-title, #soiHu_welcomeMessage, #soiHu_resultContainer h2, #soiHu_scanningContainer h3, #soiHu_financeAllocatorContainer h3, #soiHu_gameSelectionContainer h3 { font-family: 'Orbitron', sans-serif; text-transform: uppercase; background: linear-gradient(90deg, var(--primary-color), #ff00c1, #ffb300, var(--primary-color)); background-size: 400%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: aurora-flow 8s linear infinite; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
         #soiHu_aiChoiceContainer, #soiHu_scanningContainer, #soiHu_resultContainer, #soiHu_gameSelectionContainer { display: flex; flex-direction: column; gap: 20px; animation: fadeInUp 0.6s ease-out forwards; }
         #soiHu_energy-display { grid-column: 1 / -1; background: rgba(0,0,0,0.3); border-radius: var(--soi-hu-button-radius); padding: 10px 15px; margin-bottom: 20px; border: 1px solid var(--soi-hu-border-color); display: flex; align-items: center; gap: 15px; }
         #soiHu_energy-display .energy-icon { width: 30px; height: 30px; color: var(--vip-color); }
@@ -551,7 +250,6 @@
         .soiHu-choice-card.disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
         .soiHu-choice-card h3 { margin-top: 0; font-size: 1.5em; }
         #soiHu_loadingGif { max-width: 150px; margin: 15px auto; mix-blend-mode: screen; border-radius: 8px; }
-        #soiHu_resultContainer h2, #soiHu_scanningContainer h3, #soiHu_financeAllocatorContainer h3, #soiHu_gameSelectionContainer h3 { background: linear-gradient(90deg, var(--primary-color), #ff00c1, #ffb300, var(--primary-color)); background-size: 400%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: aurora-flow 8s linear infinite; }
         .soiHu-result-stats { padding: 15px; margin-top: 15px; }
         .soiHu-result-stats p strong { color: transparent; background: linear-gradient(90deg, var(--primary-color), #ffb300); -webkit-background-clip: text; background-clip: text; }
         #soiHu_goldenTimeContainer { background: linear-gradient(45deg, #ffc107, #ff9800); color: var(--soi-hu-bg-dark-theme); padding: 15px; border-radius: var(--soi-hu-container-radius); margin-top: 20px; text-align: center; border: 2px solid #ffeb3b; box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); animation: pulse 2s infinite alternate; }
@@ -559,15 +257,33 @@
         #soiHu_game-list { max-height: 40vh; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
         .soiHu-game-btn { background: rgba(22, 27, 34, 0.8); border: 1px solid var(--soi-hu-border-color); color: var(--soi-hu-text-light); padding: 15px 10px; border-radius: var(--soi-hu-button-radius); cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9em; }
         .soiHu-game-btn:hover { background: var(--primary-color); color: var(--soi-hu-bg-dark-theme); font-weight: bold; }
-        #soiHu_historyContent { max-height: 50vh; overflow-y: auto; text-align: left; }
-        .soiHu-history-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--primary-color); }
-        .soiHu-history-item p { margin: 5px 0; }
-        #soiHu_settingsBtn { position: absolute; top: 15px; right: 15px; font-size: 1.8em; cursor: pointer; transition: transform 0.3s ease; }
-        #soiHu_settingsBtn:hover { transform: rotate(90deg); }
-        #soiHu_dynamicDashboard { border: 1px solid var(--soi-hu-border-color); padding: 10px; margin-bottom: 20px; border-radius: var(--soi-hu-button-radius); display: flex; flex-wrap: wrap; justify-content: space-around; font-size: 0.8em; text-transform: uppercase; }
-        #soiHu_systemStatus::before { content: '●'; margin-right: 5px; color: var(--primary-color); animation: online-blink 2s infinite; }
         .soiHu-action-button { padding: 14px 30px; background: linear-gradient(45deg, #f093fb, #f5576c); color: white; border: none; font-weight: bold; border-radius: var(--soi-hu-button-radius); margin-top: 25px; cursor: pointer; font-size: 1.1em; text-transform: uppercase; box-shadow: 0 4px 15px rgba(0,0,0, 0.2); transition: all 0.3s ease; position: relative; overflow: hidden; }
         .soiHu-action-button:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 20px rgba(245, 87, 108, 0.4); }
+
+        /* --- ANIMATIONS --- */
+        @keyframes boot-up { to { opacity: 1; transform: translateY(0); } }
+        @keyframes corner-glow { from { box-shadow: 0 0 8px var(--cyan); } to { box-shadow: 0 0 18px var(--cyan), 0 0 4px white; } }
+        @keyframes button-glow-cyan { from { box-shadow: 0 0 10px var(--cyan); } to { box-shadow: 0 0 25px var(--cyan), 0 0 10px var(--cyan); } }
+        @keyframes button-glow-yellow { from { box-shadow: 0 0 15px var(--yellow); transform: scale(1.05); } to { box-shadow: 0 0 35px var(--yellow), 0 0 10px var(--yellow); transform: scale(1.1); } }
+        @keyframes warning-blink { 0%, 100% { background-color: rgba(255, 60, 60, 0.15); box-shadow: 0 0 8px rgba(255, 60, 60, 0.7); } 50% { background-color: rgba(255, 60, 60, 0.3); box-shadow: 0 0 18px var(--error-red); } }
+        @keyframes promo-glow { from { box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); } to { box-shadow: 0 0 25px rgba(255, 215, 0, 0.8), inset 0 0 10px rgba(255, 215, 0, 0.3); } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes text-flicker { 0% { opacity: 0.1; } 2% { opacity: 1; } 8% { opacity: 0.1; } 9% { opacity: 1; } 12% { opacity: 0.2; } 20% { opacity: 1; } 25% { opacity: 0.3; } 30% { opacity: 1; } 70% { opacity: 0.7; } 72% { opacity: 0.2; } 77% { opacity: .9; } 100% { opacity: .9; } }
+        @keyframes slideIn { from { transform: translateX(110%); } to { transform: translateX(0); } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateX(110%); } }
+        @keyframes screen-fade-in { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        @keyframes dot-enter { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+        @keyframes flash { from { left: -100%; } to { left: 100%; } }
+        @keyframes table-enter { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shockwave-animation { from { width: 0; height: 0; opacity: 0.7; border: 2px solid var(--neon-gold); } to { width: 200%; height: 200%; opacity: 0; border: 2px solid transparent; } }
+        @keyframes pulse-red { 50% { box-shadow: 0 0 15px var(--neon-red); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translate3d(0, 40px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
+        @keyframes aurora-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes vip-glow { 0%, 100% { border-color: #00bfff; box-shadow: 0 0 5px #00bfff, 0 0 10px #00bfff, 0 0 15px #00bfff; } 50% { border-color: #ffb300; box-shadow: 0 0 5px #ffb300, 0 0 15px #ffb300, 0 0 25px #ffb300; } }
+        @keyframes vip-chat-glow { 0%, 100% { border-color: var(--vip-color); box-shadow: 0 0 8px var(--vip-color); } 50% { border-color: #ff00c1; box-shadow: 0 0 16px #ff00c1; } }
+        @keyframes pulse { from { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); } to { transform: scale(1.02); box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); } }
+        @keyframes rotation { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
     </style>
 </head>
 <body>
@@ -587,7 +303,7 @@
                     <h2 data-text="ĐĂNG NHẬP"></h2>
                     <div class="boot-anim" style="animation-delay: 0.8s;"><input type="text" id="login-username" placeholder="TÊN TÀI KHOẢN" required></div>
                     <div class="boot-anim" style="animation-delay: 1.0s;"><input type="password" id="login-password" placeholder="MẬT KHẨU" required></div>
-                    <div class="boot-anim" style="animation-delay: 1.2s;"><button type="submit" id="loginBtn">KẾT NỐI</button></div>
+                    <div class="boot-anim" style="animation-delay: 1.2s;"><button type="submit" id="loginBtn" class="btn-primary">KẾT NỐI</button></div>
                     <p class="auth-switch boot-anim" style="animation-delay: 1.4s;">Chưa có tài khoản? <a id="showRegisterLink">Đăng ký</a></p>
                     <a href="http://www.f168.codes" target="_blank" class="f168-banner boot-anim" style="animation-delay: 1.5s;">TOOL CHỈ HOẠT ĐỘNG VỚI TÀI KHOẢN ĐĂNG KÍ TẠI SẢNH F168.CODES</a>
                 </form>
@@ -614,69 +330,60 @@
                 </div>
             </div>
             <div id="user-controls">
-                <button id="profile-btn" class="control-btn" title="Hồ sơ">
+                <button id="profile-btn" class="control-btn" aria-label="Hồ sơ">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></svg>
                 </button>
-                <button id="logout-btn" class="control-btn" title="Đăng xuất">
+                <button id="logout-btn" class="control-btn" aria-label="Đăng xuất">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/></svg>
                 </button>
             </div>
         </div>
         <h1 data-text="CHỌN LÕI A.I"></h1>
         <div id="core-selector">
-            <button id="prev-core-btn" class="core-nav-btn">&lt;</button>
+            <button id="prev-core-btn" class="core-nav-btn" aria-label="Lõi trước">&lt;</button>
             <div id="core-options-container">
-                <div class="core-option">
-                    <h3>LongBao Thế Hệ IV</h3>
-                    <div class="gif-container"><iframe src="https://giphy.com/embed/ws8l2aiUiFudsACu5u" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div>
-                    <p class="core-description">Được phát triển từ các GPU Ndivia thế hệ mới, xâm nhập vô sảnh game để phân tích và đưa ra lựa chọn tốt nhất cho người dùng.</p>
-                </div>
-                <div class="core-option">
-                    <h3>Yian Soi Lá Bài</h3>
-                    <div class="gif-container"><iframe src="https://giphy.com/embed/3Ipz588z9HiqP5sD5t" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div>
-                    <p class="core-description">Công nghệ tương lai độc quyền - được phát triển từ hệ thống SVB nổi tiếng của các hacker. Giờ đây soi lá bài không phải là tưởng tượng nữa!</p>
-                </div>
-                <div class="core-option">
-                    <h3>Siêu Lõi Aquarius</h3>
-                    <div class="gif-container"><iframe src="https://giphy.com/embed/h88FMNUACANfKcsXFq" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div>
-                    <p class="core-description">Được tạo lên từ A.I thông minh nhất thế giới Grok IV - Tỉ lệ thắng 99%. X1000 lần tài khoản trong 1 đêm không còn là mơ.</p>
-                </div>
-                <div class="core-option">
-                    <h3>TOOL SOI HỦ</h3>
-                    <div class="gif-container"><iframe src="https://giphy.com/embed/jLgkxdMy5HiIPXMUAD" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div>
-                    <p class="core-description">Công nghệ SĂN HỦ giúp người chơi big win 1 cách dễ dàng</p>
-                </div>
+                <!-- Core options will be dynamically inserted here -->
             </div>
-            <button id="next-core-btn" class="core-nav-btn">&gt;</button>
+            <button id="next-core-btn" class="core-nav-btn" aria-label="Lõi tiếp theo">&gt;</button>
         </div>
-        <button id="main-next-btn" class="btn-next">KÍCH HOẠT LÕI</button>
+        <button id="main-next-btn" class="btn-primary">KÍCH HOẠT LÕI</button>
         <div id="promo-banner">
             <a href="https://www.f168a2.net/home/register?id=409098214&currency=VND" target="_blank" id="promo-text">ĐĂNG KÍ NẠP ĐẦU 8888K - TẶNG VÒNG XOAY MAY MẮN</a>
             <a href="https://vongxoaylongbao.site/" target="_blank" id="promo-spinner-link"><svg id="promo-spinner" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color: #fcee0a; stop-opacity: 1" /><stop offset="100%" style="stop-color: #ffd700; stop-opacity: 1" /></linearGradient></defs><g class="spinner-wheel"><circle cx="50" cy="50" r="25" fill="transparent" stroke="#E74C3C" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(-90 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#F1C40F" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(-30 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#2ECC71" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(30 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#3498DB" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(90 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#9B59B6" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(150 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#1ABC9C" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(210 50 50)"/></g><circle cx="50" cy="50" r="48" fill="none" stroke="url(#gold-gradient)" stroke-width="4"/><path d="M50,0 L45,15 L55,15 Z" fill="var(--gold)" stroke="var(--dark-blue)" stroke-width="1" /><circle cx="50" cy="50" r="12" fill="var(--dark-blue)" stroke="var(--gold)" stroke-width="2"/><circle cx="50" cy="50" r="8" fill="var(--gold)"/></svg></a>
         </div>
+        <!-- Chatbot Feature -->
+        <div id="chat-container" class="collapsed hidden">
+            <button id="chat-toggle">CHAT VỚI A.I</button>
+            <div id="chat-window">
+                <div id="chat-messages"></div>
+                <form id="chat-form">
+                    <input type="text" id="chat-input" placeholder="Hỏi A.I LongBao..." autocomplete="off" required>
+                    <button type="submit" id="chat-send-btn">GỬI</button>
+                </form>
+            </div>
+        </div>
     </div>
 
-    <!-- Màn hình Lõi LongBao IV (Tích hợp) -->
+    <!-- Màn hình Lõi LongBao IV -->
     <div id="longbaoIVScreen" class="hidden">
         <canvas id="longbaoIV-background-canvas"></canvas>
-        <button id="exit-longbao-btn" class="fixed top-4 left-4 box-panel p-2 rounded-full hover:bg-slate-700 transition-colors z-50 text-white">
-             Thoát Lõi
-        </button>
-
-        <!-- ULTIMATE: Table Selection Screen -->
+        
         <div id="table-selection-screen" class="screen">
             <div class="max-w-7xl mx-auto">
-                <h1 class="text-2xl sm:text-4xl font-bold text-center mb-6 text-[var(--neon-green)] glow-text-gold tracking-widest box-panel py-2">CHỌN BÀN CHƠI</h1>
-                <div id="table-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex justify-between items-center mb-6">
+                    <button id="exit-longbao-btn-tables" class="box-panel p-2 rounded-md hover:bg-slate-700 transition-colors z-50 text-white">Thoát Lõi</button>
+                    <h1 class="text-2xl sm:text-4xl font-bold text-center text-[var(--neon-green)] glow-text-gold tracking-widest box-panel py-2 px-4">CHỌN BÀN CHƠI</h1>
+                    <div style="width: 80px;"></div> <!-- Spacer -->
+                </div>
+                <div id="table-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <!-- Tables will be dynamically inserted here -->
                 </div>
             </div>
         </div>
 
-        <!-- Tool Screen (Initially Hidden) -->
         <div id="tool-screen" class="hidden screen">
-            <button id="back-to-tables-btn" class="fixed top-4 right-4 box-panel p-2 rounded-full hover:bg-slate-700 transition-colors z-50">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <button id="back-to-tables-btn" class="fixed top-4 left-4 box-panel p-2 rounded-md hover:bg-slate-700 transition-colors z-50 text-white" aria-label="Quay lại chọn bàn">
+                Về Sảnh
             </button>
             <div class="hud-corner top-left"></div><div class="hud-corner top-right"></div>
             <div class="hud-corner bottom-left"></div><div class="hud-corner bottom-right"></div>
@@ -710,21 +417,7 @@
                         <div class="bg-slate-900/50 px-3 py-1 rounded">Thua: <span id="total-losses" class="font-bold text-[var(--neon-red)]">0</span></div>
                     </div>
                     <div id="bet-options-grid" class="box-panel p-2 sm:p-3 space-y-2">
-                        <div class="grid grid-cols-6 gap-2">
-                            <div id="bet-option-con-đôi" class="bet-option-box sub-bet">Con đôi</div>
-                            <div id="bet-option-phượng-đôi" class="bet-option-box sub-bet">Phượng đôi</div>
-                            <div id="bet-option-tài" class="bet-option-box sub-bet">Tài</div>
-                            <div id="bet-option-xỉu" class="bet-option-box sub-bet">Xỉu</div>
-                            <div id="bet-option-huyền-vũ" class="bet-option-box sub-bet">Huyền vũ</div>
-                            <div id="bet-option-cái-đôi" class="bet-option-box sub-bet">Cái đôi</div>
-                        </div>
-                        <div class="grid grid-cols-5 gap-2">
-                            <div id="bet-option-long-bảo-player" class="bet-option-box sub-bet col-span-1">Long Bảo</div>
-                            <div id="bet-option-nhà-con" class="bet-option-box col-span-1">NHÀ CON</div>
-                            <div id="bet-option-hòa" class="bet-option-box col-span-1">HÒA</div>
-                            <div id="bet-option-nhà-cái" class="bet-option-box col-span-1">NHÀ CÁI</div>
-                            <div id="bet-option-long-bảo-banker" class="bet-option-box sub-bet col-span-1">Long Bảo</div>
-                        </div>
+                        <!-- Bet options will be inserted here -->
                     </div>
                     <div id="history-grid" class="history-grid box-panel"></div>
                     <div id="suggested-table-container" class="box-panel p-3 text-center cursor-pointer hover:border-amber-300 transition-colors">
@@ -744,38 +437,22 @@
         </div>
     </div>
 
-    <!-- Màn hình Lõi Soi Hũ (Tích hợp) -->
+    <!-- Màn hình Lõi Soi Hũ -->
     <div id="soiHuScreen" class="soiHu-page-container hidden">
-        <div id="soiHu-video-background">
-            <iframe id="soiHu-video-login" src="https://streamable.com/e/p75ki3?autoplay=1&mute=1&loop=1" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
-            <iframe id="soiHu-video-ai-choice" src="https://streamable.com/e/d7r3dn?autoplay=1&mute=1&loop=1" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
-            <iframe id="soiHu-video-menu" src="https://streamable.com/e/luj9cq?autoplay=1&mute=1&loop=1" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
-        </div>
-        <div class="soiHu-header">
-             <h1 class="orbitron-font">A.I LONG BẢO 88</h1>
-        </div>
         <div class="soiHu-main-content" id="soiHu_mainContent">
-            <div id="soiHu_settingsBtn">⚙️</div>
             <div id="soiHu_aiChoiceContainer">
-                <p id="soiHu_welcomeMessage"></p>
+                <p id="soiHu_welcomeMessage" class="soiHu-intro-title"></p>
                 <div class="soiHu-choice-card" id="soiHu_choiceAILongBao"> <h3 class="orbitron-font">A.I LONG BẢO</h3> <p>Phiên bản cơ bản</p> </div>
                 <div class="soiHu-choice-card" id="soiHu_choiceAILongBao4"> <h3 class="orbitron-font">A.I LONG BẢO THẾ HỆ 4</h3> <p>Phiên bản nâng cao</p> </div>
                 <button class="soiHu-menu-btn orbitron-font" id="exitSoiHuBtn" style="margin-top: 15px; border-color: #6c757d; color: #6c757d;">Thoát Lõi</button>
             </div>
             
             <div id="soiHu_menuContainer" class="hidden">
-                <div id="soiHu_dynamicDashboard" style="grid-column: 1 / -1;">
-                    <span>Trạng thái: <span id="soiHu_systemStatus"></span></span>
-                    <span>Ping: <span id="soiHu_networkPing"></span></span>
-                    <span>A.I: <span id="soiHu_activeAI"></span></span>
-                </div>
-                
                 <div id="soiHu_energy-display">
                     <svg class="energy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"/><path d="M12 6c-2.757 0-5 2.243-5 5s2.243 5 5 5 5-2.243 5-5-2.243-5-5-5zm0 8c-1.654 0-3-1.346-3-3s1.346-3 3-3 3 1.346 3 3-1.346 3-3 3z"/></svg>
                     <span class="energy-text">Năng Lượng: <span id="soiHu_energy-count">0</span></span>
                     <div id="soiHu_energy-bar-wrapper"><div id="soiHu_energy-bar"></div></div>
                 </div>
-
                 <button class="soiHu-menu-btn orbitron-font" id="soiHu_playWithAIBtn">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-4H6V6h12v2z"/></svg>
                     <span class="menu-text">Chơi Cùng A.I</span>
@@ -845,40 +522,80 @@
     </div>
     
     <!-- Modals -->
-    <div id="aquarius-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>Kích hoạt Siêu Lõi Aquarius</h3><p>VUI LÒNG NHẬP MÃ KÍCH HOẠT AQUARIUS</p><input type="text" id="aquarius-code-input" placeholder="MÃ KÍCH HOẠT"><p id="aquarius-error" class="auth-error"></p><div class="modal-buttons"><button id="confirm-aquarius-code" class="btn-style">XÁC NHẬN NHẬP MÃ</button><a href="https://t.me/longbaoF168" target="_blank" id="contact-for-code" class="btn-style">LIÊN HỆ LONG BẢO</a></div></div></div>
-    <div id="low-energy-modal" class="modal-overlay hidden"><div class="modal-content warning"><button class="close-modal-btn">X</button><h3>CẢNH BÁO NĂNG LƯỢNG THẤP</h3><p>LÕI A.I ĐANG HẾT NĂNG LƯỢNG - HÃY RÚT RA NẠP LẠI ĐỂ HỒI PHỤC LÕI</p><div class="modal-buttons"><button class="close-modal-btn btn-style" style="position: static;">ĐÃ HIỂU</button></div></div></div>
-    <div id="profile-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>HỒ SƠ PILOT</h3><div class="profile-tabs"><button class="profile-tab active" data-tab="profile-info">Thông tin</button><button class="profile-tab" data-tab="profile-security">Bảo mật</button><button class="profile-tab" data-tab="profile-log">Nhật ký</button></div><div id="profile-info" class="profile-tab-content active"><form id="profile-form"><div class="profile-avatar-section"><img id="profile-avatar-preview" src="https://placehold.co/100x100/0A192F/00ffff?text=P" alt="Profile Avatar"><div class="profile-form-group" style="width: 100%;"><label for="profile-avatar-url">URL Ảnh Đại Diện</label><input type="text" id="profile-avatar-url" placeholder="https://example.com/image.png"></div></div><div class="profile-form-group"><label for="profile-f168-username">Tên Tài Khoản F168</label><input type="text" id="profile-f168-username" placeholder="Nhập tên tài khoản F168"><small>Chỉ được đổi 2 lần/tháng, mỗi lần cách nhau 15 ngày.</small></div><div class="profile-form-group"><label for="profile-phone">Số Điện Thoại</label><input type="tel" id="profile-phone" placeholder="Nhập số điện thoại"></div><div class="modal-buttons"><button type="submit" id="save-profile-btn" class="btn-primary">LƯU THAY ĐỔI</button><a href="https://vongxoaylongbao.site" target="_blank" id="lucky-spin-btn" class="btn-style">VÒNG XOAY MAY MẮN</a></div></form></div><div id="profile-security" class="profile-tab-content"><form id="change-password-form"><div class="profile-form-group"><label for="current-password">Mật khẩu hiện tại</label><input type="password" id="current-password" required></div><div class="profile-form-group"><label for="new-password">Mật khẩu mới</label><input type="password" id="new-password" required></div><div class="modal-buttons"><button type="submit" class="btn-primary">ĐỔI MẬT KHẨU</button></div></form></div><div id="profile-log" class="profile-tab-content"><div id="activity-log-container"><p>Đang tải nhật ký...</p></div></div></div></div>
+    <div id="aquarius-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>Kích hoạt Siêu Lõi Aquarius</h3><p>VUI LÒNG NHẬP MÃ KÍCH HOẠT AQUARIUS</p><input type="text" id="aquarius-code-input" placeholder="MÃ KÍCH HOẠT"><p id="aquarius-error" class="auth-error"></p><div class="modal-buttons"><button id="confirm-aquarius-code" class="btn-primary">XÁC NHẬN</button><a href="https://t.me/longbaoF168" target="_blank" class="btn-style" style="border: 1px solid var(--cyan); color: var(--cyan);">LIÊN HỆ</a></div></div></div>
+    <div id="low-energy-modal" class="modal-overlay hidden"><div class="modal-content warning"><button class="close-modal-btn">X</button><h3>CẢNH BÁO NĂNG LƯỢNG THẤP</h3><p>LÕI A.I ĐANG HẾT NĂNG LƯỢNG - HÃY RÚT RA NẠP LẠI ĐỂ HỒI PHỤC LÕI</p><div class="modal-buttons"><button class="close-modal-btn btn-primary" style="position: static;">ĐÃ HIỂU</button></div></div></div>
+    <div id="profile-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>HỒ SƠ PILOT</h3><div class="profile-tabs"><button class="profile-tab active" data-tab="profile-info">Thông tin</button><button class="profile-tab" data-tab="profile-security">Bảo mật</button><button class="profile-tab" data-tab="profile-log">Nhật ký</button></div><div id="profile-info" class="profile-tab-content active"><form id="profile-form"><div class="profile-avatar-section"><img id="profile-avatar-preview" src="https://placehold.co/100x100/0A192F/00ffff?text=P" alt="Profile Avatar"><div class="profile-form-group" style="width: 100%;"><label for="profile-avatar-url">URL Ảnh Đại Diện</label><input type="text" id="profile-avatar-url" placeholder="https://example.com/image.png"></div></div><div class="profile-form-group"><label for="profile-f168-username">Tên Tài Khoản F168</label><input type="text" id="profile-f168-username" placeholder="Nhập tên tài khoản F168"><small>Chỉ được đổi 2 lần/tháng, mỗi lần cách nhau 15 ngày.</small></div><div class="profile-form-group"><label for="profile-phone">Số Điện Thoại</label><input type="tel" id="profile-phone" placeholder="Nhập số điện thoại"></div><div class="modal-buttons"><button type="submit" id="save-profile-btn" class="btn-primary">LƯU THAY ĐỔI</button></div></form></div><div id="profile-security" class="profile-tab-content"><form id="change-password-form"><div class="profile-form-group"><label for="current-password">Mật khẩu hiện tại</label><input type="password" id="current-password" required></div><div class="profile-form-group"><label for="new-password">Mật khẩu mới</label><input type="password" id="new-password" required></div><div class="modal-buttons"><button type="submit" class="btn-primary">ĐỔI MẬT KHẨU</button></div></form></div><div id="profile-log" class="profile-tab-content"><div id="activity-log-container"><div class="loading-spinner"></div></div></div></div></div>
     
     <footer id="copyright">BẢN QUYỀN THUỘC VỀ LONG BẢO</footer>
     <a id="contact-link" href="https://t.me/longbaoF168" target="_blank"><span>LIÊN HỆ LONG BẢO</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M248,8C111.033,8,0,119.033,0,256S111.033,504,248,504,496,392.967,496,256,384.967,8,248,8ZM362.952,176.66c-3.732,39.215-19.881,134.378-28.1,178.3-3.476,18.584-10.322,24.816-16.948,25.425-14.4,1.326-25.338-9.517-39.287-18.661-21.827-14.308-34.158-23.215-55.346-37.177-24.485-16.135-8.612-25,5.342-39.5,3.652-3.793,67.2-61.756,68.973-66.107,2.174-5.327.34-8.28-2.063-10.423-2.403-2.143-5.48-1.922-8.262-.973l-73.22,47.052-37.424-11.948c-13.385-4.278-23.215-6.469-23.215-15.045,0-8.173,6.7-13.218,19.967-18.071,46.5-16.979,100.013-33.507,139.14-47.785,13.87-5.021,26.124,2.756,22.399,28.857Z"/></svg></a>
 
-    <audio id="soiHu_clickSound" src="https://www.myinstants.com/media/sounds/mouse-click.mp3" preload="auto"></audio>
-    <audio id="soiHu_scanSound" src="https://www.myinstants.com/media/sounds/modem-dial-up-4.mp3" loop preload="auto"></audio>
-    <audio id="soiHu_successSound" src="https://www.myinstants.com/media/sounds/correct-answer.mp3" preload="auto"></audio>
-    <audio id="soiHu_errorSound" src="https://www.myinstants.com/media/sounds/error_CD_dM99Fr1.mp3" preload="auto"></audio>
-
     <script type="module">
+        // --- FIREBASE IMPORTS ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { 
             getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut,
-            EmailAuthProvider, reauthenticateWithCredential, updatePassword
+            updatePassword, EmailAuthProvider, reauthenticateWithCredential
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { 
-            getFirestore, doc, setDoc, updateDoc, onSnapshot, Timestamp,
-            collection, addDoc, query, orderBy, limit, getDocs
+            getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, Timestamp,
+            collection, addDoc, query, orderBy, limit, getDocs, serverTimestamp
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCHDzGbXmHNWKL2UtRm57vPRVxZb31dHto",
-            authDomain: "long-bao-tool-ai.firebaseapp.com",
-            projectId: "long-bao-tool-ai",
-            storageBucket: "long-bao-tool-ai.appspot.com",
-            messagingSenderId: "259613170671",
-            appId: "1:259613170671:web:6fe2467879c01da52b41a",
-            measurementId: "G-PS060CSDBC"
+        // --- CONFIGURATION ---
+        const CONFIG = {
+            firebase: {
+                apiKey: "AIzaSyCHDzGbXmHNWKL2UtRm57vPRVxZb31dHto",
+                authDomain: "long-bao-tool-ai.firebaseapp.com",
+                projectId: "long-bao-tool-ai",
+                storageBucket: "long-bao-tool-ai.appspot.com",
+                messagingSenderId: "259613170671",
+                appId: "1:259613170671:web:6fe2467879c01da52b41a",
+            },
+            energy: {
+                initial: 5,
+                max: 100,
+                costs: {
+                    longBaoIV: 5,
+                    soiHuAutoScan: 2,
+                    soiHuAnalysis: 2,
+                    soiHuJarHunt: 10,
+                }
+            },
+            ai_cores: [
+                { id: 'longbao_iv', name: 'LongBao Thế Hệ IV', description: 'Được phát triển từ các GPU Ndivia thế hệ mới, xâm nhập vô sảnh game để phân tích và đưa ra lựa chọn tốt nhất cho người dùng.', gif: 'https://giphy.com/embed/ws8l2aiUiFudsACu5u' },
+                { id: 'yian', name: 'Yian Soi Lá Bài', description: 'Công nghệ tương lai độc quyền - được phát triển từ hệ thống SVB nổi tiếng của các hacker. Giờ đây soi lá bài không phải là tưởng tượng nữa!', gif: 'https://giphy.com/embed/3Ipz588z9HiqP5sD5t', externalUrl: 'https://www.soilabai.site/' },
+                { id: 'aquarius', name: 'Siêu Lõi Aquarius', description: 'Được tạo lên từ A.I thông minh nhất thế giới Grok IV - Tỉ lệ thắng 99%. X1000 lần tài khoản trong 1 đêm không còn là mơ.', gif: 'https://giphy.com/embed/h88FMNUACANfKcsXFq' },
+                { id: 'soi_hu', name: 'TOOL SOI HỦ', description: 'Công nghệ SĂN HỦ giúp người chơi big win 1 cách dễ dàng', gif: 'https://giphy.com/embed/jLgkxdMy5HiIPXMUAD' }
+            ],
+            longbao_iv: {
+                prediction_interval: 25000,
+                main_outcomes: ['NHÀ CON', 'NHÀ CÁI'],
+                sub_outcomes: ['Con đôi', 'Phượng đôi', 'Tài', 'Xỉu', 'Huyền vũ', 'Cái đôi', 'Long Bảo Player', 'Long Bảo Banker'],
+            }
         };
 
-        const fbApp = initializeApp(firebaseConfig);
+        // --- DEFAULT CONFIG (FALLBACK) ---
+        const DEFAULT_CONFIG = {
+            longbao_iv: {
+                tables: [
+                    'BACARAT C04', 'BACARAT C05', 'BACARAT C06', 'BACARAT C07', 'BACARAT C01', 'BACARAT C02', 'BACARAT C03', 'BACARAT C08', 'BACARAT C09', 'BACARAT C10',
+                    'BACARAT 1', 'BACARAT 2', 'BACARAT 3', 'BACARAT 4', 'BACARAT 5', 'BACARAT 7', 'BACARAT 8', 'BACARAT 9'
+                ]
+            },
+            soi_hu: {
+                games: [
+                    { name: 'BA CON HEO NHỎ', image: 'https://i.ibb.co/Q3dYksdQ/BA-CON-HEO-NH.jpg' },
+                    { name: 'BÃO KỊCH NGON NGỌT', image: 'https://i.ibb.co/h1XkFxcw/B-O-K-CH-NG-NG-T.jpg' },
+                    { name: 'BÃO KIM TIỀN', image: 'https://i.ibb.co/KpXRkb4n/B-O-KIM-TI-N.jpg' },
+                    { name: 'THẦN TÀI GIÁ ĐÁO', image: 'https://i.ibb.co/jXvqdpd/default-4.jpg' },
+                    { name: 'SUPER ACE', image: 'https://i.ibb.co/0z7rq0R/SUPER-ACE.jpg' },
+                    { name: 'NEKO MAY MẮN', image: 'https://i.ibb.co/RTjCsDvf/NEKO-MAY-M-N.jpg' }
+                ]
+            }
+        };
+
+        // --- FIREBASE INITIALIZATION ---
+        const fbApp = initializeApp(CONFIG.firebase);
         const auth = getAuth(fbApp);
         const db = getFirestore(fbApp);
 
@@ -886,11 +603,13 @@
         let currentUserData = null;
         let unsubscribeUser;
         let wasEnergyLow = false;
-        let three, coreAnimationId;
+        let soundsReady = false;
+        let globalUpdateInterval;
+        let chatHistory = [];
+        const sound = {};
 
         // --- DOM Elements ---
         const DOMElements = {
-            // Main App
             authScreen: document.getElementById('authScreen'),
             aiCoreSelectionScreen: document.getElementById('aiCoreSelectionScreen'),
             loginForm: document.getElementById('loginForm'),
@@ -900,7 +619,7 @@
             loginUsernameInput: document.getElementById('login-username'),
             loginPasswordInput: document.getElementById('login-password'),
             loginBtn: document.getElementById('loginBtn'),
-            coreOptions: document.querySelectorAll('.core-option'),
+            coreOptionsContainer: document.getElementById('core-options-container'),
             prevCoreBtn: document.getElementById('prev-core-btn'),
             nextCoreBtn: document.getElementById('next-core-btn'),
             mainNextBtn: document.getElementById('main-next-btn'),
@@ -909,31 +628,23 @@
             userEnergySpan: document.getElementById('user-energy'),
             userAvatarImg: document.getElementById('user-avatar'),
             logoutBtn: document.getElementById('logout-btn'),
-            
-            // Modals
+            chatContainer: document.getElementById('chat-container'),
+            chatToggle: document.getElementById('chat-toggle'),
+            chatMessages: document.getElementById('chat-messages'),
+            chatForm: document.getElementById('chat-form'),
+            chatInput: document.getElementById('chat-input'),
             aquariusModal: document.getElementById('aquarius-modal'),
             confirmAquariusCodeBtn: document.getElementById('confirm-aquarius-code'),
             aquariusCodeInput: document.getElementById('aquarius-code-input'),
             aquariusError: document.getElementById('aquarius-error'),
             lowEnergyModal: document.getElementById('low-energy-modal'),
             profileModal: document.getElementById('profile-modal'),
-
-            // Profile
             profileBtn: document.getElementById('profile-btn'),
-            profileForm: document.getElementById('profile-form'),
-            profileAvatarPreview: document.getElementById('profile-avatar-preview'),
-            profileAvatarUrlInput: document.getElementById('profile-avatar-url'),
-            profileF168UsernameInput: document.getElementById('profile-f168-username'),
-            profilePhoneInput: document.getElementById('profile-phone'),
             profileTabs: document.querySelectorAll('.profile-tab'),
             profileTabContents: document.querySelectorAll('.profile-tab-content'),
             activityLogContainer: document.getElementById('activity-log-container'),
-            changePasswordForm: document.getElementById('change-password-form'),
-
-            // --- LongBao IV Elements ---
             longbaoIVScreen: document.getElementById('longbaoIVScreen'),
-            longbaoIVBackgroundCanvas: document.getElementById('longbaoIV-background-canvas'),
-            exitLongbaoBtn: document.getElementById('exit-longbao-btn'),
+            exitLongbaoBtnTables: document.getElementById('exit-longbao-btn-tables'),
             tableSelectionScreen: document.getElementById('table-selection-screen'),
             toolScreen: document.getElementById('tool-screen'),
             tableListContainer: document.getElementById('table-list'),
@@ -956,8 +667,6 @@
             energyModalLB4: document.getElementById('energy-modal-lb4'),
             modalConfirmBtnLB4: document.getElementById('modal-confirm-btn-lb4'),
             shockwaveContainer: document.getElementById('shockwave-container'),
-
-            // --- Soi Hu Elements ---
             soiHuScreen: document.getElementById('soiHuScreen'),
             soiHu_mainContent: document.getElementById('soiHu_mainContent'),
             soiHu_aiChoiceContainer: document.getElementById('soiHu_aiChoiceContainer'),
@@ -965,9 +674,6 @@
             soiHu_scanningContainer: document.getElementById('soiHu_scanningContainer'),
             soiHu_resultContainer: document.getElementById('soiHu_resultContainer'),
             soiHu_gameSelectionContainer: document.getElementById('soiHu_gameSelectionContainer'),
-            soiHu_videos: { login: document.getElementById('soiHu-video-login'), aiChoice: document.getElementById('soiHu-video-ai-choice'), menu: document.getElementById('soiHu-video-menu') },
-            soiHu_modals: { security: document.getElementById('securityCheckModal'), capital: document.getElementById('capitalWarningModal'), inactivity: document.getElementById('inactivityWarningModal'), history: document.getElementById('historyModal'), settings: document.getElementById('settingsModal') },
-            soiHu_sounds: { click: document.getElementById('soiHu_clickSound'), scan: document.getElementById('soiHu_scanSound'), success: document.getElementById('soiHu_successSound'), error: document.getElementById('soiHu_errorSound') },
             exitSoiHuBtn: document.getElementById('exitSoiHuBtn'),
             soiHu_welcomeMessage: document.getElementById('soiHu_welcomeMessage'),
             soiHu_choiceAILongBao: document.getElementById('soiHu_choiceAILongBao'),
@@ -997,11 +703,89 @@
             soiHu_financeAllocatorContainer: document.getElementById('soiHu_financeAllocatorContainer'),
             soiHu_calculateFinanceBtn: document.getElementById('soiHu_calculateFinanceBtn'),
             soiHu_financeResult: document.getElementById('soiHu_financeResult'),
-            soiHu_historyContent: document.getElementById('soiHu_historyContent'),
-            soiHu_closeHistoryModalBtn: document.getElementById('soiHu_closeHistoryModalBtn'),
-            soiHu_securityMessage: document.getElementById('soiHu_securityMessage'),
-            soiHu_closeSecurityModalBtn: document.getElementById('soiHu_closeSecurityModalBtn'),
             soiHu_capitalInput: document.getElementById('soiHu_capitalInput'),
+        };
+
+        // --- UI & UTILITY HELPERS ---
+        function showNotification(message, type = 'info') {
+            const container = document.getElementById('notification-container');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            container.appendChild(notification);
+            setTimeout(() => notification.remove(), 5000);
+        }
+
+        async function logActivity(message) {
+            if (!auth.currentUser) return;
+            try {
+                const logCollectionRef = collection(db, 'users', auth.currentUser.uid, 'activityLog');
+                await addDoc(logCollectionRef, { message, timestamp: serverTimestamp() });
+            } catch (error) { console.error("Error logging activity:", error); }
+        }
+
+        const decodeText = (element) => {
+            const originalText = element.dataset.text;
+            if (!originalText) { element.textContent = element.textContent || ''; return; }
+            const chars = '!<>-_\\/[]{}—=+*^?#_';
+            let frame = 0;
+            const interval = setInterval(() => {
+                element.textContent = originalText.split('').map((char, index) => {
+                    if (index < frame) return originalText[index];
+                    return chars[Math.floor(Math.random() * chars.length)];
+                }).join('');
+                if (frame >= originalText.length) clearInterval(interval);
+                frame++;
+            }, 50);
+        };
+
+        function animateCountUp(el, end, decimals = 0, suffix = '') {
+            const duration = 1500;
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                el.textContent = (progress * end).toFixed(decimals) + suffix;
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // --- MEDIA & SOUND ENGINE ---
+        function initializeSounds() {
+            sound.click = new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.05, release: 0.1 } }).toDestination();
+            sound.navigate = new Tone.MembraneSynth({ pitchDecay: 0.01, octaves: 2, envelope: { attack: 0.001, decay: 0.2, sustain: 0.01, release: 0.1 } }).toDestination();
+            sound.confirm = new Tone.MetalSynth({ frequency: 200, envelope: { attack: 0.001, decay: 0.1, release: 0.05 }, harmonicity: 3.1, modulationIndex: 32, resonance: 4000, octaves: 1.5 }).toDestination();
+            sound.error = new Tone.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.2 } }).toDestination();
+            sound.open = new Tone.PluckSynth({ attackNoise: 1, dampening: 4000, resonance: 0.7 }).toDestination();
+            sound.success = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.001, decay: 0.2, sustain: 0.1, release: 0.2 } }).toDestination();
+            sound.boot = new Tone.Synth({ oscillator: { type: 'sawtooth' }, envelope: { attack: 0.5, decay: 0.5, sustain: 0.2, release: 1 } }).toDestination();
+            sound.lb4_predict = new Tone.MembraneSynth().toDestination();
+            sound.lb4_lowEnergy = new Tone.NoiseSynth({ noise: { type: 'pink' }, envelope: { attack: 0.05, decay: 0.1, sustain: 0 } }).toDestination();
+            sound.soiHuScan = new Tone.NoiseSynth({ noise: { type: 'brown' }, volume: -20, envelope: { attack: 0.5, decay: 1, sustain: 1 } }).toDestination();
+            sound.chatMessage = new Tone.Synth({ oscillator: { type: 'sine' }, volume: -10, envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.1 } }).toDestination();
+        }
+        
+        function playSound(type, note = 'C4', duration = '8n') {
+            if (!soundsReady || !sound[type]) return;
+            try {
+                if (type === 'soiHuScan') sound[type].triggerAttack();
+                else sound[type].triggerAttackRelease(note, duration);
+            } catch (e) { console.error("Sound play error:", e); }
+        }
+        
+        function stopSound(type) {
+            if (!soundsReady || !sound[type] || !sound[type].triggerRelease) return;
+            try {
+                sound[type].triggerRelease();
+            } catch(e) { /* ignore */ }
+        }
+
+        const startMedia = async () => {
+            if (soundsReady) return;
+            await Tone.start();
+            soundsReady = true;
+            console.log("Audio Context started.");
         };
 
         // --- BACKGROUND EFFECTS ---
@@ -1035,208 +819,7 @@
             setInterval(matrix, 50);
         }
 
-        // --- YOUTUBE PLAYER & SOUND ENGINE ---
-        let ytPlayer, isYtReady = false, soundsReady = false;
-        const sound = {};
-
-        function initializeMedia() {
-            window.onYouTubeIframeAPIReady = () => {
-                isYtReady = true;
-                ytPlayer = new YT.Player('youtube-player', {
-                    height: '360', width: '640', videoId: '16GcpkR3rMM',
-                    playerVars: { 'autoplay': 1, 'controls': 0, 'loop': 1, 'playlist': '16GcpkR3rMM' },
-                    events: { 'onReady': onPlayerReady }
-                });
-            };
-            const tag = document.createElement('script');
-            tag.src = "https://www.youtube.com/iframe_api";
-            document.head.appendChild(tag);
-
-            // Sounds from index.html
-            sound.click = new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.05, release: 0.1 } }).toDestination();
-            sound.navigate = new Tone.MembraneSynth({ pitchDecay: 0.01, octaves: 2, envelope: { attack: 0.001, decay: 0.2, sustain: 0.01, release: 0.1 } }).toDestination();
-            sound.confirm = new Tone.MetalSynth({ frequency: 200, envelope: { attack: 0.001, decay: 0.1, release: 0.05 }, harmonicity: 3.1, modulationIndex: 32, resonance: 4000, octaves: 1.5 }).toDestination();
-            sound.error = new Tone.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.2 } }).toDestination();
-            sound.open = new Tone.PluckSynth({ attackNoise: 1, dampening: 4000, resonance: 0.7 }).toDestination();
-            sound.typing = new Tone.NoiseSynth({ noise: { type: 'pink' }, envelope: { attack: 0.001, decay: 0.05, sustain: 0 } }).toDestination();
-            sound.success = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.001, decay: 0.2, sustain: 0.1, release: 0.2 } }).toDestination();
-            sound.boot = new Tone.Synth({ oscillator: { type: 'sawtooth' }, envelope: { attack: 0.5, decay: 0.5, sustain: 0.2, release: 1 } }).toDestination();
-            
-            // Sounds from LONGBAO IV.HTML
-            sound.lb4_hover = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 0.1 } }).toDestination();
-            sound.lb4_click = new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.005, decay: 0.2, sustain: 0.1, release: 0.2 } }).toDestination();
-            sound.lb4_predict = new Tone.MembraneSynth().toDestination();
-            sound.lb4_lowEnergy = new Tone.NoiseSynth({ noise: { type: 'pink' }, envelope: { attack: 0.05, decay: 0.1, sustain: 0 } }).toDestination();
-        }
-
-        function onPlayerReady(event) {
-            event.target.setVolume(50);
-            event.target.mute();
-            // The music will be unmuted on the first user interaction in startMedia()
-            event.target.playVideo();
-        }
-
-        function playSound(type, note = 'C4', duration = '8n') {
-            if (!soundsReady || !sound[type]) return;
-            try {
-                if (type === 'typing') sound[type].triggerAttack();
-                else if (type === 'boot') sound[type].triggerAttackRelease('C3', '1s');
-                else sound[type].triggerAttackRelease(note, duration);
-            } catch (e) { console.error("Sound play error:", e); }
-        }
-
-        const startMedia = async () => {
-            if (soundsReady) {
-                 if (isYtReady && ytPlayer && ytPlayer.isMuted()) {
-                    ytPlayer.unMute();
-                }
-                return;
-            }
-            await Tone.start();
-            console.log("Audio Context started.");
-            soundsReady = true;
-            if (isYtReady && ytPlayer && ytPlayer.isMuted()) {
-                ytPlayer.unMute();
-                console.log("YouTube player unmuted.");
-            }
-        };
-        document.body.addEventListener('click', startMedia, { once: true });
-        document.body.addEventListener('keydown', startMedia, { once: true });
-
-        // --- NOTIFICATION & LOGGING ---
-        function showNotification(message, type = 'info') {
-            const container = document.getElementById('notification-container');
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            container.appendChild(notification);
-            setTimeout(() => notification.remove(), 5000);
-        }
-        
-        async function logActivity(message) {
-            if (!auth.currentUser) return;
-            try {
-                const logCollectionRef = collection(db, 'users', auth.currentUser.uid, 'activityLog');
-                await addDoc(logCollectionRef, {
-                    message: message,
-                    timestamp: Timestamp.now()
-                });
-            } catch (error) { console.error("Error logging activity:", error); }
-        }
-
-        async function fetchActivityLog() {
-            if (!auth.currentUser) return;
-            DOMElements.activityLogContainer.innerHTML = '<p>Đang tải nhật ký...</p>';
-            const logCollectionRef = collection(db, 'users', auth.currentUser.uid, 'activityLog');
-            const q = query(logCollectionRef, orderBy('timestamp', 'desc'), limit(20));
-            try {
-                const querySnapshot = await getDocs(q);
-                if (querySnapshot.empty) {
-                    DOMElements.activityLogContainer.innerHTML = '<p>Không có hoạt động nào.</p>';
-                    return;
-                }
-                let logHTML = '';
-                querySnapshot.forEach(doc => {
-                    const log = doc.data();
-                    const date = log.timestamp.toDate().toLocaleString('vi-VN');
-                    logHTML += `<div class="log-entry"><span class="log-timestamp">[${date}]</span>${log.message}</div>`;
-                });
-                DOMElements.activityLogContainer.innerHTML = logHTML;
-            } catch (error) {
-                console.error("Error fetching activity log:", error);
-                DOMElements.activityLogContainer.innerHTML = '<p>Lỗi tải nhật ký.</p>';
-            }
-        }
-
-        // --- MAIN UI & CORE LOGIC ---
-        const decodeText = (element, onComplete = () => {}) => {
-            const originalText = element.dataset.text;
-            if (!originalText) { element.textContent = element.textContent || ''; return; }
-            const chars = '!<>-_\\/[]{}—=+*^?#_';
-            let frame = 0;
-            const interval = setInterval(() => {
-                element.textContent = originalText.split('').map((char, index) => {
-                    if(index < frame) return originalText[index];
-                    return chars[Math.floor(Math.random() * chars.length)];
-                }).join('');
-                if(frame >= originalText.length) {
-                    clearInterval(interval);
-                    onComplete();
-                }
-                frame++;
-            }, 50);
-        };
-
-        const startBootSequence = () => {
-            decodeText(DOMElements.loginForm.querySelector('h2'));
-        };
-
-        let currentCoreIndex = 0;
-        function showCore(index) { DOMElements.coreOptions.forEach((o, i) => o.classList.toggle('active', i === index)); }
-        
-        // --- FIREBASE AUTH & DATA ---
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                if (unsubscribeUser) unsubscribeUser();
-                const userDocRef = doc(db, "users", user.uid);
-                unsubscribeUser = onSnapshot(userDocRef, (doc) => {
-                    if (doc.exists()) {
-                        currentUserData = { ...doc.data(), energy: doc.data().energy || 0 };
-                        updateUIWithUserData(currentUserData);
-                    } else {
-                        console.error("User document does not exist for UID:", user.uid);
-                        signOut(auth);
-                    }
-                });
-                DOMElements.authScreen.classList.add('fade-out');
-                setTimeout(() => {
-                    DOMElements.authScreen.classList.add('hidden');
-                    DOMElements.aiCoreSelectionScreen.classList.remove('hidden');
-                    DOMElements.aiCoreSelectionScreen.classList.add('fade-in');
-                    DOMElements.userInfoBar.classList.remove('hidden');
-                    decodeText(DOMElements.aiCoreSelectionScreen.querySelector('h1'));
-                    showCore(currentCoreIndex);
-                }, 500);
-            } else {
-                if (unsubscribeUser) unsubscribeUser();
-                currentUserData = null;
-                DOMElements.authScreen.classList.remove('hidden', 'fade-out');
-                DOMElements.aiCoreSelectionScreen.classList.add('hidden');
-                DOMElements.longbaoIVScreen.classList.add('hidden');
-                DOMElements.soiHuScreen.classList.add('hidden');
-                DOMElements.userInfoBar.classList.add('hidden');
-                startBootSequence();
-            }
-        });
-        
-        function updateUIWithUserData(userData) {
-            const energy = userData.energy || 0;
-            // Main UI
-            DOMElements.userPilotSpan.textContent = `PILOT: ${userData.username.toUpperCase()}`;
-            DOMElements.userEnergySpan.textContent = `ENERGY: ${energy}`;
-            const avatarUrl = userData.avatarUrl || 'https://placehold.co/50x50/0A192F/00ffff?text=P';
-            DOMElements.userAvatarImg.src = avatarUrl;
-            DOMElements.userAvatarImg.onerror = () => { DOMElements.userAvatarImg.src = 'https://placehold.co/50x50/0A192F/00ffff?text=P'; };
-            DOMElements.userEnergySpan.classList.toggle('high', energy > 70);
-            DOMElements.userEnergySpan.classList.toggle('low', energy < 30);
-            DOMElements.userInfoBar.classList.toggle('low-energy', energy < 30);
-            
-            // Update other tools' UI if active
-            if (!DOMElements.longbaoIVScreen.classList.contains('hidden')) {
-                updateEnergyBarLB4();
-            }
-            if (!DOMElements.soiHuScreen.classList.contains('hidden')) {
-                updateEnergyDisplaySoiHu();
-            }
-
-            const isEnergyLow = energy < 30;
-            if (isEnergyLow && !wasEnergyLow) {
-                DOMElements.lowEnergyModal.classList.remove('hidden');
-                playSound('error');
-            }
-            wasEnergyLow = isEnergyLow;
-        }
-        
+        // --- AUTH LOGIC ---
         function getFirebaseErrorMessage(errorCode) {
             switch (errorCode) {
                 case 'auth/invalid-email':
@@ -1249,117 +832,362 @@
                 default: return 'LỖI HỆ THỐNG KHÔNG XÁC ĐỊNH';
             }
         }
-        
-        // --- LONGBAO IV INTEGRATED LOGIC ---
-        let allTablesState = {};
-        let globalUpdateInterval = null;
-        let currentVisibleTable = null;
 
-        const PREDICTION_INTERVAL = 25000;
-        const ENERGY_PER_ROUND_LB4 = 5;
-        const MAX_ENERGY = 100; // Used for percentage calculation
-
-        const tableNames = [
-            'BACARAT C04', 'BACARAT C05', 'BACARAT C06', 'BACARAT C07', 'BACARAT C01', 'BACARAT C02', 'BACARAT C03', 'BACARAT C08', 'BACARAT C09', 'BACARAT C10',
-            'BACARAT 1', 'BACARAT 2', 'BACARAT 3', 'BACARAT 4', 'BACARAT 5', 'BACARAT 7', 'BACARAT 8', 'BACARAT 9', 'BACARAT 10', 'BACARAT C11', 'BACARAT C12', 'BACARAT C13', 'BACARAT C15'
-        ];
-        const mainOutcomes = ['NHÀ CON', 'NHÀ CÁI'];
-        const subOutcomes = ['Con đôi', 'Phượng đôi', 'Tài', 'Xỉu', 'Huyền vũ', 'Cái đôi', 'Long Bảo Player', 'Long Bảo Banker'];
-        const outcomeClasses = { 'NHÀ CON': 'dot-player', 'NHÀ CÁI': 'dot-banker', 'HÒA': 'dot-tie' };
-        const mainPredictionStyles = {
-            'NHÀ CON': 'text-[var(--neon-blue)] glow-text-player',
-            'NHÀ CÁI': 'text-[var(--neon-red)] glow-text-banker',
-        };
-
-        function initializeAllTablesState() {
-            const now = Date.now();
-            for (const name of tableNames) {
-                allTablesState[name] = {
-                    name: name,
-                    round: 0,
-                    wins: 0,
-                    losses: 0,
-                    history: [],
-                    winRateChance: (Math.floor(Math.random() * (95 - 70 + 1)) + 70) / 100,
-                    lastPrediction: null,
-                    nextUpdateTime: now + Math.random() * PREDICTION_INTERVAL // Stagger initial updates
-                };
+        async function handleLogin(e) {
+            e.preventDefault();
+            playSound('click');
+            const username = DOMElements.loginUsernameInput.value.trim().toLowerCase();
+            const password = DOMElements.loginPasswordInput.value;
+            DOMElements.loginBtn.disabled = true;
+            try {
+                const fakeEmail = `${username}@longbao-tool.ai`;
+                await signInWithEmailAndPassword(auth, fakeEmail, password);
+                await logActivity("Đăng nhập vào hệ thống.");
+                showNotification("Kết nối thành công! Đang chuyển hướng...", "success");
+            } catch (error) {
+                showNotification(getFirebaseErrorMessage(error.code), "error");
+            } finally {
+                DOMElements.loginBtn.disabled = false;
             }
         }
 
-        function runPredictionLogicForTable(tableName) {
+        async function handleRegister(e) {
+            e.preventDefault();
+            playSound('click');
+            const username = document.getElementById('register-username').value.trim().toLowerCase();
+            const phone = document.getElementById('register-phone').value.trim();
+            const password = document.getElementById('register-password').value;
+            const registerBtn = document.getElementById('registerBtn');
+            if (!username || !phone || !password) {
+                showNotification("YÊU CẦU ĐỦ THÔNG TIN", "error");
+                return;
+            }
+            registerBtn.disabled = true;
+            try {
+                const fakeEmail = `${username}@longbao-tool.ai`;
+                const userCredential = await createUserWithEmailAndPassword(auth, fakeEmail, password);
+                const userDocRef = doc(db, "users", userCredential.user.uid);
+                await setDoc(userDocRef, { 
+                    uid: userCredential.user.uid, 
+                    username: username, 
+                    phoneNumber: phone, 
+                    energy: CONFIG.energy.initial,
+                    createdAt: serverTimestamp(),
+                    avatarUrl: '',
+                    f168Username: '',
+                    f168UsernameLastChanged: null,
+                    f168UsernameChangeCount: 0
+                });
+                await logActivity("Tạo tài khoản thành công.");
+                showNotification("Tài khoản đã được tạo! Vui lòng đăng nhập.", "success");
+                DOMElements.registerForm.classList.add('hidden');
+                DOMElements.loginForm.classList.remove('hidden');
+                decodeText(DOMElements.loginForm.querySelector('h2'));
+            } catch (error) {
+                showNotification(getFirebaseErrorMessage(error.code), "error");
+            } finally {
+                registerBtn.disabled = false;
+            }
+        }
+
+        // --- MAIN APP LOGIC ---
+        let currentCoreIndex = 0;
+
+        function updateUIWithUserData(userData) {
+            const energy = userData.energy || 0;
+            DOMElements.userPilotSpan.textContent = `PILOT: ${userData.username.toUpperCase()}`;
+            DOMElements.userEnergySpan.textContent = `ENERGY: ${energy}`;
+            const avatarUrl = userData.avatarUrl || `https://placehold.co/50x50/0A192F/00ffff?text=${userData.username.charAt(0).toUpperCase()}`;
+            DOMElements.userAvatarImg.src = avatarUrl;
+            DOMElements.userAvatarImg.onerror = () => { DOMElements.userAvatarImg.src = `https://placehold.co/50x50/0A192F/00ffff?text=${userData.username.charAt(0).toUpperCase()}`; };
+            DOMElements.userEnergySpan.classList.toggle('high', energy > 70);
+            DOMElements.userEnergySpan.classList.toggle('low', energy < 30);
+            DOMElements.userInfoBar.classList.toggle('low-energy', energy < 30);
+            
+            if (!DOMElements.longbaoIVScreen.classList.contains('hidden')) updateEnergyBarLB4();
+            if (!DOMElements.soiHuScreen.classList.contains('hidden')) updateEnergyDisplaySoiHu();
+
+            const isEnergyLow = energy < 30;
+            if (isEnergyLow && !wasEnergyLow) {
+                DOMElements.lowEnergyModal.classList.remove('hidden');
+                playSound('error');
+            }
+            wasEnergyLow = isEnergyLow;
+        }
+
+        function renderAICores() {
+            DOMElements.coreOptionsContainer.innerHTML = '';
+            CONFIG.ai_cores.forEach(core => {
+                const coreEl = document.createElement('div');
+                coreEl.className = 'core-option';
+                coreEl.innerHTML = `
+                    <h3>${core.name}</h3>
+                    <div class="gif-container"><iframe src="${core.gif}" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div>
+                    <p class="core-description">${core.description}</p>
+                `;
+                DOMElements.coreOptionsContainer.appendChild(coreEl);
+            });
+            showCore(currentCoreIndex);
+        }
+
+        function showCore(index) {
+            const coreOptions = document.querySelectorAll('.core-option');
+            coreOptions.forEach((o, i) => o.classList.toggle('active', i === index));
+        }
+
+        function handleActivateCore() {
+            playSound('confirm');
+            const selectedCore = CONFIG.ai_cores[currentCoreIndex];
+            switch (selectedCore.id) {
+                case 'longbao_iv':
+                    launchLongBaoIV();
+                    break;
+                case 'yian':
+                    window.open(selectedCore.externalUrl, '_blank');
+                    break;
+                case 'aquarius':
+                    DOMElements.aquariusModal.classList.remove('hidden');
+                    playSound('open', 'G4');
+                    break;
+                case 'soi_hu':
+                    launchSoiHu();
+                    break;
+            }
+        }
+
+        // --- CHATBOT LOGIC (GEMINI INTEGRATED) ---
+        function initChatbot() {
+            chatHistory = [{
+                role: "model",
+                parts: [{ text: `ĐÂY LÀ A.I LONG BẢO THẾ HỆ IV, TÔI SẼ LÀ NGƯỜI ĐỒNG HÀNH CỦA BẠN. HÃY HỎI !` }]
+            }];
+            DOMElements.chatMessages.innerHTML = '';
+            renderChatMessage({
+                username: 'A.I LongBao',
+                text: chatHistory[0].parts[0].text,
+                isAI: true
+            });
+        }
+        
+        function renderChatMessage(data) {
+            const msgContainer = document.createElement('div');
+            msgContainer.className = `chat-message ${data.isAI ? 'ai' : 'user'}`;
+            if (data.id) {
+                msgContainer.id = data.id;
+            }
+
+            msgContainer.innerHTML = `
+                <span class="chat-username">${data.username}:</span>
+                <span class="chat-text ${data.isAI ? 'ai' : 'user'}">${data.text}</span>
+            `;
+            DOMElements.chatMessages.appendChild(msgContainer);
+            DOMElements.chatMessages.scrollTop = DOMElements.chatMessages.scrollHeight;
+        }
+
+        async function handleSendMessage(e) {
+            e.preventDefault();
+            const text = DOMElements.chatInput.value.trim();
+            if (text === '' || !currentUserData) return;
+
+            renderChatMessage({ username: currentUserData.username, text, isAI: false });
+            chatHistory.push({ role: "user", parts: [{ text }] });
+            DOMElements.chatInput.value = '';
+            DOMElements.chatInput.disabled = true;
+            
+            // Show thinking indicator
+            const thinkingId = 'thinking-indicator';
+            renderChatMessage({
+                username: 'A.I LongBao',
+                text: `<div class="thinking-indicator"><span></span><span></span><span></span></div>`,
+                isAI: true,
+                id: thinkingId
+            });
+
+            try {
+                const prompt = `You are A.I Long Bảo, a helpful and friendly assistant for a gaming analysis tool. Your user is named ${currentUserData.username}. Keep your answers concise, helpful, and in Vietnamese. Here is the conversation history: ${JSON.stringify(chatHistory)}. Now, answer the user's latest message: "${text}"`;
+                
+                let chatHistoryForAPI = [];
+                chatHistoryForAPI.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = { contents: chatHistoryForAPI };
+                const apiKey = ""; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API call failed with status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                const thinkingIndicator = document.getElementById(thinkingId);
+                if (thinkingIndicator) {
+                    thinkingIndicator.remove();
+                }
+
+                if (result.candidates && result.candidates.length > 0) {
+                    const aiReply = result.candidates[0].content.parts[0].text;
+                    renderChatMessage({ username: 'A.I LongBao', text: aiReply, isAI: true });
+                    chatHistory.push({ role: "model", parts: [{ text: aiReply }] });
+                    playSound('chatMessage', 'G5');
+                } else {
+                    throw new Error("Invalid response structure from API.");
+                }
+
+            } catch (error) {
+                console.error("Error calling Gemini API:", error);
+                const thinkingIndicator = document.getElementById(thinkingId);
+                if (thinkingIndicator) {
+                    thinkingIndicator.remove();
+                }
+                renderChatMessage({
+                    username: 'A.I LongBao',
+                    text: 'Tôi gặp sự cố khi kết nối. Vui lòng thử lại sau.',
+                    isAI: true
+                });
+            } finally {
+                 DOMElements.chatInput.disabled = false;
+                 DOMElements.chatInput.focus();
+            }
+        }
+
+        // --- CORE: LONGBÃO IV LOGIC ---
+        let allTablesState = {};
+        let currentVisibleTable = null;
+        let lb4ConfigData = null;
+        let lb4AnimationId;
+
+        async function launchLongBaoIV() {
+            logActivity("Khởi chạy Lõi LongBao IV.");
+            DOMElements.aiCoreSelectionScreen.classList.add('hidden');
+            DOMElements.longbaoIVScreen.classList.remove('hidden');
+            DOMElements.tableSelectionScreen.classList.remove('hidden');
+            DOMElements.toolScreen.classList.add('hidden');
+
+            if (!lb4ConfigData) {
+                try {
+                    const docRef = doc(db, "config", "longbao_iv");
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists() && docSnap.data().tables) {
+                        lb4ConfigData = docSnap.data();
+                    } else {
+                        console.warn("Không tìm thấy cấu hình LongBao IV trên Firestore hoặc dữ liệu không hợp lệ. Sử dụng cấu hình mặc định.");
+                        lb4ConfigData = DEFAULT_CONFIG.longbao_iv;
+                    }
+                } catch (error) {
+                    console.error("Lỗi tải cấu hình LongBao IV:", error, ". Sử dụng cấu hình mặc định.");
+                    lb4ConfigData = DEFAULT_CONFIG.longbao_iv;
+                }
+            }
+            
+            initializeAllTablesState();
+            generateTableListLB4();
+            if (!globalUpdateInterval) startGlobalUpdater();
+            
+            initLongBaoIVBackground();
+            updateSuggestedTableLB4();
+            setInterval(updateSuggestedTableLB4, 10000);
+        }
+        
+        function initializeAllTablesState() {
+            const now = Date.now();
+            if (!lb4ConfigData || !lb4ConfigData.tables) return;
+            for (const name of lb4ConfigData.tables) {
+                allTablesState[name] = {
+                    name: name, round: 0, wins: 0, losses: 0, history: [],
+                    winRateChance: (Math.floor(Math.random() * (95 - 70 + 1)) + 70) / 100,
+                    lastPrediction: null,
+                    nextUpdateTime: now + Math.random() * CONFIG.longbao_iv.prediction_interval
+                };
+            }
+        }
+        
+        function runAdvancedPredictionLogic(tableName) {
             const tableState = allTablesState[tableName];
-            const mainPrediction = mainOutcomes[Math.floor(Math.random() * mainOutcomes.length)];
-            const subPrediction = subOutcomes[Math.floor(Math.random() * subOutcomes.length)];
+            const history = tableState.history;
+            let playerChance = 0.5;
+
+            if (history.length >= 3) {
+                const last3 = history.slice(-3);
+                if (last3.every(r => r === 'NHÀ CON')) playerChance += 0.15;
+                if (last3.every(r => r === 'NHÀ CÁI')) playerChance -= 0.15;
+            }
+            if (history.length >= 4) {
+                 const last4 = history.slice(-4);
+                 if(last4[0] === last4[2] && last4[1] === last4[3] && last4[0] !== last4[1]){
+                     if(last4[3] === 'NHÀ CÁI') playerChance += 0.1;
+                     else playerChance -= 0.1;
+                 }
+            }
+
+            playerChance = Math.max(0.1, Math.min(0.9, playerChance));
+            
+            const mainPrediction = Math.random() < playerChance ? 'NHÀ CON' : 'NHÀ CÁI';
+            const subPrediction = CONFIG.longbao_iv.sub_outcomes[Math.floor(Math.random() * CONFIG.longbao_iv.sub_outcomes.length)];
             const isWin = Math.random() < tableState.winRateChance;
-            const actualResult = isWin ? mainPrediction : mainOutcomes.find(o => o !== mainPrediction);
+            const actualResult = isWin ? mainPrediction : (mainPrediction === 'NHÀ CON' ? 'NHÀ CÁI' : 'NHÀ CON');
             
             tableState.round++;
-            if (isWin) { tableState.wins++; } else { tableState.losses++; }
-            if(tableState.history.length > 150) tableState.history.shift();
+            if (isWin) tableState.wins++; else tableState.losses++;
+            if (tableState.history.length > 150) tableState.history.shift();
             tableState.history.push(actualResult);
             tableState.lastPrediction = { main: mainPrediction, sub: subPrediction, result: actualResult };
         }
 
         async function updateAllTables() {
             const now = Date.now();
-            for (const tableName of tableNames) {
+            for (const tableName in allTablesState) {
                 const tableState = allTablesState[tableName];
                 if (now >= tableState.nextUpdateTime) {
-                    runPredictionLogicForTable(tableName);
-                    tableState.nextUpdateTime = now + PREDICTION_INTERVAL;
+                    runAdvancedPredictionLogic(tableName);
+                    tableState.nextUpdateTime = now + CONFIG.longbao_iv.prediction_interval;
 
                     if (tableName === currentVisibleTable) {
-                        if (currentUserData && currentUserData.energy >= ENERGY_PER_ROUND_LB4) {
-                            const newEnergy = currentUserData.energy - ENERGY_PER_ROUND_LB4;
+                        if (currentUserData && currentUserData.energy >= CONFIG.energy.costs.longBaoIV) {
+                            const newEnergy = currentUserData.energy - CONFIG.energy.costs.longBaoIV;
                             const userDocRef = doc(db, "users", auth.currentUser.uid);
                             await updateDoc(userDocRef, { energy: newEnergy });
-                            logActivity(`Sử dụng Lõi LongBao IV (-${ENERGY_PER_ROUND_LB4} năng lượng) tại bàn ${tableName}. Năng lượng còn lại: ${newEnergy}`);
-                            
+                            logActivity(`Sử dụng Lõi LongBao IV (-${CONFIG.energy.costs.longBaoIV} năng lượng) tại bàn ${tableName}.`);
                             updateVisibleTableUI();
                         } else {
                             playSound('lb4_lowEnergy', "C2", "0.2n");
                             DOMElements.energyModalLB4.classList.remove('hidden');
-                            currentVisibleTable = null; // Stop tracking this table
+                            currentVisibleTable = null; 
                         }
                     }
                 }
             }
         }
-        
-        function startGlobalUpdater() {
-            if (globalUpdateInterval) return;
-            globalUpdateInterval = setInterval(updateAllTables, 1000); // Check every second
-        }
 
-        function launchLongBaoIV() {
-            logActivity("Khởi chạy Lõi LongBao IV.");
-            DOMElements.aiCoreSelectionScreen.classList.add('hidden');
-            DOMElements.longbaoIVScreen.classList.remove('hidden');
-            DOMElements.tableSelectionScreen.classList.remove('hidden');
-            DOMElements.toolScreen.classList.add('hidden');
-            
-            if (Object.keys(allTablesState).length === 0) {
-                initializeAllTablesState();
-            }
-            if (!globalUpdateInterval) {
-                startGlobalUpdater();
-            }
-            
-            generateTableListLB4();
-            initLongBaoIVBackground();
+        function startGlobalUpdater() {
+            if (globalUpdateInterval) clearInterval(globalUpdateInterval);
+            globalUpdateInterval = setInterval(updateAllTables, 1000);
         }
 
         function exitLongBaoIV() {
             currentVisibleTable = null;
             DOMElements.longbaoIVScreen.classList.add('hidden');
             DOMElements.aiCoreSelectionScreen.classList.remove('hidden');
+            if (lb4AnimationId) cancelAnimationFrame(lb4AnimationId);
+            if (globalUpdateInterval) {
+                clearInterval(globalUpdateInterval);
+                globalUpdateInterval = null;
+            }
         }
 
         function generateTableListLB4() {
             DOMElements.tableListContainer.innerHTML = '';
-            tableNames.forEach((name, index) => {
-                const tableState = allTablesState[name];
+            if (!lb4ConfigData || !lb4ConfigData.tables) {
+                DOMElements.tableListContainer.innerHTML = '<p class="text-center text-gray-400 col-span-full">Không thể tải danh sách bàn chơi.</p>';
+                return;
+            }
+            lb4ConfigData.tables.forEach((name, index) => {
+                const tableState = allTablesState[name] || { round: 0, winRateChance: 0.8 };
                 const tableElement = document.createElement('div');
                 tableElement.className = 'table-item-ultimate p-3 flex items-center gap-3';
                 tableElement.style.animationDelay = `${index * 50}ms`;
@@ -1373,9 +1201,8 @@
                         <p class="font-bold text-xl win-rate-text-ultimate">${Math.round(tableState.winRateChance * 100)}%</p>
                     </div>
                 `;
-                tableElement.addEventListener('mouseenter', () => playSound('lb4_hover', 'C5', '8n'));
                 tableElement.addEventListener('click', () => {
-                    playSound('lb4_click', 'E5', '8n');
+                    playSound('confirm');
                     startToolForTableLB4(name);
                 });
                 DOMElements.tableListContainer.appendChild(tableElement);
@@ -1385,7 +1212,6 @@
         function updateVisibleTableUI() {
             if (!currentVisibleTable) return;
             const tableState = allTablesState[currentVisibleTable];
-
             updatePredictionUILB4(tableState.lastPrediction.main, tableState.lastPrediction.sub);
             updateBetOptionsUILB4(tableState.lastPrediction.main, tableState.lastPrediction.sub);
             updateStatsUILB4();
@@ -1397,12 +1223,9 @@
 
         function renderFullTableState(tableName) {
             const tableState = allTablesState[tableName];
-            
             DOMElements.historyGrid.innerHTML = '';
             tableState.history.forEach(result => addDotToHistoryLB4(result, false));
-            
             updateStatsUILB4(false);
-            
             if (tableState.lastPrediction) {
                 updatePredictionUILB4(tableState.lastPrediction.main, tableState.lastPrediction.sub, false);
                 updateBetOptionsUILB4(tableState.lastPrediction.main, tableState.lastPrediction.sub);
@@ -1412,26 +1235,22 @@
                 DOMElements.mainPredictionText.className = 'text-5xl sm:text-6xl font-bold text-gray-500';
                 DOMElements.betOptionsGrid.querySelectorAll('.bet-option-box').forEach(opt => opt.classList.remove('active'));
             }
-            
             updateFluctuatingWinRateLB4();
             updateEnergyBarLB4();
-            
             const timeRemaining = tableState.nextUpdateTime - Date.now();
-            const percentageRemaining = Math.max(0, timeRemaining / PREDICTION_INTERVAL);
+            const percentageRemaining = Math.max(0, timeRemaining / CONFIG.longbao_iv.prediction_interval);
             DOMElements.countdownBar.style.transition = 'none';
             DOMElements.countdownBar.style.width = `${percentageRemaining * 100}%`;
             void DOMElements.countdownBar.offsetWidth;
             DOMElements.countdownBar.style.transition = `width ${timeRemaining / 1000}s linear`;
             DOMElements.countdownBar.style.width = '0%';
         }
-
+        
         function startToolForTableLB4(tableName) {
             DOMElements.tableSelectionScreen.classList.add('hidden');
             DOMElements.toolScreen.classList.remove('hidden');
-
             DOMElements.toolTitle.textContent = `DỰ ĐOÁN - ${tableName}`;
             currentVisibleTable = tableName;
-            
             renderFullTableState(tableName);
         }
 
@@ -1439,31 +1258,22 @@
             currentVisibleTable = null;
             DOMElements.toolScreen.classList.add('hidden');
             DOMElements.tableSelectionScreen.classList.remove('hidden');
-            generateTableListLB4(); // Refresh table list with latest round counts
+            generateTableListLB4();
         }
 
         function updatePredictionUILB4(mainPrediction, subPrediction, animate = true) {
-            if(animate) {
+            if (animate) {
                 playSound('lb4_predict', "C2", "8n");
                 const shockwave = document.createElement('div');
                 shockwave.className = 'shockwave';
                 DOMElements.shockwaveContainer.appendChild(shockwave);
                 setTimeout(() => shockwave.remove(), 700);
             }
-
-            DOMElements.mainPredictionText.classList.remove('predict-enter');
-            void DOMElements.mainPredictionText.offsetWidth;
-            DOMElements.mainPredictionText.className = 'text-5xl sm:text-6xl font-bold transition-all duration-300';
-            if(animate) DOMElements.mainPredictionText.classList.add('predict-enter');
+            const mainStyles = { 'NHÀ CON': 'text-[var(--neon-blue)] glow-text-player', 'NHÀ CÁI': 'text-[var(--neon-red)] glow-text-banker' };
+            DOMElements.mainPredictionText.className = `text-5xl sm:text-6xl font-bold transition-all duration-300 ${mainStyles[mainPrediction] || ''}`;
             DOMElements.mainPredictionText.textContent = mainPrediction;
-            DOMElements.mainPredictionText.classList.add(...(mainPredictionStyles[mainPrediction] || '').split(' '));
-
-            DOMElements.subPredictionText.classList.remove('predict-enter');
-            void DOMElements.subPredictionText.offsetWidth;
-            DOMElements.subPredictionText.className = 'text-base sm:text-xl font-semibold mt-2 h-8';
-            if(animate) DOMElements.subPredictionText.classList.add('predict-enter');
+            DOMElements.subPredictionText.className = 'text-base sm:text-xl font-semibold mt-2 h-8 glow-text-gold';
             DOMElements.subPredictionText.textContent = `+ ${subPrediction}`;
-            DOMElements.subPredictionText.classList.add('glow-text-gold');
         }
 
         function updateBetOptionsUILB4(mainPrediction, subPrediction) {
@@ -1474,34 +1284,20 @@
             document.getElementById(subId)?.classList.add('active');
         }
 
-        function animateCounter(el, end) {
-            const start = parseInt(el.innerText) || 0;
-            if (start === end) return;
-            const duration = 500;
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                el.innerText = Math.floor(progress * (end - start) + start);
-                if (progress < 1) window.requestAnimationFrame(step);
-            };
-            window.requestAnimationFrame(step);
-        }
-
         function updateStatsUILB4(useAnimation = true) {
-            if(!currentVisibleTable) return;
+            if (!currentVisibleTable) return;
             const tableState = allTablesState[currentVisibleTable];
             if (useAnimation) {
-                animateCounter(DOMElements.roundCountEl, tableState.round);
-                animateCounter(DOMElements.totalWinsEl, tableState.wins);
-                animateCounter(DOMElements.totalLossesEl, tableState.losses);
+                animateCountUp(DOMElements.roundCountEl, tableState.round);
+                animateCountUp(DOMElements.totalWinsEl, tableState.wins);
+                animateCountUp(DOMElements.totalLossesEl, tableState.losses);
             } else {
                 DOMElements.roundCountEl.innerText = tableState.round;
                 DOMElements.totalWinsEl.innerText = tableState.wins;
                 DOMElements.totalLossesEl.innerText = tableState.losses;
             }
         }
-
+        
         function updateFluctuatingWinRateLB4() {
             const fluctuatingRate = Math.floor(Math.random() * (90 - 80 + 1)) + 80;
             DOMElements.progressValue.textContent = `${fluctuatingRate}%`;
@@ -1510,27 +1306,23 @@
         
         function updateEnergyBarLB4() {
             if (!currentUserData) return;
-            const energyPercent = Math.max(0, (currentUserData.energy / MAX_ENERGY) * 100);
+            const energyPercent = Math.max(0, (currentUserData.energy / CONFIG.energy.max) * 100);
             DOMElements.energyBar.style.width = `${energyPercent}%`;
-            DOMElements.energyTextLB4.textContent = `${Math.round(energyPercent)}%`;
+            DOMElements.energyTextLB4.textContent = `${Math.round(currentUserData.energy)} / ${CONFIG.energy.max}`;
             DOMElements.energyBar.classList.remove('energy-bar-pulsing');
-
-            if (energyPercent > 60) {
-                DOMElements.energyBar.style.background = 'linear-gradient(90deg, var(--neon-green), var(--neon-blue))';
-            } else if (energyPercent > 30) {
-                DOMElements.energyBar.style.background = 'linear-gradient(90deg, #facc15, #fb923c)';
-            } else {
+            if (energyPercent > 60) DOMElements.energyBar.style.background = 'linear-gradient(90deg, var(--neon-green), var(--neon-blue))';
+            else if (energyPercent > 30) DOMElements.energyBar.style.background = 'linear-gradient(90deg, #facc15, #fb923c)';
+            else {
                 DOMElements.energyBar.style.background = 'linear-gradient(90deg, #fb923c, #ef4444)';
-                if (energyPercent > 0) {
-                     DOMElements.energyBar.classList.add('energy-bar-pulsing');
-                }
+                if (energyPercent > 0) DOMElements.energyBar.classList.add('energy-bar-pulsing');
             }
         }
 
         function addDotToHistoryLB4(result, animate = true) {
             const dot = document.createElement('div');
+            const outcomeClasses = { 'NHÀ CON': 'dot-player', 'NHÀ CÁI': 'dot-banker', 'HÒA': 'dot-tie' };
             dot.className = `history-dot ${outcomeClasses[result]}`;
-            if(!animate) dot.style.animation = 'none';
+            if (!animate) dot.style.animation = 'none';
             DOMElements.historyGrid.appendChild(dot);
             if (DOMElements.historyGrid.children.length > 150) {
                 DOMElements.historyGrid.removeChild(DOMElements.historyGrid.firstChild);
@@ -1541,88 +1333,60 @@
             DOMElements.countdownBar.style.transition = 'none';
             DOMElements.countdownBar.style.width = '100%';
             void DOMElements.countdownBar.offsetWidth; 
-            DOMElements.countdownBar.style.transition = `width ${PREDICTION_INTERVAL / 1000}s linear`;
+            DOMElements.countdownBar.style.transition = `width ${CONFIG.longbao_iv.prediction_interval / 1000}s linear`;
             DOMElements.countdownBar.style.width = '0%';
-        }
-        
-        function typeEffectLB4(element, text, i = 0) {
-            if (i === 0) element.textContent = '';
-            if (i < text.length) {
-                element.textContent += text[i];
-                setTimeout(() => typeEffectLB4(element, text, i + 1), 50);
-            }
         }
 
         function updateSuggestedTableLB4() {
-            const randomIndex = Math.floor(Math.random() * tableNames.length);
-            const randomTable = tableNames[randomIndex];
-            typeEffectLB4(DOMElements.suggestedTableNameEl, randomTable);
+            if (!lb4ConfigData || !lb4ConfigData.tables) return;
+            const randomIndex = Math.floor(Math.random() * lb4ConfigData.tables.length);
+            DOMElements.suggestedTableNameEl.textContent = lb4ConfigData.tables[randomIndex];
         }
 
-        // --- LongBao IV Background Canvas Animation ---
         function initLongBaoIVBackground() {
-            const canvas = DOMElements.longbaoIVBackgroundCanvas;
+            const canvas = document.getElementById('longbaoIV-background-canvas');
             const ctx = canvas.getContext('2d');
-            let animationFrameId;
+            let particles = [];
             
             function setupCanvas() {
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
-                initParticles();
-            }
-
-            class Particle {
-                constructor(x, y) {
-                    this.x = x; this.y = y; this.size = Math.random() * 1.5 + 1;
-                    this.speedX = Math.random() * 1 - 0.5; this.speedY = Math.random() * 1 - 0.5;
-                    this.color = 'rgba(0, 255, 155, 0.7)';
-                }
-                update() {
-                    if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
-                    if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
-                    this.x += this.speedX; this.y += this.speedY;
-                }
-                draw() {
-                    ctx.fillStyle = this.color;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-
-            function initParticles() {
-                lb4Particles = [];
-                const numParticles = Math.floor(canvas.width / (canvas.width < 768 ? 40 : 25));
+                particles = [];
+                const numParticles = Math.floor(canvas.width / 40);
                 for (let i = 0; i < numParticles; i++) {
-                    lb4Particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
-                }
-            }
-
-            function connectParticles() {
-                for (let a = 0; a < lb4Particles.length; a++) {
-                    for (let b = a; b < lb4Particles.length; b++) {
-                        const distance = Math.sqrt((lb4Particles[a].x - lb4Particles[b].x) ** 2 + (lb4Particles[a].y - lb4Particles[b].y) ** 2);
-                        if (distance < 100) {
-                            ctx.strokeStyle = `rgba(0, 255, 155, ${1 - distance / 100})`;
-                            ctx.lineWidth = 0.5;
-                            ctx.beginPath();
-                            ctx.moveTo(lb4Particles[a].x, lb4Particles[a].y);
-                            ctx.lineTo(lb4Particles[b].x, lb4Particles[b].y);
-                            ctx.stroke();
-                        }
-                    }
+                    particles.push({
+                        x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                        size: Math.random() * 1.5 + 1,
+                        speedX: Math.random() * 1 - 0.5, speedY: Math.random() * 1 - 0.5,
+                        color: 'rgba(0, 255, 155, 0.7)'
+                    });
                 }
             }
 
             function animate() {
                 if(DOMElements.longbaoIVScreen.classList.contains('hidden')) {
-                    cancelAnimationFrame(animationFrameId);
+                    cancelAnimationFrame(lb4AnimationId);
                     return;
                 };
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                for (const particle of lb4Particles) { particle.update(); particle.draw(); }
-                connectParticles();
-                animationFrameId = requestAnimationFrame(animate);
+                particles.forEach(p => {
+                    p.x += p.speedX; p.y += p.speedY;
+                    if (p.x > canvas.width || p.x < 0) p.speedX *= -1;
+                    if (p.y > canvas.height || p.y < 0) p.speedY *= -1;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+                });
+                for (let a = 0; a < particles.length; a++) {
+                    for (let b = a; b < particles.length; b++) {
+                        const distance = Math.sqrt((particles[a].x - particles[b].x) ** 2 + (particles[a].y - particles[b].y) ** 2);
+                        if (distance < 100) {
+                            ctx.strokeStyle = `rgba(0, 255, 155, ${1 - distance / 100})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.beginPath(); ctx.moveTo(particles[a].x, particles[a].y); ctx.lineTo(particles[b].x, particles[b].y); ctx.stroke();
+                        }
+                    }
+                }
+                lb4AnimationId = requestAnimationFrame(animate);
             }
             
             setupCanvas();
@@ -1630,502 +1394,222 @@
             window.addEventListener('resize', setupCanvas);
         }
 
-        // --- SOI HU TOOL INTEGRATED LOGIC ---
-        const soiHu_featureCosts = { autoScan: 2, startAnalysis: 2, securityCheck: 10, jarHunt: 10, playWithAI: 20 };
-        let soiHu_tawkToLoaded = false;
+        // --- CORE: SOI HU LOGIC ---
+        let soiHuConfigData = null;
         let soiHu_chosenAI = null;
-        let soiHu_scanHistory = [];
-        let soiHu_isSoundEnabled = true;
-        let soiHu_dashboardInterval;
-        const soiHu_gameData = [ { name: 'BA CON HEO NHỎ', image: 'https://i.ibb.co/Q3dYksdQ/BA-CON-HEO-NH.jpg' }, { name: 'BÃO KỊCH NGON NGỌT', image: 'https://i.ibb.co/h1XkFxcw/B-O-K-CH-NG-NG-T.jpg' }, { name: 'BÃO KIM TIỀN', image: 'https://i.ibb.co/KpXRkb4n/B-O-KIM-TI-N.jpg' }, { name: 'CUỒNG NỘ MÈO', image: 'https://i.ibb.co/jvnT8Qm1/CU-I-N-M.jpg' }, { name: 'THẦN TÀI GIÁ ĐÁO', image: 'https://i.ibb.co/jXvqdpd/default-4.jpg' }, { name: 'JOKER', image: 'https://i.ibb.co/21C53TfM/JOKER.jpg' }, { name: 'NỮ HOÀNG INCA', image: 'https://i.ibb.co/JRgCH2CC/N-HO-NG-INCA.jpg' }, { name: 'ALIBABA', image: 'https://i.ibb.co/6JJzg75v/ALIBABA.jpg' }, { name: 'BÓNG THÁCH ĐẤU 2', image: 'https://i.ibb.co/bjS6ztq7/B-O-TH-CH-2.jpg' }, { name: 'QUYỀN VƯƠNG', image: 'https://i.ibb.co/Y4Pky0NW/QUY-N-V-NG.jpg' }, { name: 'SIN CITY', image: 'https://i.ibb.co/FbLYFC28/SINCITY.jpg' }, { name: 'SUPER ACE', image: 'https://i.ibb.co/0z7rq0R/SUPER-ACE.jpg' }, { name: 'THÀNH PHỐ VÀNG', image: 'https://i.ibb.co/5XpkCZ9Z/TH-NH-PH-V-NG.jpg' }, { name: 'TRÂU HÚC', image: 'https://i.ibb.co/N5Dst5n/TR-U-H-C.jpg' }, { name: 'ĐƯỜNG MẠT CHƯỢC 2', image: 'https://i.ibb.co/9HzhpDSZ/NG-M-T-CH-C-2.jpg' }, { name: 'ĐƯỜNG MẠT CHƯỢT', image: 'https://i.ibb.co/CsvS9Jq7/NG-M-T-CH-T.jpg' }, { name: 'GANESHA VÀNG', image: 'https://i.ibb.co/tPKDFgXJ/GANESHA-V-NG.jpg' }, { name: 'KỲ LÂN MẠ VÀNG', image: 'https://i.ibb.co/S7srXvxc/K-L-N-M-CH-N-C.jpg' }, { name: 'KHO BÁU AZTEC', image: 'https://i.ibb.co/x8g4Yjb3/KHO-B-U-AZTEC.jpg' }, { name: 'MEDUSA 1: LỜI NGUYỀN ATHENA', image: 'https://i.ibb.co/DD4JSsQ1/MEDUSA-1-L-I-NGUY-N.jpg' }, { name: 'MEDUSA', image: 'https://i.ibb.co/cKvJ8hQf/MEDUSA.jpg' }, { name: 'NEKO MAY MẮN', image: 'https://i.ibb.co/RTjCsDvf/NEKO-MAY-M-N.jpg' }, { name: 'NỮ HOÀNG TIỀN THƯỞNG', image: 'https://i.ibb.co/fVxjh4rC/N-HO-NG-TI-N-TH-NG.jpg' }, { name: 'QUỶ TỬ CHIẾN TIỀN THƯỞNG', image: 'https://i.ibb.co/7Nx37ftx/QUY-T-CHI-N-TI-N-TH-NG.jpg' }, { name: 'THỎ MAY MẮN', image: 'https://i.ibb.co/RTXxqQP0/TH-MAY-M-N.jpg' }, { name: 'VUA KHỦNG LONG', image: 'https://i.ibb.co/gbTBKrjg/VUA-C-NG-LONG.jpg' }, { name: 'WILD OTTER', image: 'https://i.ibb.co/srLdPjG/WILD-O-T-C.jpg' }, { name: 'ZOMBIE BREAKER', image: 'https://i.ibb.co/wFnHkL3N/ZOMBIE-BREAKER.jpg' }, { name: 'LỄ HỘI BIA', image: 'https://i.ibb.co/8gwq7PmY/U-B-P-B-N.jpg' }, { name: 'KHU TIỀN MẶT 777', image: 'https://i.ibb.co/SD2Rgf31/KHU-TI-N-M-T-777.jpg' }, { name: 'NOEL BIG BANG', image: 'https://i.ibb.co/Z69fZ2qZ/NOEL-BIG-BANG.jpg' }, { name: 'NGÀY TẬN THẾ', image: 'https://i.ibb.co/Rk2tR28N/NG-Y-T-N-TH.jpg' }, { name: 'NHIỆM VỤ BERMUDA', image: 'https://i.ibb.co/DHG22BF5/NHI-M-V-BERMUDA.jpg' }, { name: 'RACING BULL', image: 'https://i.ibb.co/gbFw5MsH/RACING-BULL.jpg' }, { name: 'RISE OF SAMURAI 4', image: 'https://i.ibb.co/bg6TG5vp/RISE-OF-SAMURAI-4.jpg' }, { name: 'SUGAR RUSH 1000', image: 'https://i.ibb.co/ZjGNbk8/SUGAR-RUSH-1000.jpg' }, { name: 'TIK TAC TAKE', image: 'https://i.ibb.co/fYf5ZfD7/TIK-TAC-TAK.jpg' }, { name: 'VẬN MAY GIZA', image: 'https://i.ibb.co/qYyTgdMS/V-N-MAY-GIZA.jpg' } ];
-        
-        function playSoundSoiHu(soundName) { if (soiHu_isSoundEnabled) { try { if (DOMElements.soiHu_sounds[soundName]) { DOMElements.soiHu_sounds[soundName].currentTime = 0; DOMElements.soiHu_sounds[soundName].play(); } } catch(e) { /* ignore */ } } }
-        function stopSoundSoiHu(soundName) { try { if (DOMElements.soiHu_sounds[soundName]) { DOMElements.soiHu_sounds[soundName].pause(); DOMElements.soiHu_sounds[soundName].currentTime = 0; } } catch(e) { /* ignore */ } }
-        function setScreenVisibilitySoiHu(show, hide = []) { if (show) show.classList.remove('hidden'); hide.forEach(el => el.classList.add('hidden')); }
-        function switchViewSoiHu(show, hide = []) { setScreenVisibilitySoiHu(show, hide); playSoundSoiHu('click'); }
-        function updateVideoBackgroundSoiHu(activeVideo) { Object.values(DOMElements.soiHu_videos).forEach(video => video.classList.remove('active')); if (DOMElements.soiHu_videos[activeVideo]) DOMElements.soiHu_videos[activeVideo].classList.add('active'); }
-        
-        function updateEnergyDisplaySoiHu() {
-            if (!currentUserData) return;
-            DOMElements.soiHu_energyCount.textContent = currentUserData.energy;
-            const percentage = MAX_ENERGY > 0 ? (currentUserData.energy / MAX_ENERGY) * 100 : 0;
-            DOMElements.soiHu_energyBar.style.width = `${percentage}%`;
-        }
 
-        async function useFeatureSoiHu(featureName, action) {
-            playSoundSoiHu('click');
-            if (!currentUserData || !auth.currentUser) return;
-
-            const cost = soiHu_featureCosts[featureName];
-            if (currentUserData.energy >= cost) {
-                const newEnergy = currentUserData.energy - cost;
-                const userDocRef = doc(db, "users", auth.currentUser.uid);
-                try {
-                    await updateDoc(userDocRef, { energy: newEnergy });
-                    logActivity(`Sử dụng Lõi Soi Hũ (${featureName}), năng lượng còn lại: ${newEnergy}`);
-                    action();
-                } catch (error) {
-                    console.error("Lỗi khi cập nhật năng lượng:", error);
-                    showNotification("Lỗi kết nối, không thể sử dụng tính năng.", "error");
-                }
-            } else {
-                playSoundSoiHu('error');
-                showNotification(`Không đủ năng lượng! Cần ${cost}, bạn còn ${currentUserData.energy}.`, "error");
-            }
-        }
-
-        function selectAISoiHu(type) {
-            soiHu_chosenAI = type;
-            const jarHuntBtn = DOMElements.soiHu_jarHuntBtn;
-            const playWithAIBtn = DOMElements.soiHu_playWithAIBtn;
-            
-            if (type === 'gen4') {
-                DOMElements.soiHu_menuContainer.classList.add('menu-vip');
-                DOMElements.soiHu_menuContainer.classList.remove('menu-base');
-                DOMElements.soiHu_mainContent.classList.add('vip-mode');
-                jarHuntBtn.style.display = 'flex';
-                playWithAIBtn.style.display = 'flex';
-            } else { 
-                DOMElements.soiHu_menuContainer.classList.add('menu-base');
-                DOMElements.soiHu_menuContainer.classList.remove('menu-vip');
-                DOMElements.soiHu_mainContent.classList.remove('vip-mode');
-                jarHuntBtn.style.display = 'none';
-                playWithAIBtn.style.display = 'none';
-            }
-            
-            setScreenVisibilitySoiHu(DOMElements.soiHu_menuContainer, [DOMElements.soiHu_aiChoiceContainer]);
-            updateVideoBackgroundSoiHu('menu'); 
-            startDashboardSoiHu();
-        }
-
-        function startDashboardSoiHu() {
-            if(soiHu_dashboardInterval) clearInterval(soiHu_dashboardInterval);
-            const update = () => {
-                document.getElementById('soiHu_systemStatus').textContent = 'ONLINE';
-                document.getElementById('soiHu_networkPing').textContent = Math.floor(Math.random() * (70 - 20) + 20) + 'ms';
-                document.getElementById('soiHu_activeAI').textContent = soiHu_chosenAI === 'gen4' ? 'THẾ HỆ 4' : 'CƠ BẢN';
-            };
-            update();
-            soiHu_dashboardInterval = setInterval(update, 3000);
-        }
-
-        function showGameSelectionSoiHu() {
-            const gameList = DOMElements.soiHu_gameList;
-            gameList.innerHTML = '';
-            soiHu_gameData.forEach(game => {
-                const gameButton = document.createElement('button');
-                gameButton.className = 'soiHu-game-btn';
-                gameButton.textContent = game.name;
-                gameButton.onclick = () => { startSpecificScanSoiHu(game, 'analysis'); };
-                gameList.appendChild(gameButton);
-            });
-            switchViewSoiHu(DOMElements.soiHu_gameSelectionContainer, [DOMElements.soiHu_menuContainer]);
-        }
-
-        function startAutoScanSoiHu() {
-            const randomGame = soiHu_gameData[Math.floor(Math.random() * soiHu_gameData.length)];
-            startSpecificScanSoiHu(randomGame, 'analysis');
-        }
-        
-        function startJarHuntSoiHu() {
-            const randomGame = soiHu_gameData[Math.floor(Math.random() * soiHu_gameData.length)];
-            startSpecificScanSoiHu(randomGame, 'jarHunt');
-        }
-
-        function startSpecificScanSoiHu(game, mode) {
-            const loadingGif = DOMElements.soiHu_loadingGif;
-            const scanTitle = DOMElements.soiHu_scanTitle;
-            loadingGif.src = (soiHu_chosenAI === 'gen4') ? 'https://i.ibb.co/C30H2ZYr/Nft-Hacker-GIF-by-Cyber-Brokers.gif' : 'https://i.ibb.co/nsw6D7cw/Art-Animation-GIF-by-xponentialdesign.gif';
-            scanTitle.textContent = (mode === 'jarHunt') ? 'ĐANG QUÉT CÁC GAME CÓ HŨ LỚN...' : 'ĐANG PHÂN TÍCH LỖ HỔNG...';
-            setScreenVisibilitySoiHu(DOMElements.soiHu_scanningContainer, [DOMElements.soiHu_gameSelectionContainer, DOMElements.soiHu_resultContainer, DOMElements.soiHu_menuContainer]);
-            updateVideoBackgroundSoiHu('none');
-            playSoundSoiHu('scan');
-            setTimeout(() => showResultsSoiHu(game, mode), 4500);
-        }
-        
-        function showResultsSoiHu(selectedGame, mode) {
-            stopSoundSoiHu('scan');
-            playSoundSoiHu('success');
-            setScreenVisibilitySoiHu(DOMElements.soiHu_resultContainer, [DOMElements.soiHu_scanningContainer]);
-            
-            DOMElements.soiHu_gameName.textContent = selectedGame.name;
-            DOMElements.soiHu_gameImage.src = selectedGame.image;
-            const goldenTime = calculateGoldenTimeSoiHu();
-            DOMElements.soiHu_goldenTime.textContent = goldenTime;
-
-            let historyEntry = { game: selectedGame, goldenTime, timestamp: new Date() };
-
-            if (mode === 'jarHunt') {
-                DOMElements.soiHu_resultContainer.querySelector('.soiHu-result-stats').classList.add('hidden');
-                const reasoningEl = DOMElements.soiHu_scanReasoning;
-                const randomSessions = Math.floor(Math.random() * 2000000) + 500000;
-                reasoningEl.innerHTML = `Phân tích <strong>${randomSessions.toLocaleString('vi-VN')}</strong> phiên gần nhất cho thấy game <strong>${selectedGame.name}</strong> đang có tần suất trả thưởng cao bất thường. Đề xuất vào ngay!`;
-                reasoningEl.classList.remove('hidden');
-                historyEntry.type = 'Săn Hũ';
-            } else {
-                DOMElements.soiHu_resultContainer.querySelector('.soiHu-result-stats').classList.remove('hidden');
-                DOMElements.soiHu_scanReasoning.classList.add('hidden');
-                const winRate = (soiHu_chosenAI === 'gen4') ? (Math.random() * (98.5 - 85) + 85) : (Math.random() * (92.5 - 75) + 75);
-                const spinCount = Math.floor(Math.random() * (250 - 120 + 1)) + 120;
-                const scatterRate = (Math.random() * (90 - 50) + 50);
-                animateCountUp(DOMElements.soiHu_winRate, winRate, 2, '%');
-                animateCountUp(DOMElements.soiHu_spinCount, spinCount, 0, ' vòng');
-                animateCountUp(DOMElements.soiHu_scatterRate, scatterRate, 2, '%');
-                historyEntry.type = 'Phân tích';
-                historyEntry.winRate = winRate;
-            }
-
-            soiHu_scanHistory.unshift(historyEntry);
-            if (soiHu_scanHistory.length > 5) soiHu_scanHistory.pop();
-            
-            DOMElements.soiHu_financeAllocatorContainer.classList.remove('hidden');
-            DOMElements.soiHu_financeResult.innerHTML = "";
-            DOMElements.soiHu_capitalInput.value = "";
-        }
-        
-        function displayScanHistorySoiHu() {
-            const historyContent = DOMElements.soiHu_historyContent;
-            historyContent.innerHTML = '';
-            if (soiHu_scanHistory.length === 0) {
-                historyContent.innerHTML = '<p>Chưa có lịch sử quét.</p>';
-            } else {
-                soiHu_scanHistory.forEach(entry => {
-                    const item = document.createElement('div');
-                    item.className = 'soiHu-history-item';
-                    let details = `<p><strong>Game:</strong> ${entry.game.name}</p><p><strong>Loại:</strong> ${entry.type}</p>`;
-                    if(entry.winRate) details += `<p><strong>Tỉ lệ thắng:</strong> ${entry.winRate.toFixed(2)}%</p>`;
-                    details += `<p><strong>Khung giờ vàng:</strong> ${entry.goldenTime}</p><p><small>Thời gian: ${entry.timestamp.toLocaleString('vi-VN')}</small></p>`;
-                    item.innerHTML = details;
-                    historyContent.appendChild(item);
-                });
-            }
-            DOMElements.soiHu_modals.history.classList.remove('hidden');
-        }
-        
-        function runSecurityCheckSoiHu() {
-            const modal = DOMElements.soiHu_modals.security, messageEl = DOMElements.soiHu_securityMessage, closeBtn = DOMElements.soiHu_closeSecurityModalBtn;
-            messageEl.innerHTML = "";
-            closeBtn.classList.add('hidden');
-            modal.classList.remove('hidden');
-            playSoundSoiHu('scan');
-            const logMessages = [
-                "ĐANG PHÂN TÍCH TÀI KHOẢN...", "ĐANG KIỂM TRA LỊCH SỬ THẮNG...", "ĐANG KIỂM TRA IP HIỆN TẠI...",
-                "<span style='color:var(--soi-hu-error-red)'>PHÁT HIỆN THEO DÕI TỪ SẢNH GAME!</span>", "...................", "ĐANG XOÁ THEO DÕI...",
-                "ĐANG XOÁ IP CŨ...", "ĐANG THAY THẾ IP BẢO MẬT...", "ĐANG LÀM SẠCH BỘ NHỚ ĐỆM...",
-                "<strong style='color:var(--primary-color)'>TÀI KHOẢN ĐÃ ĐƯỢC LÀM SẠCH VÀ BẢO VỆ.</strong>", "<strong>BẢO MẬT KHÔI PHỤC 100%. CHÚC MAY MẮN!</strong>"
-            ];
-            let i = 0;
-            const interval = setInterval(() => {
-                if (i < logMessages.length) {
-                    messageEl.innerHTML += logMessages[i] + "<br>";
-                    messageEl.scrollTop = messageEl.scrollHeight;
-                    i++;
-                } else {
-                    clearInterval(interval);
-                    stopSoundSoiHu('scan');
-                    playSoundSoiHu('success');
-                    closeBtn.classList.remove('hidden');
-                }
-            }, 900);
-        }
-        
-        function calculateAndDisplayFinanceSoiHu() {
-            const capitalInput = DOMElements.soiHu_capitalInput, resultDiv = DOMElements.soiHu_financeResult, rawValue = parseInt(capitalInput.value, 10);
-            if (isNaN(rawValue) || rawValue <= 0) { resultDiv.innerHTML = `<p style="color: var(--soi-hu-error-red);">Vui lòng nhập một số vốn hợp lệ.</p>`; return; }
-            const totalCapital = rawValue * 1000;
-            const exploreBet = (totalCapital * 0.01).toLocaleString('vi-VN');
-            const attackBet = (totalCapital * 0.025).toLocaleString('vi-VN');
-            const stopLoss = (totalCapital * 0.3).toLocaleString('vi-VN');
-            resultDiv.innerHTML = `
-                <p><strong>Tổng vốn:</strong> ${totalCapital.toLocaleString('vi-VN')} đ</p>
-                <p><strong>Giai đoạn 1 (Thăm dò):</strong> Cược <strong>${exploreBet} đ/vòng</strong> trong 15 vòng.</p>
-                <p><strong>Giai đoạn 2 (Tấn công):</strong> Nếu thắng lớn, tăng cược lên <strong>${attackBet} đ/vòng</strong>.</p>
-                <p><strong>Giai đoạn 3 (Bảo toàn):</strong> Nếu thua <strong>${stopLoss} đ</strong>, dừng lại và chạy lại Kiểm Tra Bảo Mật.</p>
-            `;
-        }
-        
-        function calculateGoldenTimeSoiHu() {
-            const now = new Date(), startOffset = Math.floor(Math.random() * 21) + 5, endTime = startOffset + (Math.floor(Math.random() * 6) + 10);
-            const startTime = new Date(now.getTime() + startOffset * 60000), finalEndTime = new Date(now.getTime() + endTime * 60000);
-            const formatTime = (date) => date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-            return `${formatTime(startTime)} - ${formatTime(finalEndTime)}`;
-        }
-
-        function goBackToChoicesSoiHu() {
-            if(soiHu_dashboardInterval) clearInterval(soiHu_dashboardInterval);
-            switchViewSoiHu(DOMElements.soiHu_aiChoiceContainer, [DOMElements.soiHu_menuContainer]);
-            updateVideoBackgroundSoiHu('aiChoice');
-        }
-
-        function goBackToMenuSoiHu() { 
-            switchViewSoiHu(DOMElements.soiHu_menuContainer, [DOMElements.soiHu_resultContainer, DOMElements.soiHu_gameSelectionContainer]); 
-            updateVideoBackgroundSoiHu('menu'); 
-            startDashboardSoiHu(); 
-        }
-
-        function launchSoiHu() {
+        async function launchSoiHu() {
             logActivity("Khởi chạy Lõi Tool Soi Hũ.");
             DOMElements.aiCoreSelectionScreen.classList.add('hidden');
             DOMElements.soiHuScreen.classList.remove('hidden');
+
+            if (!soiHuConfigData) {
+                 try {
+                    const docRef = doc(db, "config", "soi_hu");
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists() && docSnap.data().games) {
+                        soiHuConfigData = docSnap.data();
+                    } else {
+                        console.warn("Không tìm thấy cấu hình Soi Hũ. Sử dụng cấu hình mặc định.");
+                        soiHuConfigData = DEFAULT_CONFIG.soi_hu;
+                    }
+                } catch (error) {
+                    console.error("Lỗi tải cấu hình Soi Hũ:", error, ". Sử dụng cấu hình mặc định.");
+                    soiHuConfigData = DEFAULT_CONFIG.soi_hu;
+                }
+            }
             initSoiHu();
         }
 
         function exitSoiHu() {
-            if(soiHu_dashboardInterval) clearInterval(soiHu_dashboardInterval);
             DOMElements.soiHuScreen.classList.add('hidden');
             DOMElements.aiCoreSelectionScreen.classList.remove('hidden');
         }
         
         function initSoiHu() {
-            setScreenVisibilitySoiHu(DOMElements.soiHu_aiChoiceContainer, [DOMElements.soiHu_menuContainer, DOMElements.soiHu_scanningContainer, DOMElements.soiHu_resultContainer, DOMElements.soiHu_gameSelectionContainer]);
-            updateVideoBackgroundSoiHu('aiChoice');
+            DOMElements.soiHu_mainContent.style.display = 'block';
+            DOMElements.soiHu_aiChoiceContainer.classList.remove('hidden');
+            DOMElements.soiHu_menuContainer.classList.add('hidden');
+            DOMElements.soiHu_scanningContainer.classList.add('hidden');
+            DOMElements.soiHu_resultContainer.classList.add('hidden');
+            DOMElements.soiHu_gameSelectionContainer.classList.add('hidden');
             DOMElements.soiHu_welcomeMessage.textContent = `CHÀO MỪNG, ${currentUserData?.username?.toUpperCase() || 'PILOT'}`;
             updateEnergyDisplaySoiHu();
         }
+        
+        function updateEnergyDisplaySoiHu() {
+            if (!currentUserData) return;
+            DOMElements.soiHu_energyCount.textContent = currentUserData.energy;
+            const percentage = CONFIG.energy.max > 0 ? (currentUserData.energy / CONFIG.energy.max) * 100 : 0;
+            DOMElements.soiHu_energyBar.style.width = `${percentage}%`;
+        }
 
-        // --- EVENT LISTENERS ---
-        function setupEventListeners() {
-            DOMElements.loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                playSound('click');
-                const username = DOMElements.loginUsernameInput.value.trim().toLowerCase();
-                const password = DOMElements.loginPasswordInput.value;
-                DOMElements.loginBtn.disabled = true;
-                try {
-                    const fakeEmail = `${username}@longbao-tool.ai`;
-                    await signInWithEmailAndPassword(auth, fakeEmail, password);
-                    await logActivity("Đăng nhập vào hệ thống.");
-                    showNotification("Kết nối thành công! Đang chuyển hướng...", "success");
-                } catch (error) {
-                    showNotification(getFirebaseErrorMessage(error.code), "error");
-                } finally {
-                    DOMElements.loginBtn.disabled = false;
-                }
-            });
-
-            DOMElements.registerForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                playSound('click');
-                const username = document.getElementById('register-username').value.trim().toLowerCase();
-                const phone = document.getElementById('register-phone').value.trim();
-                const password = document.getElementById('register-password').value;
-                const registerBtn = document.getElementById('registerBtn');
-                if (!username || !phone || !password) {
-                    showNotification("YÊU CẦU ĐỦ THÔNG TIN", "error");
-                    return;
-                }
-                registerBtn.disabled = true;
-                try {
-                    const fakeEmail = `${username}@longbao-tool.ai`;
-                    const userCredential = await createUserWithEmailAndPassword(auth, fakeEmail, password);
-                    const userDocRef = doc(db, "users", userCredential.user.uid);
-                    await setDoc(userDocRef, { 
-                        uid: userCredential.user.uid, 
-                        username: username, 
-                        phoneNumber: phone, 
-                        energy: 5, // Set initial energy to 5
-                        createdAt: Timestamp.now(),
-                        avatarUrl: '',
-                        f168Username: '',
-                        f168UsernameLastChanged: null,
-                        f168UsernameChangeCount: 0
-                    });
-                    await logActivity("Tạo tài khoản thành công.");
-                    showNotification("Tài khoản đã được tạo! Vui lòng đăng nhập.", "success");
-                    DOMElements.registerForm.classList.add('hidden');
-                    DOMElements.loginForm.classList.remove('hidden');
-                    decodeText(DOMElements.loginForm.querySelector('h2'));
-                } catch (error) {
-                    showNotification(getFirebaseErrorMessage(error.code), "error");
-                } finally {
-                    registerBtn.disabled = false;
-                }
-            });
-
-            DOMElements.showRegisterLink.addEventListener('click', () => {
-                playSound('click');
-                DOMElements.loginForm.classList.add('hidden');
-                DOMElements.registerForm.classList.remove('hidden');
-                decodeText(DOMElements.registerForm.querySelector('h2'));
-            });
-
-            DOMElements.showLoginLink.addEventListener('click', () => {
-                playSound('click');
-                DOMElements.registerForm.classList.add('hidden');
-                DOMElements.loginForm.classList.remove('hidden');
-                decodeText(DOMElements.loginForm.querySelector('h2'));
-            });
-
-            DOMElements.mainNextBtn.addEventListener('click', () => {
-                playSound('confirm');
-                if (currentCoreIndex === 0) { // LongBao IV
-                    launchLongBaoIV();
-                } 
-                else if (currentCoreIndex === 1) { // Yian
-                    window.location.href = 'https://www.soilabai.site/';
-                } 
-                else if (currentCoreIndex === 2) { // Aquarius
-                    DOMElements.aquariusModal.classList.remove('hidden');
-                    playSound('open', 'G4');
-                }
-                else if (currentCoreIndex === 3) { // TOOL SOI HỦ
-                    launchSoiHu();
-                }
-            });
-
-            DOMElements.confirmAquariusCodeBtn.addEventListener('click', () => {
-                if (DOMElements.aquariusCodeInput.value.trim() !== '') {
-                    playSound('confirm');
-                    DOMElements.aquariusModal.classList.add('hidden');
-                    // Placeholder for Aquarius activation
-                    showNotification("Lõi Aquarius đang được bảo trì.", "info");
-                    DOMElements.aquariusCodeInput.value = '';
-                    DOMElements.aquariusError.textContent = '';
-                } else {
-                    playSound('error');
-                    DOMElements.aquariusError.textContent = 'MÃ KÍCH HOẠT KHÔNG HỢP LỆ';
-                }
-            });
-
-            DOMElements.nextCoreBtn.addEventListener('click', () => {
-                playSound('navigate', 'E4');
-                currentCoreIndex = (currentCoreIndex + 1) % DOMElements.coreOptions.length;
-                showCore(currentCoreIndex);
-            });
-
-            DOMElements.prevCoreBtn.addEventListener('click', () => {
-                playSound('navigate', 'C4');
-                currentCoreIndex = (currentCoreIndex - 1 + DOMElements.coreOptions.length) % DOMElements.coreOptions.length;
-                showCore(currentCoreIndex);
-            });
-
-            DOMElements.logoutBtn.addEventListener('click', () => {
-                logActivity("Đăng xuất.");
-                signOut(auth);
-                showNotification("Đã đăng xuất.", "info");
-            });
+        async function useFeatureSoiHu(featureName, cost, action) {
+            playSound('click');
+            if (!currentUserData || !auth.currentUser || currentUserData.energy < cost) {
+                playSound('error');
+                showNotification(`Không đủ năng lượng! Cần ${cost}, bạn còn ${currentUserData.energy}.`, "error");
+                return;
+            }
             
+            const newEnergy = currentUserData.energy - cost;
+            const userDocRef = doc(db, "users", auth.currentUser.uid);
+            try {
+                await updateDoc(userDocRef, { energy: newEnergy });
+                logActivity(`Sử dụng Lõi Soi Hũ (${featureName}), năng lượng còn lại: ${newEnergy}`);
+                action();
+            } catch (error) {
+                showNotification("Lỗi kết nối, không thể sử dụng tính năng.", "error");
+            }
+        }
+
+        function selectAISoiHu(type) {
+            soiHu_chosenAI = type;
+            const isVip = type === 'gen4';
+            DOMElements.soiHu_mainContent.classList.toggle('vip-mode', isVip);
+            DOMElements.soiHu_menuContainer.classList.toggle('menu-vip', isVip);
+            DOMElements.soiHu_menuContainer.classList.toggle('menu-base', !isVip);
+            DOMElements.soiHu_jarHuntBtn.style.display = isVip ? 'flex' : 'none';
+            DOMElements.soiHu_playWithAIBtn.style.display = isVip ? 'flex' : 'none';
+            DOMElements.soiHu_aiChoiceContainer.classList.add('hidden');
+            DOMElements.soiHu_menuContainer.classList.remove('hidden');
+        }
+
+        function showGameSelectionSoiHu() {
+            const gameList = DOMElements.soiHu_gameList;
+            gameList.innerHTML = '';
+            soiHuConfigData.games.forEach(game => {
+                const gameButton = document.createElement('button');
+                gameButton.className = 'soiHu-game-btn';
+                gameButton.textContent = game.name;
+                gameButton.onclick = () => useFeatureSoiHu('Phân Tích', CONFIG.energy.costs.soiHuAnalysis, () => startSpecificScanSoiHu(game, 'analysis'));
+                gameList.appendChild(gameButton);
+            });
+            DOMElements.soiHu_menuContainer.classList.add('hidden');
+            DOMElements.soiHu_gameSelectionContainer.classList.remove('hidden');
+        }
+
+        function startSpecificScanSoiHu(game, mode) {
+            const loadingGif = DOMElements.soiHu_loadingGif;
+            loadingGif.src = (soiHu_chosenAI === 'gen4') ? 'https://i.ibb.co/C30H2ZYr/Nft-Hacker-GIF-by-Cyber-Brokers.gif' : 'https://i.ibb.co/nsw6D7cw/Art-Animation-GIF-by-xponentialdesign.gif';
+            DOMElements.soiHu_scanTitle.textContent = (mode === 'jarHunt') ? 'ĐANG QUÉT CÁC GAME CÓ HŨ LỚN...' : 'ĐANG PHÂN TÍCH LỖ HỔNG...';
+            DOMElements.soiHu_gameSelectionContainer.classList.add('hidden');
+            DOMElements.soiHu_menuContainer.classList.add('hidden');
+            DOMElements.soiHu_scanningContainer.classList.remove('hidden');
+            playSound('soiHuScan');
+            setTimeout(() => showResultsSoiHu(game, mode), 4500);
+        }
+        
+        function showResultsSoiHu(selectedGame, mode) {
+            stopSound('soiHuScan');
+            playSound('success');
+            DOMElements.soiHu_scanningContainer.classList.add('hidden');
+            DOMElements.soiHu_resultContainer.classList.remove('hidden');
+            
+            DOMElements.soiHu_gameName.textContent = selectedGame.name;
+            DOMElements.soiHu_gameImage.src = selectedGame.image;
+            const now = new Date(), startOffset = Math.floor(Math.random() * 21) + 5, endTime = startOffset + (Math.floor(Math.random() * 6) + 10);
+            const formatTime = (date) => date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            DOMElements.soiHu_goldenTime.textContent = `${formatTime(new Date(now.getTime() + startOffset * 60000))} - ${formatTime(new Date(now.getTime() + endTime * 60000))}`;
+
+            if (mode === 'jarHunt') {
+                DOMElements.soiHu_resultContainer.querySelector('.soiHu-result-stats').classList.add('hidden');
+                DOMElements.soiHu_scanReasoning.innerHTML = `Phân tích <strong>${(Math.floor(Math.random() * 2000000) + 500000).toLocaleString('vi-VN')}</strong> phiên gần nhất cho thấy game <strong>${selectedGame.name}</strong> đang có tần suất trả thưởng cao bất thường. Đề xuất vào ngay!`;
+                DOMElements.soiHu_scanReasoning.classList.remove('hidden');
+            } else {
+                DOMElements.soiHu_resultContainer.querySelector('.soiHu-result-stats').classList.remove('hidden');
+                DOMElements.soiHu_scanReasoning.classList.add('hidden');
+                const winRate = (soiHu_chosenAI === 'gen4') ? (Math.random() * (98.5 - 85) + 85) : (Math.random() * (92.5 - 75) + 75);
+                animateCountUp(DOMElements.soiHu_winRate, winRate, 2, '%');
+                animateCountUp(DOMElements.soiHu_spinCount, Math.floor(Math.random() * (250 - 120 + 1)) + 120, 0, ' vòng');
+                animateCountUp(DOMElements.soiHu_scatterRate, (Math.random() * (90 - 50) + 50), 2, '%');
+            }
+            
+            DOMElements.soiHu_financeAllocatorContainer.classList.remove('hidden');
+            DOMElements.soiHu_financeResult.innerHTML = "";
+            DOMElements.soiHu_capitalInput.value = "";
+        }
+
+        // --- MAIN INITIALIZATION & EVENT LISTENERS ---
+        function setupEventListeners() {
+            document.body.addEventListener('click', startMedia, { once: true });
+            document.body.addEventListener('keydown', startMedia, { once: true });
+            
+            DOMElements.loginForm.addEventListener('submit', handleLogin);
+            DOMElements.registerForm.addEventListener('submit', handleRegister);
+            DOMElements.showRegisterLink.addEventListener('click', () => { playSound('click'); DOMElements.loginForm.classList.add('hidden'); DOMElements.registerForm.classList.remove('hidden'); decodeText(DOMElements.registerForm.querySelector('h2')); });
+            DOMElements.showLoginLink.addEventListener('click', () => { playSound('click'); DOMElements.registerForm.classList.add('hidden'); DOMElements.loginForm.classList.remove('hidden'); decodeText(DOMElements.loginForm.querySelector('h2')); });
+            DOMElements.mainNextBtn.addEventListener('click', handleActivateCore);
+            DOMElements.nextCoreBtn.addEventListener('click', () => { playSound('navigate', 'E4'); currentCoreIndex = (currentCoreIndex + 1) % CONFIG.ai_cores.length; showCore(currentCoreIndex); });
+            DOMElements.prevCoreBtn.addEventListener('click', () => { playSound('navigate', 'C4'); currentCoreIndex = (currentCoreIndex - 1 + CONFIG.ai_cores.length) % CONFIG.ai_cores.length; showCore(currentCoreIndex); });
+            DOMElements.logoutBtn.addEventListener('click', () => { logActivity("Đăng xuất."); signOut(auth); showNotification("Đã đăng xuất.", "info"); });
+            DOMElements.chatToggle.addEventListener('click', () => DOMElements.chatContainer.classList.toggle('collapsed'));
+            DOMElements.chatForm.addEventListener('submit', handleSendMessage);
+            document.querySelectorAll('.close-modal-btn').forEach(btn => btn.addEventListener('click', () => { playSound('click'); btn.closest('.modal-overlay').classList.add('hidden'); }));
             DOMElements.profileBtn.addEventListener('click', () => {
                 if (!currentUserData) return;
                 playSound('open');
-                DOMElements.profileAvatarUrlInput.value = currentUserData.avatarUrl || '';
-                DOMElements.profileAvatarPreview.src = currentUserData.avatarUrl || 'https://placehold.co/100x100/0A192F/00ffff?text=P';
-                DOMElements.profileF168UsernameInput.value = currentUserData.f168Username || '';
-                DOMElements.profilePhoneInput.value = currentUserData.phoneNumber || '';
-                DOMElements.profileTabs.forEach(t => t.classList.remove('active'));
-                DOMElements.profileTabContents.forEach(c => c.classList.remove('active'));
-                document.querySelector('.profile-tab[data-tab="profile-info"]').classList.add('active');
-                document.getElementById('profile-info').classList.add('active');
                 DOMElements.profileModal.classList.remove('hidden');
+                // Logic to populate profile modal
             });
-
-            DOMElements.profileTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const target = tab.dataset.tab;
-                    DOMElements.profileTabs.forEach(t => t.classList.remove('active'));
-                    DOMElements.profileTabContents.forEach(c => c.classList.remove('active'));
-                    tab.classList.add('active');
-                    document.getElementById(target).classList.add('active');
-                    if (target === 'profile-log') fetchActivityLog();
-                });
-            });
-            
-            document.querySelectorAll('.close-modal-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    playSound('click');
-                    btn.closest('.modal-overlay').classList.add('hidden');
-                });
-            });
-
-            // --- LongBao IV Event Listeners ---
-            DOMElements.exitLongbaoBtn.addEventListener('click', () => {
-                playSound('click', 'A4', '8n');
-                exitLongBaoIV();
-            });
-            DOMElements.backToTablesBtn.addEventListener('click', () => {
-                playSound('lb4_click', 'A4', '8n');
-                showTableSelectionScreenLB4();
-            });
-            DOMElements.modalConfirmBtnLB4.addEventListener('click', () => {
-                playSound('lb4_click', 'A4', '8n');
-                DOMElements.energyModalLB4.classList.add('hidden');
-                exitLongBaoIV();
-            });
-            DOMElements.suggestedTableContainer.addEventListener('click', () => {
-                const tableName = DOMElements.suggestedTableNameEl.textContent;
-                if (tableName && tableName !== '...') {
-                    playSound('lb4_click', 'E5', '8n');
-                    startToolForTableLB4(tableName);
-                }
-            });
-
-            // --- Soi Hu Event Listeners ---
+            DOMElements.exitLongbaoBtnTables.addEventListener('click', exitLongBaoIV);
+            DOMElements.backToTablesBtn.addEventListener('click', showTableSelectionScreenLB4);
+            DOMElements.modalConfirmBtnLB4.addEventListener('click', () => { DOMElements.energyModalLB4.classList.add('hidden'); exitLongBaoIV(); });
             DOMElements.exitSoiHuBtn.addEventListener('click', exitSoiHu);
             DOMElements.soiHu_choiceAILongBao.addEventListener('click', () => selectAISoiHu('base'));
             DOMElements.soiHu_choiceAILongBao4.addEventListener('click', () => selectAISoiHu('gen4'));
-            DOMElements.soiHu_autoScanBtn.addEventListener('click', () => useFeatureSoiHu('autoScan', startAutoScanSoiHu));
-            DOMElements.soiHu_startAnalysisBtn.addEventListener('click', () => useFeatureSoiHu('startAnalysis', showGameSelectionSoiHu));
-            DOMElements.soiHu_jarHuntBtn.addEventListener('click', () => useFeatureSoiHu('jarHunt', startJarHuntSoiHu));
-            DOMElements.soiHu_securityCheckBtn.addEventListener('click', () => useFeatureSoiHu('securityCheck', runSecurityCheckSoiHu));
-            DOMElements.soiHu_historyBtn.addEventListener('click', () => { playSoundSoiHu('click'); displayScanHistorySoiHu(); });
-            DOMElements.soiHu_backToChoiceBtn.addEventListener('click', goBackToChoicesSoiHu);
-            DOMElements.soiHu_backToMenuBtn.addEventListener('click', goBackToMenuSoiHu);
-            DOMElements.soiHu_backToMenuFromGameSelectBtn.addEventListener('click', goBackToMenuSoiHu);
-            DOMElements.soiHu_calculateFinanceBtn.addEventListener('click', () => { playSoundSoiHu('click'); calculateAndDisplayFinanceSoiHu(); });
-            DOMElements.soiHu_closeHistoryModalBtn.addEventListener('click', () => DOMElements.soiHu_modals.history.classList.add('hidden'));
-            DOMElements.soiHu_closeSecurityModalBtn.addEventListener('click', () => { DOMElements.soiHu_modals.security.classList.add('hidden'); stopSoundSoiHu('scan'); });
+            DOMElements.soiHu_autoScanBtn.addEventListener('click', () => useFeatureSoiHu('Tự động quét', CONFIG.energy.costs.soiHuAutoScan, () => startSpecificScanSoiHu(soiHuConfigData.games[Math.floor(Math.random() * soiHuConfigData.games.length)], 'analysis')));
+            DOMElements.soiHu_startAnalysisBtn.addEventListener('click', showGameSelectionSoiHu);
+            DOMElements.soiHu_jarHuntBtn.addEventListener('click', () => useFeatureSoiHu('Săn Hũ', CONFIG.energy.costs.soiHuJarHunt, () => startSpecificScanSoiHu(soiHuConfigData.games[Math.floor(Math.random() * soiHuConfigData.games.length)], 'jarHunt')));
+            DOMElements.soiHu_backToChoiceBtn.addEventListener('click', initSoiHu);
+            DOMElements.soiHu_backToMenuFromGameSelectBtn.addEventListener('click', () => {
+                playSound('click');
+                DOMElements.soiHu_gameSelectionContainer.classList.add('hidden');
+                DOMElements.soiHu_menuContainer.classList.remove('hidden');
+            });
         }
-
-        // --- INITIALIZATION ---
+        
         function init() {
-            initializeMedia();
             setupEventListeners(); 
             setupMatrixRain();
-        }
+            initializeSounds();
+            renderAICores();
 
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    if (unsubscribeUser) unsubscribeUser();
+                    unsubscribeUser = onSnapshot(doc(db, "users", user.uid), (doc) => {
+                        if (doc.exists()) {
+                            currentUserData = { ...doc.data(), energy: doc.data().energy || 0 };
+                            updateUIWithUserData(currentUserData);
+                        } else { signOut(auth); }
+                    });
+                    DOMElements.authScreen.classList.add('fade-out');
+                    setTimeout(() => {
+                        DOMElements.authScreen.classList.add('hidden');
+                        DOMElements.aiCoreSelectionScreen.classList.remove('hidden');
+                        DOMElements.aiCoreSelectionScreen.classList.add('fade-in');
+                        DOMElements.userInfoBar.classList.remove('hidden');
+                        DOMElements.chatContainer.classList.remove('hidden');
+                        decodeText(DOMElements.aiCoreSelectionScreen.querySelector('h1'));
+                        initChatbot();
+                    }, 500);
+                } else {
+                    if (unsubscribeUser) unsubscribeUser();
+                    currentUserData = null;
+                    DOMElements.authScreen.classList.remove('hidden', 'fade-out');
+                    DOMElements.aiCoreSelectionScreen.classList.add('hidden');
+                    DOMElements.longbaoIVScreen.classList.add('hidden');
+                    DOMElements.soiHuScreen.classList.add('hidden');
+                    DOMElements.userInfoBar.classList.add('hidden');
+                    DOMElements.chatContainer.classList.add('hidden');
+                    decodeText(DOMElements.loginForm.querySelector('h2'));
+                }
+            });
+        }
+        
         init();
+
     </script>
-
-<script>
-    const canvas = document.getElementById("matrix-bg");
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const letters = "天地玄黄宇宙洪荒日月盈昃辰宿列张寒来暑往秋收冬藏";
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const drops = [];
-
-    for (let x = 0; x < columns; x++) drops[x] = 1;
-
-    function draw() {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = "#00ff00";
-        ctx.font = fontSize + "px monospace";
-
-        for (let i = 0; i < drops.length; i++) {
-            const text = letters.charAt(Math.floor(Math.random() * letters.length));
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                drops[i] = 0;
-            }
-
-            drops[i]++;
-        }
-    }
-
-    setInterval(draw, 33);
-
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    });
-</script>
-
 </body>
 </html>

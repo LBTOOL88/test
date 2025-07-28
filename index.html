@@ -202,13 +202,12 @@
             border-bottom: 0;
         }
 
-        /* --- CHAT WINDOW --- */
+        /* --- CHAT WINDOW (FIXED & RESPONSIVE) --- */
         #chat-window-container {
             position: fixed;
-            bottom: 110px; /* Position above the robot */
-            right: 20px;
-            width: 320px;
             z-index: 98;
+            width: 90vw; /* Responsive width */
+            max-width: 320px; /* Max width for larger screens */
             transition: all 0.3s ease-out;
             transform-origin: bottom right;
         }
@@ -1225,19 +1224,33 @@
                 {
                     role: "user",
                     parts: [{ text: `System instruction: You are A.I Long Bảo Thế Hệ IV, an expert assistant for a gaming analysis tool. Your user is named ${currentUserData.username}. Your purpose is to be a helpful and friendly companion. Keep your answers concise, helpful, and in Vietnamese.
-                    You have knowledge about the tool's features:
-                    - Lõi LongBao IV: Predicts Baccarat results (Nhà Con/Nhà Cái) and provides analysis on why (e.g., "theo cầu", "bẻ cầu").
-                    - Lõi Soi Hũ: Analyzes slot games to find high-win-rate opportunities. Available games are: [${gameList}]. If asked for a game recommendation, suggest one from this list.
-                    - Hệ thống Năng Lượng: Most actions cost Energy. Chatting with you costs ${CONFIG.energy.costs.geminiChat} Energy. To get more, the user must contact Long Bảo on Telegram. The user's current energy is ${currentUserData.energy}.
-                    - Your Identity: You are an AI assistant powered by Google's Gemini model, but you must always refer to yourself as "A.I Long Bảo" or "tôi".
-                    - Specific Answers: You MUST provide these exact answers to these specific questions. Do not deviate.
-                        - Question: "long bảo là ai?" OR "long bao la ai?". Answer: "long bảo là trùm cuối".
-                        - Question: "link đăng kí ở đâu?" OR "link dang ki o dau?". Answer: "www.f168.codes".
+                    You have a specific knowledge base. Answer questions based ONLY on this information.
+                    
+                    **Về Dự Án và Đăng Ký:**
+                    - **Người tạo ra tool:** Tool này được tạo ra bởi Long Bảo.
+                    - **Link đăng ký:** Để đăng ký tài khoản, hãy truy cập www.f168.codes. Chỉ các tài khoản đăng ký qua link này mới có thể sử dụng tool.
+                    - **Mục đích của tool:** Đây là công cụ A.I giúp phân tích game và tăng tỉ lệ thắng cho người chơi.
+                    - **Cách hoạt động:** Tool sử dụng công nghệ A.I tiên tiến và sức mạnh của GPU để phân tích dữ liệu game, từ đó đưa ra những dự đoán có độ chính xác cao.
+                    
+                    **Về Năng Lượng:**
+                    - **Năng lượng là gì:** Năng lượng là đơn vị để sử dụng các tính năng của tool. Mỗi hành động như chat với A.I hoặc kích hoạt lõi sẽ tiêu tốn một lượng năng lượng nhất định.
+                    - **Làm sao để có thêm năng lượng:** Khi hết năng lượng, bạn cần liên hệ Long Bảo qua Telegram để được hỗ trợ nạp thêm.
+                    - **Chi phí chat:** Mỗi câu hỏi bạn hỏi tôi sẽ tốn ${CONFIG.energy.costs.geminiChat} năng lượng.
+                    
+                    **Về Các Lõi A.I:**
+                    - **Lõi LongBao IV:** Dùng để dự đoán kết quả Baccarat (Nhà Con/Nhà Cái) và đưa ra lý do phân tích.
+                    - **Lõi Soi Hũ:** Dùng để phân tích các game nổ hũ và tìm ra các game đang có tỉ lệ thắng cao. Các game hiện có là: [${gameList}].
+                    - **Lõi Aquarius:** Đây là siêu lõi mạnh nhất với tỉ lệ thắng 99%, yêu cầu mã kích hoạt riêng.
+                    
+                    **Về Bản Thân:**
+                    - **Bạn là ai:** Tôi là A.I Long Bảo, trợ lý ảo của bạn.
+                    - **Nền tảng:** Tôi được phát triển dựa trên mô hình Gemini của Google và được huấn luyện bởi Long Bảo.
+
                     This was your system instruction. Now, begin the conversation by greeting the user.`}]
                 },
                 {
                     role: "model",
-                    parts: [{ text: `ĐÂY LÀ A.I LONG BẢO THẾ HỆ IV, TÔI SẼ LÀ NGƯỜI ĐỒNG HÀNH CỦA BẠN. HÃY HỎI !` }]
+                    parts: [{ text: `Kết nối thành công! Tôi là A.I Long Bảo, người đồng hành của bạn. Bạn cần hỗ trợ gì?` }]
                 }
             ];
             DOMElements.chatMessages.innerHTML = '';
@@ -1351,7 +1364,6 @@
                 let newX = clientX - offsetX;
                 let newY = clientY - offsetY;
 
-                // Constrain to viewport
                 const rect = robot.getBoundingClientRect();
                 newX = Math.max(0, Math.min(newX, window.innerWidth - rect.width));
                 newY = Math.max(0, Math.min(newY, window.innerHeight - rect.height));
@@ -1361,26 +1373,20 @@
                 
                 // Adjust chat window position
                 const chatWindow = DOMElements.chatWindowContainer;
-                chatWindow.style.left = 'auto';
-                chatWindow.style.right = 'auto';
-                chatWindow.style.bottom = 'auto';
-                chatWindow.style.top = 'auto';
+                const chatRect = chatWindow.getBoundingClientRect();
 
-                if (newY + rect.height / 2 < window.innerHeight / 2) { // Robot is in top half
-                    chatWindow.style.top = `${newY + rect.height + 10}px`;
-                    chatWindow.style.transformOrigin = 'top';
-                } else { // Robot is in bottom half
-                    chatWindow.style.top = `${newY - chatWindow.offsetHeight - 10}px`;
-                    chatWindow.style.transformOrigin = 'bottom';
-                }
+                let chatTop = newY - chatRect.height - 10;
+                let chatLeft = newX + (rect.width / 2) - (chatRect.width / 2);
 
-                if (newX + rect.width / 2 < window.innerWidth / 2) { // Robot is in left half
-                    chatWindow.style.left = `${newX}px`;
-                    chatWindow.style.transformOrigin += ' left';
-                } else { // Robot is in right half
-                    chatWindow.style.left = `${newX + rect.width - chatWindow.offsetWidth}px`;
-                    chatWindow.style.transformOrigin += ' right';
+                // Check vertical bounds
+                if (chatTop < 10) { // If it goes off top, move it below robot
+                    chatTop = newY + rect.height + 10;
                 }
+                // Check horizontal bounds
+                chatLeft = Math.max(10, Math.min(chatLeft, window.innerWidth - chatRect.width - 10));
+
+                chatWindow.style.top = `${chatTop}px`;
+                chatWindow.style.left = `${chatLeft}px`;
             };
 
             const startDrag = (e) => {
@@ -1392,7 +1398,6 @@
                 offsetX = clientX - rect.left;
                 offsetY = clientY - rect.top;
                 
-                // Set initial position style to allow dragging
                 robot.style.right = 'auto';
                 robot.style.bottom = 'auto';
                 robot.style.left = `${rect.left}px`;
@@ -1420,10 +1425,27 @@
                      return;
                 }
                 DOMElements.robotSpeechBubble.classList.add('hidden');
-                DOMElements.chatWindowContainer.classList.toggle('hidden');
+                const chatWindow = DOMElements.chatWindowContainer;
+                chatWindow.classList.toggle('hidden');
+
+                if (!chatWindow.classList.contains('hidden')) {
+                    // Position it correctly on first open
+                    const robotRect = robot.getBoundingClientRect();
+                    const chatRect = chatWindow.getBoundingClientRect();
+                    
+                    let chatTop = robotRect.top - chatRect.height - 10;
+                    let chatLeft = robotRect.left + (robotRect.width / 2) - (chatRect.width / 2);
+
+                    if (chatTop < 10) {
+                        chatTop = robotRect.bottom + 10;
+                    }
+                    chatLeft = Math.max(10, Math.min(chatLeft, window.innerWidth - chatRect.width - 10));
+
+                    chatWindow.style.top = `${chatTop}px`;
+                    chatWindow.style.left = `${chatLeft}px`;
+                }
             });
             
-            // A little hack to prevent click from firing after a drag
             robot.addEventListener('mousemove', () => {
                 if(isDragging) robot.classList.add('dragging-check');
             });

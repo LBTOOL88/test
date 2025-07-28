@@ -801,6 +801,7 @@
         let chatHistory = [];
         let ytPlayer, isYtReady = false;
         const sound = {};
+        let randomNotifierTimeout; // Timer for random game notifications
 
         // --- DOM Elements ---
         const DOMElements = {
@@ -1971,6 +1972,49 @@
             }, randomDelay);
         }
 
+        // --- RANDOM NOTIFIER ---
+        function startRandomGameNotifier() {
+            if (randomNotifierTimeout) clearTimeout(randomNotifierTimeout);
+
+            const delays = [3 * 60 * 1000, 5 * 60 * 1000, 6 * 60 * 1000, 10 * 60 * 1000];
+            const randomDelay = delays[Math.floor(Math.random() * delays.length)];
+
+            randomNotifierTimeout = setTimeout(() => {
+                if (!auth.currentUser || !soiHuConfigData || !soiHuConfigData.games) {
+                    return; 
+                }
+                const games = soiHuConfigData.games;
+                const randomGame = games[Math.floor(Math.random() * games.length)];
+                
+                showNotification(`A.I phát hiện ${randomGame.name} đang có tỉ lệ nổ hũ cao! Đề xuất vào ngay!`, "success");
+                playSound('success', 'A5');
+                startRandomGameNotifier();
+            }, randomDelay);
+        }
+
+        function stopRandomGameNotifier() {
+            if (randomNotifierTimeout) {
+                clearTimeout(randomNotifierTimeout);
+                randomNotifierTimeout = null;
+            }
+        }
+
+        async function loadRemoteConfigs() {
+            try {
+                const soiHuDocRef = doc(db, "config", "soi_hu");
+                const soiHuDocSnap = await getDoc(soiHuDocRef);
+                if (soiHuDocSnap.exists() && soiHuDocSnap.data().games) {
+                    soiHuConfigData = soiHuDocSnap.data();
+                } else {
+                    console.warn("Using default Soi Hu config.");
+                    soiHuConfigData = DEFAULT_CONFIG.soi_hu;
+                }
+            } catch (error) {
+                console.error("Error loading Soi Hu config, using default:", error);
+                soiHuConfigData = DEFAULT_CONFIG.soi_hu;
+            }
+        }
+
         // --- MAIN INITIALIZATION & EVENT LISTENERS ---
         function setupEventListeners() {
             document.body.addEventListener('click', startMedia, { once: true });
@@ -2021,7 +2065,7 @@
             initializeMedia();
             renderAICores();
 
-            onAuthStateChanged(auth, (user) => {
+            onAuthStateChanged(auth, async (user) => {
                 if (user) {
                     if (unsubscribeUser) unsubscribeUser();
                     unsubscribeUser = onSnapshot(doc(db, "users", user.uid), (doc) => {
@@ -2030,6 +2074,9 @@
                             updateUIWithUserData(currentUserData);
                         } else { signOut(auth); }
                     });
+
+                    await loadRemoteConfigs();
+
                     DOMElements.authScreen.classList.add('fade-out');
                     setTimeout(() => {
                         DOMElements.authScreen.classList.add('hidden');
@@ -2039,10 +2086,12 @@
                         DOMElements.chatRobotContainer.classList.remove('hidden');
                         decodeText(DOMElements.aiCoreSelectionScreen.querySelector('h1'));
                         initChatbot();
+                        startRandomGameNotifier();
                     }, 500);
                 } else {
                     if (unsubscribeUser) unsubscribeUser();
                     currentUserData = null;
+                    stopRandomGameNotifier();
                     DOMElements.authScreen.classList.remove('hidden', 'fade-out');
                     DOMElements.aiCoreSelectionScreen.classList.add('hidden');
                     DOMElements.longbaoIVScreen.classList.add('hidden');

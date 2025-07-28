@@ -214,6 +214,7 @@
         .hud-corner.bottom-right { bottom: 10px; right: 10px; border-left: none; border-top: none; }
         .shockwave { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; animation: shockwave-animation 0.7s ease-out forwards; }
         .energy-bar-pulsing { animation: pulse-red 1s infinite; }
+        #ai-reasoning { min-height: 2.5rem; font-family: 'Fira Code', monospace; color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green); }
 
         /* --- SOI HU STYLES --- */
         #soiHuScreen { --primary-color: #00ff7f; --vip-color: #ffc107; --soi-hu-text-light: #f0f0f0; --soi-hu-bg-dark-theme: #0d1117; --soi-hu-container-bg: rgba(13, 17, 23, 0.75); --soi-hu-input-bg: #161b22; --soi-hu-border-color: rgba(0, 255, 127, 0.25); --soi-hu-button-radius: 12px; --soi-hu-container-radius: 16px; --soi-hu-error-red: #ff4757; }
@@ -357,7 +358,7 @@
             <div id="chat-window">
                 <div id="chat-messages"></div>
                 <form id="chat-form">
-                    <input type="text" id="chat-input" placeholder="Hỏi A.I LongBao..." autocomplete="off" required>
+                    <input type="text" id="chat-input" placeholder="Hỏi A.I LongBao... (-5 Năng Lượng)" autocomplete="off" required>
                     <button type="submit" id="chat-send-btn">GỬI</button>
                 </form>
             </div>
@@ -400,6 +401,9 @@
                             <div id="shockwave-container"></div>
                             <p id="main-prediction-text" class="text-5xl sm:text-6xl font-bold text-gray-500">CHỜ...</p>
                             <p id="sub-prediction-text" class="text-base sm:text-xl font-semibold text-gray-500 mt-2 h-8"></p>
+                        </div>
+                        <div id="ai-reasoning" class="mt-2 text-center text-sm p-2 bg-black/20 rounded-md border border-cyan-500/20">
+                            <!-- AI Reasoning will be displayed here -->
                         </div>
                     </div>
                     <div class="box-panel p-4 flex-grow flex flex-col items-center justify-center">
@@ -453,17 +457,9 @@
                     <span class="energy-text">Năng Lượng: <span id="soiHu_energy-count">0</span></span>
                     <div id="soiHu_energy-bar-wrapper"><div id="soiHu_energy-bar"></div></div>
                 </div>
-                <button class="soiHu-menu-btn orbitron-font" id="soiHu_playWithAIBtn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-4H6V6h12v2z"/></svg>
-                    <span class="menu-text">Chơi Cùng A.I</span>
-                </button>
-                <button class="soiHu-menu-btn orbitron-font" id="soiHu_jarHuntBtn">
+                <button class="soiHu-menu-btn orbitron-font" id="soiHu_autoJarHuntBtn">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.49 2 2 6.49 2 12s4.49 10 10 10 10-4.49 10-10S17.51 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-12h2v4h-2zm0 6h2v2h-2z"/></svg>
-                    <span class="menu-text">Săn Hũ</span>
-                </button>
-                <button class="soiHu-menu-btn orbitron-font" id="soiHu_autoScanBtn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C7.03 3 3 7.03 3 12s4.03 9 9 9 9-4.03 9-9c0-4.97-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/><path d="M16.24 7.76C15.07 6.59 13.54 6 12 6v6l4.24 4.24c2.34-2.34 2.34-6.14 0-8.48z" opacity=".3"/></svg>
-                    <span class="menu-text">Tự Động Quét</span>
+                    <span class="menu-text">Tự Động Săn Hũ</span>
                 </button>
                 <button class="soiHu-menu-btn orbitron-font" id="soiHu_startAnalysisBtn">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
@@ -559,6 +555,7 @@
                     soiHuAutoScan: 2,
                     soiHuAnalysis: 2,
                     soiHuJarHunt: 10,
+                    geminiChat: 5, // NEW: Energy cost for chat
                 }
             },
             ai_cores: [
@@ -667,6 +664,7 @@
             energyModalLB4: document.getElementById('energy-modal-lb4'),
             modalConfirmBtnLB4: document.getElementById('modal-confirm-btn-lb4'),
             shockwaveContainer: document.getElementById('shockwave-container'),
+            aiReasoning: document.getElementById('ai-reasoning'),
             soiHuScreen: document.getElementById('soiHuScreen'),
             soiHu_mainContent: document.getElementById('soiHu_mainContent'),
             soiHu_aiChoiceContainer: document.getElementById('soiHu_aiChoiceContainer'),
@@ -678,9 +676,7 @@
             soiHu_welcomeMessage: document.getElementById('soiHu_welcomeMessage'),
             soiHu_choiceAILongBao: document.getElementById('soiHu_choiceAILongBao'),
             soiHu_choiceAILongBao4: document.getElementById('soiHu_choiceAILongBao4'),
-            soiHu_jarHuntBtn: document.getElementById('soiHu_jarHuntBtn'),
-            soiHu_playWithAIBtn: document.getElementById('soiHu_playWithAIBtn'),
-            soiHu_autoScanBtn: document.getElementById('soiHu_autoScanBtn'),
+            soiHu_autoJarHuntBtn: document.getElementById('soiHu_autoJarHuntBtn'),
             soiHu_startAnalysisBtn: document.getElementById('soiHu_startAnalysisBtn'),
             soiHu_historyBtn: document.getElementById('soiHu_historyBtn'),
             soiHu_securityCheckBtn: document.getElementById('soiHu_securityCheckBtn'),
@@ -989,12 +985,28 @@
             const text = DOMElements.chatInput.value.trim();
             if (text === '' || !currentUserData) return;
 
+            // Energy Check
+            if (currentUserData.energy < CONFIG.energy.costs.geminiChat) {
+                renderChatMessage({
+                    username: 'A.I LongBao',
+                    text: `Không đủ năng lượng. Bạn cần ${CONFIG.energy.costs.geminiChat} năng lượng để hỏi, bạn đang có ${currentUserData.energy}.`,
+                    isAI: true
+                });
+                playSound('error');
+                return;
+            }
+            
+            // Deduct energy
+            const newEnergy = currentUserData.energy - CONFIG.energy.costs.geminiChat;
+            const userDocRef = doc(db, "users", auth.currentUser.uid);
+            await updateDoc(userDocRef, { energy: newEnergy });
+            logActivity(`Chat với A.I (-${CONFIG.energy.costs.geminiChat} năng lượng).`);
+
             renderChatMessage({ username: currentUserData.username, text, isAI: false });
             chatHistory.push({ role: "user", parts: [{ text }] });
             DOMElements.chatInput.value = '';
             DOMElements.chatInput.disabled = true;
             
-            // Show thinking indicator
             const thinkingId = 'thinking-indicator';
             renderChatMessage({
                 username: 'A.I LongBao',
@@ -1004,10 +1016,10 @@
             });
 
             try {
-                const prompt = `You are A.I Long Bảo, a helpful and friendly assistant for a gaming analysis tool. Your user is named ${currentUserData.username}. Keep your answers concise, helpful, and in Vietnamese. Here is the conversation history: ${JSON.stringify(chatHistory)}. Now, answer the user's latest message: "${text}"`;
+                const gameList = (soiHuConfigData?.games || DEFAULT_CONFIG.soi_hu.games).map(g => g.name).join(', ');
+                const prompt = `You are A.I Long Bảo, an expert assistant for a gaming analysis tool. Your user is named ${currentUserData.username}. Keep your answers concise, helpful, and in Vietnamese. You have access to a list of slot games: [${gameList}]. If the user asks for a game recommendation, suggest one from this list. Here is the conversation history: ${JSON.stringify(chatHistory)}. Now, answer the user's latest message: "${text}"`;
                 
-                let chatHistoryForAPI = [];
-                chatHistoryForAPI.push({ role: "user", parts: [{ text: prompt }] });
+                let chatHistoryForAPI = [{ role: "user", parts: [{ text: prompt }] }];
 
                 const payload = { contents: chatHistoryForAPI };
                 const apiKey = ""; 
@@ -1019,16 +1031,11 @@
                     body: JSON.stringify(payload)
                 });
 
-                if (!response.ok) {
-                    throw new Error(`API call failed with status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`API call failed with status: ${response.status}`);
 
                 const result = await response.json();
                 
-                const thinkingIndicator = document.getElementById(thinkingId);
-                if (thinkingIndicator) {
-                    thinkingIndicator.remove();
-                }
+                document.getElementById(thinkingId)?.remove();
 
                 if (result.candidates && result.candidates.length > 0) {
                     const aiReply = result.candidates[0].content.parts[0].text;
@@ -1041,10 +1048,7 @@
 
             } catch (error) {
                 console.error("Error calling Gemini API:", error);
-                const thinkingIndicator = document.getElementById(thinkingId);
-                if (thinkingIndicator) {
-                    thinkingIndicator.remove();
-                }
+                document.getElementById(thinkingId)?.remove();
                 renderChatMessage({
                     username: 'A.I LongBao',
                     text: 'Tôi gặp sự cố khi kết nối. Vui lòng thử lại sau.',
@@ -1111,17 +1115,29 @@
             const tableState = allTablesState[tableName];
             const history = tableState.history;
             let playerChance = 0.5;
+            let reasoning = "Phân tích dữ liệu ngẫu nhiên...";
 
             if (history.length >= 3) {
                 const last3 = history.slice(-3);
-                if (last3.every(r => r === 'NHÀ CON')) playerChance += 0.15;
-                if (last3.every(r => r === 'NHÀ CÁI')) playerChance -= 0.15;
+                if (last3.every(r => r === 'NHÀ CON')) {
+                    playerChance += 0.2;
+                    reasoning = "Phát hiện chuỗi 3 Nhà Con. Theo cầu.";
+                }
+                if (last3.every(r => r === 'NHÀ CÁI')) {
+                    playerChance -= 0.2;
+                    reasoning = "Phát hiện chuỗi 3 Nhà Cái. Theo cầu.";
+                }
             }
             if (history.length >= 4) {
                  const last4 = history.slice(-4);
                  if(last4[0] === last4[2] && last4[1] === last4[3] && last4[0] !== last4[1]){
-                     if(last4[3] === 'NHÀ CÁI') playerChance += 0.1;
-                     else playerChance -= 0.1;
+                     if(last4[3] === 'NHÀ CÁI') {
+                        playerChance += 0.15;
+                        reasoning = "Phát hiện cầu xen kẽ (1-1).";
+                     } else {
+                        playerChance -= 0.15;
+                        reasoning = "Phát hiện cầu xen kẽ (1-1).";
+                     }
                  }
             }
 
@@ -1136,7 +1152,7 @@
             if (isWin) tableState.wins++; else tableState.losses++;
             if (tableState.history.length > 150) tableState.history.shift();
             tableState.history.push(actualResult);
-            tableState.lastPrediction = { main: mainPrediction, sub: subPrediction, result: actualResult };
+            tableState.lastPrediction = { main: mainPrediction, sub: subPrediction, result: actualResult, reasoning: reasoning };
         }
 
         async function updateAllTables() {
@@ -1212,10 +1228,11 @@
         function updateVisibleTableUI() {
             if (!currentVisibleTable) return;
             const tableState = allTablesState[currentVisibleTable];
-            updatePredictionUILB4(tableState.lastPrediction.main, tableState.lastPrediction.sub);
-            updateBetOptionsUILB4(tableState.lastPrediction.main, tableState.lastPrediction.sub);
+            const { main, sub, result, reasoning } = tableState.lastPrediction;
+            updatePredictionUILB4(main, sub, reasoning);
+            updateBetOptionsUILB4(main, sub);
             updateStatsUILB4();
-            addDotToHistoryLB4(tableState.lastPrediction.result);
+            addDotToHistoryLB4(result);
             updateFluctuatingWinRateLB4();
             updateEnergyBarLB4();
             resetCountdownLB4();
@@ -1227,11 +1244,13 @@
             tableState.history.forEach(result => addDotToHistoryLB4(result, false));
             updateStatsUILB4(false);
             if (tableState.lastPrediction) {
-                updatePredictionUILB4(tableState.lastPrediction.main, tableState.lastPrediction.sub, false);
-                updateBetOptionsUILB4(tableState.lastPrediction.main, tableState.lastPrediction.sub);
+                const { main, sub, reasoning } = tableState.lastPrediction;
+                updatePredictionUILB4(main, sub, reasoning, false);
+                updateBetOptionsUILB4(main, sub);
             } else {
                 DOMElements.mainPredictionText.textContent = 'CHỜ...';
                 DOMElements.subPredictionText.textContent = '';
+                DOMElements.aiReasoning.textContent = 'Đang chờ phiên mới...';
                 DOMElements.mainPredictionText.className = 'text-5xl sm:text-6xl font-bold text-gray-500';
                 DOMElements.betOptionsGrid.querySelectorAll('.bet-option-box').forEach(opt => opt.classList.remove('active'));
             }
@@ -1261,7 +1280,7 @@
             generateTableListLB4();
         }
 
-        function updatePredictionUILB4(mainPrediction, subPrediction, animate = true) {
+        function updatePredictionUILB4(mainPrediction, subPrediction, reasoning, animate = true) {
             if (animate) {
                 playSound('lb4_predict', "C2", "8n");
                 const shockwave = document.createElement('div');
@@ -1274,6 +1293,7 @@
             DOMElements.mainPredictionText.textContent = mainPrediction;
             DOMElements.subPredictionText.className = 'text-base sm:text-xl font-semibold mt-2 h-8 glow-text-gold';
             DOMElements.subPredictionText.textContent = `+ ${subPrediction}`;
+            DOMElements.aiReasoning.textContent = `Phân Tích A.I: ${reasoning}`;
         }
 
         function updateBetOptionsUILB4(mainPrediction, subPrediction) {
@@ -1469,8 +1489,7 @@
             DOMElements.soiHu_mainContent.classList.toggle('vip-mode', isVip);
             DOMElements.soiHu_menuContainer.classList.toggle('menu-vip', isVip);
             DOMElements.soiHu_menuContainer.classList.toggle('menu-base', !isVip);
-            DOMElements.soiHu_jarHuntBtn.style.display = isVip ? 'flex' : 'none';
-            DOMElements.soiHu_playWithAIBtn.style.display = isVip ? 'flex' : 'none';
+            DOMElements.soiHu_autoJarHuntBtn.style.display = isVip ? 'flex' : 'none';
             DOMElements.soiHu_aiChoiceContainer.classList.add('hidden');
             DOMElements.soiHu_menuContainer.classList.remove('hidden');
         }
@@ -1530,6 +1549,16 @@
             DOMElements.soiHu_capitalInput.value = "";
         }
 
+        function handleAutoJarHunt() {
+            showNotification("Kích hoạt chế độ Tự Động Săn Hũ. A.I sẽ thông báo khi phát hiện cơ hội.", "info");
+            const randomDelay = (Math.random() * 60 + 30) * 1000; // 30-90 seconds
+            setTimeout(() => {
+                const randomGame = soiHuConfigData.games[Math.floor(Math.random() * soiHuConfigData.games.length)];
+                showNotification(`A.I phát hiện ${randomGame.name} đang có tỉ lệ nổ hũ cao!`, "success");
+                playSound('success');
+            }, randomDelay);
+        }
+
         // --- MAIN INITIALIZATION & EVENT LISTENERS ---
         function setupEventListeners() {
             document.body.addEventListener('click', startMedia, { once: true });
@@ -1558,9 +1587,8 @@
             DOMElements.exitSoiHuBtn.addEventListener('click', exitSoiHu);
             DOMElements.soiHu_choiceAILongBao.addEventListener('click', () => selectAISoiHu('base'));
             DOMElements.soiHu_choiceAILongBao4.addEventListener('click', () => selectAISoiHu('gen4'));
-            DOMElements.soiHu_autoScanBtn.addEventListener('click', () => useFeatureSoiHu('Tự động quét', CONFIG.energy.costs.soiHuAutoScan, () => startSpecificScanSoiHu(soiHuConfigData.games[Math.floor(Math.random() * soiHuConfigData.games.length)], 'analysis')));
+            DOMElements.soiHu_autoJarHuntBtn.addEventListener('click', () => useFeatureSoiHu('Tự Động Săn Hũ', CONFIG.energy.costs.soiHuJarHunt, handleAutoJarHunt));
             DOMElements.soiHu_startAnalysisBtn.addEventListener('click', showGameSelectionSoiHu);
-            DOMElements.soiHu_jarHuntBtn.addEventListener('click', () => useFeatureSoiHu('Săn Hũ', CONFIG.energy.costs.soiHuJarHunt, () => startSpecificScanSoiHu(soiHuConfigData.games[Math.floor(Math.random() * soiHuConfigData.games.length)], 'jarHunt')));
             DOMElements.soiHu_backToChoiceBtn.addEventListener('click', initSoiHu);
             DOMElements.soiHu_backToMenuFromGameSelectBtn.addEventListener('click', () => {
                 playSound('click');

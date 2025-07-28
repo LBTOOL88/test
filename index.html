@@ -7,7 +7,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@400;700&family=Fira+Code:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&family=Rajdhani:wght@400;700&family=Fira+Code:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     
     <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -38,13 +38,13 @@
             font-family: 'Rajdhani', sans-serif;
             color: var(--text-light);
             overflow: hidden;
-            background-color: transparent;
+            background-color: transparent; /* Body MUST be transparent */
             cursor: crosshair;
         }
         .hidden { display: none !important; }
 
         .background-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -10; /* Set to a very low z-index */
             transition: opacity 0.5s ease;
         }
         #youtube-player {
@@ -491,6 +491,83 @@
             to { width: 200%; height: 200%; opacity: 0; border: 2px solid transparent; }
         }
         @keyframes pulse-red { 50% { box-shadow: 0 0 15px var(--neon-red); } }
+        
+        /* --- STYLES for Soi Hu Tool --- */
+        #soiHuScreen {
+            --primary-color: #00ff7f; /* Green */
+            --vip-color: #ffc107; /* Gold for VIP */
+            --soi-hu-text-light: #f0f0f0;
+            --soi-hu-bg-dark-theme: #0d1117;
+            --soi-hu-container-bg: rgba(13, 17, 23, 0.75);
+            --soi-hu-input-bg: #161b22;
+            --soi-hu-border-color: rgba(0, 255, 127, 0.25);
+            --soi-hu-button-radius: 12px;
+            --soi-hu-container-radius: 16px;
+            --soi-hu-error-red: #ff4757;
+        }
+        #soiHuScreen {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: var(--soi-hu-bg-dark-theme);
+            color: var(--soi-hu-text-light);
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 25;
+            overflow-y: auto;
+        }
+        .orbitron-font { font-family: 'Orbitron', sans-serif; }
+        #soiHu-video-background { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; opacity: 0.6; }
+        #soiHu-video-background iframe { position: absolute; top: 50%; left: 50%; width: 100vw; height: 100vh; transform: translate(-50%, -50%); object-fit: cover; transition: opacity 0.7s ease-in-out; opacity: 0; pointer-events: none; }
+        #soiHu-video-background iframe.active { opacity: 1; }
+        .soiHu-page-container { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; min-height: 100vh; padding: 20px; box-sizing: border-box; }
+        .soiHu-main-content { position: relative; background: var(--soi-hu-container-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); max-width: 620px; border: 2px solid var(--soi-hu-border-color); border-radius: var(--soi-hu-container-radius); padding: 30px 40px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); animation: fadeInUp 0.8s ease-out; text-align: center; width: 100%; }
+        .soiHu-main-content.vip-mode { --soi-hu-border-color: rgba(255, 193, 7, 0.5); background: rgba(20, 15, 0, 0.75); }
+        .soiHu-header { width: 100%; background-color: rgba(13, 17, 23, 0.8); padding: 15px; text-align: center; border-bottom: 2px solid var(--soi-hu-border-color); backdrop-filter: blur(10px); box-sizing: border-box; margin-bottom: 20px; }
+        .soiHu-header h1 { font-size: 1.8em; margin: 0; }
+        .soiHu-intro-title, .soiHu-header h1, #soiHu_welcomeMessage { font-family: 'Orbitron', sans-serif; text-transform: uppercase; background: linear-gradient(90deg, var(--primary-color), #ff00c1, #ffb300, var(--primary-color)); background-size: 400%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: aurora-flow 8s linear infinite; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        #soiHu_aiChoiceContainer, #soiHu_scanningContainer, #soiHu_resultContainer, #soiHu_gameSelectionContainer { display: flex; flex-direction: column; gap: 20px; animation: fadeInUp 0.6s ease-out forwards; }
+        #soiHu_energy-display { grid-column: 1 / -1; background: rgba(0,0,0,0.3); border-radius: var(--soi-hu-button-radius); padding: 10px 15px; margin-bottom: 20px; border: 1px solid var(--soi-hu-border-color); display: flex; align-items: center; gap: 15px; }
+        #soiHu_energy-display .energy-icon { width: 30px; height: 30px; color: var(--vip-color); }
+        #soiHu_energy-display .energy-text { font-family: 'Orbitron', sans-serif; font-size: 1.2em; color: var(--soi-hu-text-light); flex-shrink: 0; }
+        #soiHu_energy-bar-wrapper { flex-grow: 1; height: 12px; background: rgba(0,0,0,0.5); border-radius: 6px; overflow: hidden; border: 1px solid #000; }
+        #soiHu_energy-bar { height: 100%; width: 100%; background: linear-gradient(90deg, var(--vip-color), #ffd700); border-radius: 6px; transition: width 0.5s ease-in-out; }
+        #soiHu_menuContainer { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; animation: fadeInUp 0.6s ease-out forwards; }
+        .soiHu-menu-btn { background: transparent; font-size: 1em; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; box-sizing: border-box; padding: 12px; border-radius: var(--soi-hu-button-radius); cursor: pointer; transition: all 0.3s ease-in-out; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100px; text-align: center; }
+        .soiHu-menu-btn svg { width: 32px; height: 32px; margin-bottom: 8px; transition: all 0.3s ease; flex-shrink: 0; }
+        .soiHu-menu-btn .menu-text { font-size: 0.85em; line-height: 1.2; }
+        .soiHu-menu-btn:hover svg { transform: scale(1.1); }
+        .menu-base .soiHu-menu-btn { color: var(--primary-color); border: 1px solid var(--soi-hu-border-color); }
+        .menu-base .soiHu-menu-btn:hover { background: var(--primary-color); color: var(--soi-hu-bg-dark-theme); transform: translateY(-5px); border-color: var(--primary-color); box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color); }
+        .menu-vip .soiHu-menu-btn { color: var(--vip-color); border: 1px solid var(--vip-color); }
+        .menu-vip .soiHu-menu-btn:hover { background: var(--vip-color); color: var(--soi-hu-bg-dark-theme); transform: translateY(-5px); border-color: var(--vip-color); box-shadow: 0 0 10px var(--vip-color), 0 0 20px var(--vip-color); }
+        #soiHu_backToChoiceBtn { grid-column: 1 / -1; flex-direction: row; background-color: transparent; border: 1px solid #6c757d; color: #6c757d; }
+        #soiHu_backToChoiceBtn:hover { background: #6c757d; color: var(--soi-hu-text-light); border-color: #6c757d; box-shadow: 0 0 10px #6c757d; }
+        #soiHu_backToChoiceBtn svg { width: 24px; height: 24px; margin-bottom: 0; margin-right: 10px; }
+        #soiHu_playWithAIBtn { grid-column: 1 / -1; border-width: 2px; animation: vip-chat-glow 3s linear infinite; }
+        .soiHu-choice-card { border: 2px solid var(--soi-hu-border-color); border-radius: var(--soi-hu-container-radius); padding: 25px; text-align: center; cursor: pointer; transition: all 0.3s ease-in-out; background: rgba(22, 27, 34, 0.8); backdrop-filter: blur(5px); }
+        .soiHu-choice-card:hover { transform: translateY(-5px); border-color: var(--primary-color); background: rgba(35, 42, 53, 0.9); }
+        #soiHu_choiceAILongBao4 { border: 2px solid; animation: vip-glow 6s linear infinite; }
+        #soiHu_choiceAILongBao4 h3 { background: linear-gradient(90deg, #00bfff, #ff00c1, #ffb300, #00bfff); background-size: 400%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: aurora-flow 6s linear infinite; }
+        #soiHu_choiceAILongBao4:hover { transform: translateY(-8px) scale(1.03); }
+        .soiHu-choice-card.disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+        .soiHu-choice-card h3 { margin-top: 0; font-size: 1.5em; }
+        #soiHu_loadingGif { max-width: 150px; margin: 15px auto; mix-blend-mode: screen; border-radius: 8px; }
+        #soiHu_resultContainer h2, #soiHu_scanningContainer h3, #soiHu_financeAllocatorContainer h3, #soiHu_gameSelectionContainer h3 { background: linear-gradient(90deg, var(--primary-color), #ff00c1, #ffb300, var(--primary-color)); background-size: 400%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: aurora-flow 8s linear infinite; }
+        .soiHu-result-stats { padding: 15px; margin-top: 15px; }
+        .soiHu-result-stats p strong { color: transparent; background: linear-gradient(90deg, var(--primary-color), #ffb300); -webkit-background-clip: text; background-clip: text; }
+        #soiHu_goldenTimeContainer { background: linear-gradient(45deg, #ffc107, #ff9800); color: var(--soi-hu-bg-dark-theme); padding: 15px; border-radius: var(--soi-hu-container-radius); margin-top: 20px; text-align: center; border: 2px solid #ffeb3b; box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); animation: pulse 2s infinite alternate; }
+        #soiHu_scanReasoning { font-style: italic; color: #f5a623; margin-top: 20px; font-size: 1.1em; }
+        #soiHu_game-list { max-height: 40vh; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .soiHu-game-btn { background: rgba(22, 27, 34, 0.8); border: 1px solid var(--soi-hu-border-color); color: var(--soi-hu-text-light); padding: 15px 10px; border-radius: var(--soi-hu-button-radius); cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9em; }
+        .soiHu-game-btn:hover { background: var(--primary-color); color: var(--soi-hu-bg-dark-theme); font-weight: bold; }
+        #soiHu_historyContent { max-height: 50vh; overflow-y: auto; text-align: left; }
+        .soiHu-history-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--primary-color); }
+        .soiHu-history-item p { margin: 5px 0; }
+        #soiHu_settingsBtn { position: absolute; top: 15px; right: 15px; font-size: 1.8em; cursor: pointer; transition: transform 0.3s ease; }
+        #soiHu_settingsBtn:hover { transform: rotate(90deg); }
+        #soiHu_dynamicDashboard { border: 1px solid var(--soi-hu-border-color); padding: 10px; margin-bottom: 20px; border-radius: var(--soi-hu-button-radius); display: flex; flex-wrap: wrap; justify-content: space-around; font-size: 0.8em; text-transform: uppercase; }
+        #soiHu_systemStatus::before { content: '●'; margin-right: 5px; color: var(--primary-color); animation: online-blink 2s infinite; }
+        .soiHu-action-button { padding: 14px 30px; background: linear-gradient(45deg, #f093fb, #f5576c); color: white; border: none; font-weight: bold; border-radius: var(--soi-hu-button-radius); margin-top: 25px; cursor: pointer; font-size: 1.1em; text-transform: uppercase; box-shadow: 0 4px 15px rgba(0,0,0, 0.2); transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .soiHu-action-button:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 20px rgba(245, 87, 108, 0.4); }
     </style>
 </head>
 <body>
@@ -667,6 +744,106 @@
         </div>
     </div>
 
+    <!-- Màn hình Lõi Soi Hũ (Tích hợp) -->
+    <div id="soiHuScreen" class="soiHu-page-container hidden">
+        <div id="soiHu-video-background">
+            <iframe id="soiHu-video-login" src="https://streamable.com/e/p75ki3?autoplay=1&mute=1&loop=1" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+            <iframe id="soiHu-video-ai-choice" src="https://streamable.com/e/d7r3dn?autoplay=1&mute=1&loop=1" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+            <iframe id="soiHu-video-menu" src="https://streamable.com/e/luj9cq?autoplay=1&mute=1&loop=1" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        </div>
+        <div class="soiHu-header">
+             <h1 class="orbitron-font">A.I LONG BẢO 88</h1>
+        </div>
+        <div class="soiHu-main-content" id="soiHu_mainContent">
+            <div id="soiHu_settingsBtn">⚙️</div>
+            <div id="soiHu_aiChoiceContainer">
+                <p id="soiHu_welcomeMessage"></p>
+                <div class="soiHu-choice-card" id="soiHu_choiceAILongBao"> <h3 class="orbitron-font">A.I LONG BẢO</h3> <p>Phiên bản cơ bản</p> </div>
+                <div class="soiHu-choice-card" id="soiHu_choiceAILongBao4"> <h3 class="orbitron-font">A.I LONG BẢO THẾ HỆ 4</h3> <p>Phiên bản nâng cao</p> </div>
+                <button class="soiHu-menu-btn orbitron-font" id="exitSoiHuBtn" style="margin-top: 15px; border-color: #6c757d; color: #6c757d;">Thoát Lõi</button>
+            </div>
+            
+            <div id="soiHu_menuContainer" class="hidden">
+                <div id="soiHu_dynamicDashboard" style="grid-column: 1 / -1;">
+                    <span>Trạng thái: <span id="soiHu_systemStatus"></span></span>
+                    <span>Ping: <span id="soiHu_networkPing"></span></span>
+                    <span>A.I: <span id="soiHu_activeAI"></span></span>
+                </div>
+                
+                <div id="soiHu_energy-display">
+                    <svg class="energy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"/><path d="M12 6c-2.757 0-5 2.243-5 5s2.243 5 5 5 5-2.243 5-5-2.243-5-5-5zm0 8c-1.654 0-3-1.346-3-3s1.346-3 3-3 3 1.346 3 3-1.346 3-3 3z"/></svg>
+                    <span class="energy-text">Năng Lượng: <span id="soiHu_energy-count">0</span></span>
+                    <div id="soiHu_energy-bar-wrapper"><div id="soiHu_energy-bar"></div></div>
+                </div>
+
+                <button class="soiHu-menu-btn orbitron-font" id="soiHu_playWithAIBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-4H6V6h12v2z"/></svg>
+                    <span class="menu-text">Chơi Cùng A.I</span>
+                </button>
+                <button class="soiHu-menu-btn orbitron-font" id="soiHu_jarHuntBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.49 2 2 6.49 2 12s4.49 10 10 10 10-4.49 10-10S17.51 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-12h2v4h-2zm0 6h2v2h-2z"/></svg>
+                    <span class="menu-text">Săn Hũ</span>
+                </button>
+                <button class="soiHu-menu-btn orbitron-font" id="soiHu_autoScanBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C7.03 3 3 7.03 3 12s4.03 9 9 9 9-4.03 9-9c0-4.97-4.03-9-9-9zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/><path d="M16.24 7.76C15.07 6.59 13.54 6 12 6v6l4.24 4.24c2.34-2.34 2.34-6.14 0-8.48z" opacity=".3"/></svg>
+                    <span class="menu-text">Tự Động Quét</span>
+                </button>
+                <button class="soiHu-menu-btn orbitron-font" id="soiHu_startAnalysisBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>
+                    <span class="menu-text">Phân Tích Game</span>
+                </button>
+                <button class="soiHu-menu-btn orbitron-font" id="soiHu_historyBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6a7 7 0 0 1 7-7 7 7 0 0 1 7 7 7 7 0 0 1-7 7v2a9 9 0 0 0 9-9c0-4.97-4.03-9-9-9z"/><path d="M12 8v5l4.25 2.52.75-1.23-3.5-2.07V8z"/></svg>
+                    <span class="menu-text">Lịch sử</span>
+                </button>
+                <button class="soiHu-menu-btn orbitron-font" id="soiHu_securityCheckBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                    <span class="menu-text">Bảo Mật</span>
+                </button>
+                <button class="soiHu-menu-btn orbitron-font" id="soiHu_capitalPreserveBtn">
+                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.9 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                    <span class="menu-text">Bảo Toàn Vốn</span>
+                </button>
+                <button class="soiHu-menu-btn orbitron-font" id="soiHu_backToChoiceBtn">
+                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                     <span class="menu-text">Quay Lại</span>
+                </button>
+            </div>
+
+            <div id="soiHu_gameSelectionContainer" class="hidden">
+                <h3 class="orbitron-font">CHỌN GAME ĐỂ PHÂN TÍCH</h3>
+                <div id="soiHu_game-list"></div>
+                <button class="soiHu-menu-btn orbitron-font" id="soiHu_backToMenuFromGameSelectBtn" style="margin-top: 20px;">Quay Lại Menu</button>
+            </div>
+            <div id="soiHu_scanningContainer" class="hidden">
+                <h3 class="orbitron-font" id="soiHu_scanTitle">ĐANG PHÂN TÍCH LỖ HỔNG...</h3>
+                <img src="" alt="Scanning..." id="soiHu_loadingGif">
+            </div>
+            <div id="soiHu_resultContainer" class="hidden">
+                <h2 class="orbitron-font" id="soiHu_gameName"></h2>
+                <img id="soiHu_gameImage" src="" alt="Game Image" style="width: 100%; max-width: 200px; margin: 15px auto; display: block; border-radius: 8px;">
+                <div id="soiHu_scanReasoning"></div>
+                <div class="soiHu-result-stats">
+                    <p><strong>TỈ LỆ THẮNG:</strong> <span id="soiHu_winRate"></span></p>
+                    <p><strong>SỐ VÒNG XOAY:</strong> <span id="soiHu_spinCount"></span></p>
+                    <p><strong>TỈ LỆ RƠI SCATTER:</strong> <span id="soiHu_scatterRate"></span></p>
+                </div>
+                <div id="soiHu_goldenTimeContainer">
+                    <h3 class="orbitron-font">🌟 KHUNG GIỜ VÀNG 🌟</h3>
+                    <span id="soiHu_goldenTime">Đang tính toán...</span>
+                </div>
+                <div id="soiHu_financeAllocatorContainer" class="hidden" style="margin-top: 25px; border-top: 2px solid var(--soi-hu-border-color); padding-top: 20px;">
+                    <h3 class="orbitron-font">TRỢ LÝ TÀI CHÍNH</h3>
+                    <p style="font-size: 0.9em; opacity: 0.8;">Nhập tổng vốn để nhận kế hoạch chi tiết.</p>
+                    <input type="number" id="soiHu_capitalInput" placeholder="Nhập vốn (ví dụ: 1000 = 1.000.000đ)" style="margin: 15px auto;">
+                    <button id="soiHu_calculateFinanceBtn" class="soiHu-action-button" style="padding: 10px 25px; font-size: 1em; margin-top: 10px;">Lên Kế Hoạch</button>
+                    <div id="soiHu_financeResult" style="margin-top: 20px; text-align: left; padding: 15px; background: rgba(0,0,0,0.25); border-radius: 8px; line-height: 1.8;"></div>
+                </div>
+                <button class="soiHu-menu-btn orbitron-font" id="soiHu_backToMenuBtn" style="margin-top: 25px;">Quay Lại Menu</button>
+            </div>
+        </div>
+    </div>
+    
     <!-- Modals -->
     <div id="aquarius-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>Kích hoạt Siêu Lõi Aquarius</h3><p>VUI LÒNG NHẬP MÃ KÍCH HOẠT AQUARIUS</p><input type="text" id="aquarius-code-input" placeholder="MÃ KÍCH HOẠT"><p id="aquarius-error" class="auth-error"></p><div class="modal-buttons"><button id="confirm-aquarius-code" class="btn-style">XÁC NHẬN NHẬP MÃ</button><a href="https://t.me/longbaoF168" target="_blank" id="contact-for-code" class="btn-style">LIÊN HỆ LONG BẢO</a></div></div></div>
     <div id="low-energy-modal" class="modal-overlay hidden"><div class="modal-content warning"><button class="close-modal-btn">X</button><h3>CẢNH BÁO NĂNG LƯỢNG THẤP</h3><p>LÕI A.I ĐANG HẾT NĂNG LƯỢNG - HÃY RÚT RA NẠP LẠI ĐỂ HỒI PHỤC LÕI</p><div class="modal-buttons"><button class="close-modal-btn btn-style" style="position: static;">ĐÃ HIỂU</button></div></div></div>
@@ -674,6 +851,11 @@
     
     <footer id="copyright">BẢN QUYỀN THUỘC VỀ LONG BẢO</footer>
     <a id="contact-link" href="https://t.me/longbaoF168" target="_blank"><span>LIÊN HỆ LONG BẢO</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M248,8C111.033,8,0,119.033,0,256S111.033,504,248,504,496,392.967,496,256,384.967,8,248,8ZM362.952,176.66c-3.732,39.215-19.881,134.378-28.1,178.3-3.476,18.584-10.322,24.816-16.948,25.425-14.4,1.326-25.338-9.517-39.287-18.661-21.827-14.308-34.158-23.215-55.346-37.177-24.485-16.135-8.612-25,5.342-39.5,3.652-3.793,67.2-61.756,68.973-66.107,2.174-5.327.34-8.28-2.063-10.423-2.403-2.143-5.48-1.922-8.262-.973l-73.22,47.052-37.424-11.948c-13.385-4.278-23.215-6.469-23.215-15.045,0-8.173,6.7-13.218,19.967-18.071,46.5-16.979,100.013-33.507,139.14-47.785,13.87-5.021,26.124,2.756,22.399,28.857Z"/></svg></a>
+
+    <audio id="soiHu_clickSound" src="https://www.myinstants.com/media/sounds/mouse-click.mp3" preload="auto"></audio>
+    <audio id="soiHu_scanSound" src="https://www.myinstants.com/media/sounds/modem-dial-up-4.mp3" loop preload="auto"></audio>
+    <audio id="soiHu_successSound" src="https://www.myinstants.com/media/sounds/correct-answer.mp3" preload="auto"></audio>
+    <audio id="soiHu_errorSound" src="https://www.myinstants.com/media/sounds/error_CD_dM99Fr1.mp3" preload="auto"></audio>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -774,6 +956,52 @@
             energyModalLB4: document.getElementById('energy-modal-lb4'),
             modalConfirmBtnLB4: document.getElementById('modal-confirm-btn-lb4'),
             shockwaveContainer: document.getElementById('shockwave-container'),
+
+            // --- Soi Hu Elements ---
+            soiHuScreen: document.getElementById('soiHuScreen'),
+            soiHu_mainContent: document.getElementById('soiHu_mainContent'),
+            soiHu_aiChoiceContainer: document.getElementById('soiHu_aiChoiceContainer'),
+            soiHu_menuContainer: document.getElementById('soiHu_menuContainer'),
+            soiHu_scanningContainer: document.getElementById('soiHu_scanningContainer'),
+            soiHu_resultContainer: document.getElementById('soiHu_resultContainer'),
+            soiHu_gameSelectionContainer: document.getElementById('soiHu_gameSelectionContainer'),
+            soiHu_videos: { login: document.getElementById('soiHu-video-login'), aiChoice: document.getElementById('soiHu-video-ai-choice'), menu: document.getElementById('soiHu-video-menu') },
+            soiHu_modals: { security: document.getElementById('securityCheckModal'), capital: document.getElementById('capitalWarningModal'), inactivity: document.getElementById('inactivityWarningModal'), history: document.getElementById('historyModal'), settings: document.getElementById('settingsModal') },
+            soiHu_sounds: { click: document.getElementById('soiHu_clickSound'), scan: document.getElementById('soiHu_scanSound'), success: document.getElementById('soiHu_successSound'), error: document.getElementById('soiHu_errorSound') },
+            exitSoiHuBtn: document.getElementById('exitSoiHuBtn'),
+            soiHu_welcomeMessage: document.getElementById('soiHu_welcomeMessage'),
+            soiHu_choiceAILongBao: document.getElementById('soiHu_choiceAILongBao'),
+            soiHu_choiceAILongBao4: document.getElementById('soiHu_choiceAILongBao4'),
+            soiHu_jarHuntBtn: document.getElementById('soiHu_jarHuntBtn'),
+            soiHu_playWithAIBtn: document.getElementById('soiHu_playWithAIBtn'),
+            soiHu_autoScanBtn: document.getElementById('soiHu_autoScanBtn'),
+            soiHu_startAnalysisBtn: document.getElementById('soiHu_startAnalysisBtn'),
+            soiHu_historyBtn: document.getElementById('soiHu_historyBtn'),
+            soiHu_securityCheckBtn: document.getElementById('soiHu_securityCheckBtn'),
+            soiHu_capitalPreserveBtn: document.getElementById('soiHu_capitalPreserveBtn'),
+            soiHu_backToChoiceBtn: document.getElementById('soiHu_backToChoiceBtn'),
+            soiHu_backToMenuBtn: document.getElementById('soiHu_backToMenuBtn'),
+            soiHu_backToMenuFromGameSelectBtn: document.getElementById('soiHu_backToMenuFromGameSelectBtn'),
+            soiHu_energyCount: document.getElementById('soiHu_energy-count'),
+            soiHu_energyBar: document.getElementById('soiHu_energy-bar'),
+            soiHu_gameList: document.getElementById('soiHu_game-list'),
+            soiHu_loadingGif: document.getElementById('soiHu_loadingGif'),
+            soiHu_scanTitle: document.getElementById('soiHu_scanTitle'),
+            soiHu_gameName: document.getElementById('soiHu_gameName'),
+            soiHu_gameImage: document.getElementById('soiHu_gameImage'),
+            soiHu_scanReasoning: document.getElementById('soiHu_scanReasoning'),
+            soiHu_winRate: document.getElementById('soiHu_winRate'),
+            soiHu_spinCount: document.getElementById('soiHu_spinCount'),
+            soiHu_scatterRate: document.getElementById('soiHu_scatterRate'),
+            soiHu_goldenTime: document.getElementById('soiHu_goldenTime'),
+            soiHu_financeAllocatorContainer: document.getElementById('soiHu_financeAllocatorContainer'),
+            soiHu_calculateFinanceBtn: document.getElementById('soiHu_calculateFinanceBtn'),
+            soiHu_financeResult: document.getElementById('soiHu_financeResult'),
+            soiHu_historyContent: document.getElementById('soiHu_historyContent'),
+            soiHu_closeHistoryModalBtn: document.getElementById('soiHu_closeHistoryModalBtn'),
+            soiHu_securityMessage: document.getElementById('soiHu_securityMessage'),
+            soiHu_closeSecurityModalBtn: document.getElementById('soiHu_closeSecurityModalBtn'),
+            soiHu_capitalInput: document.getElementById('soiHu_capitalInput'),
         };
 
         // --- BACKGROUND EFFECTS ---
@@ -975,6 +1203,7 @@
                 DOMElements.authScreen.classList.remove('hidden', 'fade-out');
                 DOMElements.aiCoreSelectionScreen.classList.add('hidden');
                 DOMElements.longbaoIVScreen.classList.add('hidden');
+                DOMElements.soiHuScreen.classList.add('hidden');
                 DOMElements.userInfoBar.classList.add('hidden');
                 startBootSequence();
             }
@@ -992,9 +1221,12 @@
             DOMElements.userEnergySpan.classList.toggle('low', energy < 30);
             DOMElements.userInfoBar.classList.toggle('low-energy', energy < 30);
             
-            // Update LongBao IV energy bar if it's active
+            // Update other tools' UI if active
             if (!DOMElements.longbaoIVScreen.classList.contains('hidden')) {
                 updateEnergyBarLB4();
+            }
+            if (!DOMElements.soiHuScreen.classList.contains('hidden')) {
+                updateEnergyDisplaySoiHu();
             }
 
             const isEnergyLow = energy < 30;
@@ -1024,7 +1256,7 @@
         let currentVisibleTable = null;
 
         const PREDICTION_INTERVAL = 25000;
-        const ENERGY_PER_ROUND = 5;
+        const ENERGY_PER_ROUND_LB4 = 5;
         const MAX_ENERGY = 100; // Used for percentage calculation
 
         const tableNames = [
@@ -1078,11 +1310,11 @@
                     tableState.nextUpdateTime = now + PREDICTION_INTERVAL;
 
                     if (tableName === currentVisibleTable) {
-                        if (currentUserData && currentUserData.energy >= ENERGY_PER_ROUND) {
-                            const newEnergy = currentUserData.energy - ENERGY_PER_ROUND;
+                        if (currentUserData && currentUserData.energy >= ENERGY_PER_ROUND_LB4) {
+                            const newEnergy = currentUserData.energy - ENERGY_PER_ROUND_LB4;
                             const userDocRef = doc(db, "users", auth.currentUser.uid);
                             await updateDoc(userDocRef, { energy: newEnergy });
-                            logActivity(`Sử dụng Lõi LongBao IV (-${ENERGY_PER_ROUND} năng lượng) tại bàn ${tableName}. Năng lượng còn lại: ${newEnergy}`);
+                            logActivity(`Sử dụng Lõi LongBao IV (-${ENERGY_PER_ROUND_LB4} năng lượng) tại bàn ${tableName}. Năng lượng còn lại: ${newEnergy}`);
                             
                             updateVisibleTableUI();
                         } else {
@@ -1398,6 +1630,259 @@
             window.addEventListener('resize', setupCanvas);
         }
 
+        // --- SOI HU TOOL INTEGRATED LOGIC ---
+        const soiHu_featureCosts = { autoScan: 2, startAnalysis: 2, securityCheck: 10, jarHunt: 10, playWithAI: 20 };
+        let soiHu_tawkToLoaded = false;
+        let soiHu_chosenAI = null;
+        let soiHu_scanHistory = [];
+        let soiHu_isSoundEnabled = true;
+        let soiHu_dashboardInterval;
+        const soiHu_gameData = [ { name: 'BA CON HEO NHỎ', image: 'https://i.ibb.co/Q3dYksdQ/BA-CON-HEO-NH.jpg' }, { name: 'BÃO KỊCH NGON NGỌT', image: 'https://i.ibb.co/h1XkFxcw/B-O-K-CH-NG-NG-T.jpg' }, { name: 'BÃO KIM TIỀN', image: 'https://i.ibb.co/KpXRkb4n/B-O-KIM-TI-N.jpg' }, { name: 'CUỒNG NỘ MÈO', image: 'https://i.ibb.co/jvnT8Qm1/CU-I-N-M.jpg' }, { name: 'THẦN TÀI GIÁ ĐÁO', image: 'https://i.ibb.co/jXvqdpd/default-4.jpg' }, { name: 'JOKER', image: 'https://i.ibb.co/21C53TfM/JOKER.jpg' }, { name: 'NỮ HOÀNG INCA', image: 'https://i.ibb.co/JRgCH2CC/N-HO-NG-INCA.jpg' }, { name: 'ALIBABA', image: 'https://i.ibb.co/6JJzg75v/ALIBABA.jpg' }, { name: 'BÓNG THÁCH ĐẤU 2', image: 'https://i.ibb.co/bjS6ztq7/B-O-TH-CH-2.jpg' }, { name: 'QUYỀN VƯƠNG', image: 'https://i.ibb.co/Y4Pky0NW/QUY-N-V-NG.jpg' }, { name: 'SIN CITY', image: 'https://i.ibb.co/FbLYFC28/SINCITY.jpg' }, { name: 'SUPER ACE', image: 'https://i.ibb.co/0z7rq0R/SUPER-ACE.jpg' }, { name: 'THÀNH PHỐ VÀNG', image: 'https://i.ibb.co/5XpkCZ9Z/TH-NH-PH-V-NG.jpg' }, { name: 'TRÂU HÚC', image: 'https://i.ibb.co/N5Dst5n/TR-U-H-C.jpg' }, { name: 'ĐƯỜNG MẠT CHƯỢC 2', image: 'https://i.ibb.co/9HzhpDSZ/NG-M-T-CH-C-2.jpg' }, { name: 'ĐƯỜNG MẠT CHƯỢT', image: 'https://i.ibb.co/CsvS9Jq7/NG-M-T-CH-T.jpg' }, { name: 'GANESHA VÀNG', image: 'https://i.ibb.co/tPKDFgXJ/GANESHA-V-NG.jpg' }, { name: 'KỲ LÂN MẠ VÀNG', image: 'https://i.ibb.co/S7srXvxc/K-L-N-M-CH-N-C.jpg' }, { name: 'KHO BÁU AZTEC', image: 'https://i.ibb.co/x8g4Yjb3/KHO-B-U-AZTEC.jpg' }, { name: 'MEDUSA 1: LỜI NGUYỀN ATHENA', image: 'https://i.ibb.co/DD4JSsQ1/MEDUSA-1-L-I-NGUY-N.jpg' }, { name: 'MEDUSA', image: 'https://i.ibb.co/cKvJ8hQf/MEDUSA.jpg' }, { name: 'NEKO MAY MẮN', image: 'https://i.ibb.co/RTjCsDvf/NEKO-MAY-M-N.jpg' }, { name: 'NỮ HOÀNG TIỀN THƯỞNG', image: 'https://i.ibb.co/fVxjh4rC/N-HO-NG-TI-N-TH-NG.jpg' }, { name: 'QUỶ TỬ CHIẾN TIỀN THƯỞNG', image: 'https://i.ibb.co/7Nx37ftx/QUY-T-CHI-N-TI-N-TH-NG.jpg' }, { name: 'THỎ MAY MẮN', image: 'https://i.ibb.co/RTXxqQP0/TH-MAY-M-N.jpg' }, { name: 'VUA KHỦNG LONG', image: 'https://i.ibb.co/gbTBKrjg/VUA-C-NG-LONG.jpg' }, { name: 'WILD OTTER', image: 'https://i.ibb.co/srLdPjG/WILD-O-T-C.jpg' }, { name: 'ZOMBIE BREAKER', image: 'https://i.ibb.co/wFnHkL3N/ZOMBIE-BREAKER.jpg' }, { name: 'LỄ HỘI BIA', image: 'https://i.ibb.co/8gwq7PmY/U-B-P-B-N.jpg' }, { name: 'KHU TIỀN MẶT 777', image: 'https://i.ibb.co/SD2Rgf31/KHU-TI-N-M-T-777.jpg' }, { name: 'NOEL BIG BANG', image: 'https://i.ibb.co/Z69fZ2qZ/NOEL-BIG-BANG.jpg' }, { name: 'NGÀY TẬN THẾ', image: 'https://i.ibb.co/Rk2tR28N/NG-Y-T-N-TH.jpg' }, { name: 'NHIỆM VỤ BERMUDA', image: 'https://i.ibb.co/DHG22BF5/NHI-M-V-BERMUDA.jpg' }, { name: 'RACING BULL', image: 'https://i.ibb.co/gbFw5MsH/RACING-BULL.jpg' }, { name: 'RISE OF SAMURAI 4', image: 'https://i.ibb.co/bg6TG5vp/RISE-OF-SAMURAI-4.jpg' }, { name: 'SUGAR RUSH 1000', image: 'https://i.ibb.co/ZjGNbk8/SUGAR-RUSH-1000.jpg' }, { name: 'TIK TAC TAKE', image: 'https://i.ibb.co/fYf5ZfD7/TIK-TAC-TAK.jpg' }, { name: 'VẬN MAY GIZA', image: 'https://i.ibb.co/qYyTgdMS/V-N-MAY-GIZA.jpg' } ];
+        
+        function playSoundSoiHu(soundName) { if (soiHu_isSoundEnabled) { try { if (DOMElements.soiHu_sounds[soundName]) { DOMElements.soiHu_sounds[soundName].currentTime = 0; DOMElements.soiHu_sounds[soundName].play(); } } catch(e) { /* ignore */ } } }
+        function stopSoundSoiHu(soundName) { try { if (DOMElements.soiHu_sounds[soundName]) { DOMElements.soiHu_sounds[soundName].pause(); DOMElements.soiHu_sounds[soundName].currentTime = 0; } } catch(e) { /* ignore */ } }
+        function setScreenVisibilitySoiHu(show, hide = []) { if (show) show.classList.remove('hidden'); hide.forEach(el => el.classList.add('hidden')); }
+        function switchViewSoiHu(show, hide = []) { setScreenVisibilitySoiHu(show, hide); playSoundSoiHu('click'); }
+        function updateVideoBackgroundSoiHu(activeVideo) { Object.values(DOMElements.soiHu_videos).forEach(video => video.classList.remove('active')); if (DOMElements.soiHu_videos[activeVideo]) DOMElements.soiHu_videos[activeVideo].classList.add('active'); }
+        
+        function updateEnergyDisplaySoiHu() {
+            if (!currentUserData) return;
+            DOMElements.soiHu_energyCount.textContent = currentUserData.energy;
+            const percentage = MAX_ENERGY > 0 ? (currentUserData.energy / MAX_ENERGY) * 100 : 0;
+            DOMElements.soiHu_energyBar.style.width = `${percentage}%`;
+        }
+
+        async function useFeatureSoiHu(featureName, action) {
+            playSoundSoiHu('click');
+            if (!currentUserData || !auth.currentUser) return;
+
+            const cost = soiHu_featureCosts[featureName];
+            if (currentUserData.energy >= cost) {
+                const newEnergy = currentUserData.energy - cost;
+                const userDocRef = doc(db, "users", auth.currentUser.uid);
+                try {
+                    await updateDoc(userDocRef, { energy: newEnergy });
+                    logActivity(`Sử dụng Lõi Soi Hũ (${featureName}), năng lượng còn lại: ${newEnergy}`);
+                    action();
+                } catch (error) {
+                    console.error("Lỗi khi cập nhật năng lượng:", error);
+                    showNotification("Lỗi kết nối, không thể sử dụng tính năng.", "error");
+                }
+            } else {
+                playSoundSoiHu('error');
+                showNotification(`Không đủ năng lượng! Cần ${cost}, bạn còn ${currentUserData.energy}.`, "error");
+            }
+        }
+
+        function selectAISoiHu(type) {
+            soiHu_chosenAI = type;
+            const jarHuntBtn = DOMElements.soiHu_jarHuntBtn;
+            const playWithAIBtn = DOMElements.soiHu_playWithAIBtn;
+            
+            if (type === 'gen4') {
+                DOMElements.soiHu_menuContainer.classList.add('menu-vip');
+                DOMElements.soiHu_menuContainer.classList.remove('menu-base');
+                DOMElements.soiHu_mainContent.classList.add('vip-mode');
+                jarHuntBtn.style.display = 'flex';
+                playWithAIBtn.style.display = 'flex';
+            } else { 
+                DOMElements.soiHu_menuContainer.classList.add('menu-base');
+                DOMElements.soiHu_menuContainer.classList.remove('menu-vip');
+                DOMElements.soiHu_mainContent.classList.remove('vip-mode');
+                jarHuntBtn.style.display = 'none';
+                playWithAIBtn.style.display = 'none';
+            }
+            
+            setScreenVisibilitySoiHu(DOMElements.soiHu_menuContainer, [DOMElements.soiHu_aiChoiceContainer]);
+            updateVideoBackgroundSoiHu('menu'); 
+            startDashboardSoiHu();
+        }
+
+        function startDashboardSoiHu() {
+            if(soiHu_dashboardInterval) clearInterval(soiHu_dashboardInterval);
+            const update = () => {
+                document.getElementById('soiHu_systemStatus').textContent = 'ONLINE';
+                document.getElementById('soiHu_networkPing').textContent = Math.floor(Math.random() * (70 - 20) + 20) + 'ms';
+                document.getElementById('soiHu_activeAI').textContent = soiHu_chosenAI === 'gen4' ? 'THẾ HỆ 4' : 'CƠ BẢN';
+            };
+            update();
+            soiHu_dashboardInterval = setInterval(update, 3000);
+        }
+
+        function showGameSelectionSoiHu() {
+            const gameList = DOMElements.soiHu_gameList;
+            gameList.innerHTML = '';
+            soiHu_gameData.forEach(game => {
+                const gameButton = document.createElement('button');
+                gameButton.className = 'soiHu-game-btn';
+                gameButton.textContent = game.name;
+                gameButton.onclick = () => { startSpecificScanSoiHu(game, 'analysis'); };
+                gameList.appendChild(gameButton);
+            });
+            switchViewSoiHu(DOMElements.soiHu_gameSelectionContainer, [DOMElements.soiHu_menuContainer]);
+        }
+
+        function startAutoScanSoiHu() {
+            const randomGame = soiHu_gameData[Math.floor(Math.random() * soiHu_gameData.length)];
+            startSpecificScanSoiHu(randomGame, 'analysis');
+        }
+        
+        function startJarHuntSoiHu() {
+            const randomGame = soiHu_gameData[Math.floor(Math.random() * soiHu_gameData.length)];
+            startSpecificScanSoiHu(randomGame, 'jarHunt');
+        }
+
+        function startSpecificScanSoiHu(game, mode) {
+            const loadingGif = DOMElements.soiHu_loadingGif;
+            const scanTitle = DOMElements.soiHu_scanTitle;
+            loadingGif.src = (soiHu_chosenAI === 'gen4') ? 'https://i.ibb.co/C30H2ZYr/Nft-Hacker-GIF-by-Cyber-Brokers.gif' : 'https://i.ibb.co/nsw6D7cw/Art-Animation-GIF-by-xponentialdesign.gif';
+            scanTitle.textContent = (mode === 'jarHunt') ? 'ĐANG QUÉT CÁC GAME CÓ HŨ LỚN...' : 'ĐANG PHÂN TÍCH LỖ HỔNG...';
+            setScreenVisibilitySoiHu(DOMElements.soiHu_scanningContainer, [DOMElements.soiHu_gameSelectionContainer, DOMElements.soiHu_resultContainer, DOMElements.soiHu_menuContainer]);
+            updateVideoBackgroundSoiHu('none');
+            playSoundSoiHu('scan');
+            setTimeout(() => showResultsSoiHu(game, mode), 4500);
+        }
+        
+        function showResultsSoiHu(selectedGame, mode) {
+            stopSoundSoiHu('scan');
+            playSoundSoiHu('success');
+            setScreenVisibilitySoiHu(DOMElements.soiHu_resultContainer, [DOMElements.soiHu_scanningContainer]);
+            
+            DOMElements.soiHu_gameName.textContent = selectedGame.name;
+            DOMElements.soiHu_gameImage.src = selectedGame.image;
+            const goldenTime = calculateGoldenTimeSoiHu();
+            DOMElements.soiHu_goldenTime.textContent = goldenTime;
+
+            let historyEntry = { game: selectedGame, goldenTime, timestamp: new Date() };
+
+            if (mode === 'jarHunt') {
+                DOMElements.soiHu_resultContainer.querySelector('.soiHu-result-stats').classList.add('hidden');
+                const reasoningEl = DOMElements.soiHu_scanReasoning;
+                const randomSessions = Math.floor(Math.random() * 2000000) + 500000;
+                reasoningEl.innerHTML = `Phân tích <strong>${randomSessions.toLocaleString('vi-VN')}</strong> phiên gần nhất cho thấy game <strong>${selectedGame.name}</strong> đang có tần suất trả thưởng cao bất thường. Đề xuất vào ngay!`;
+                reasoningEl.classList.remove('hidden');
+                historyEntry.type = 'Săn Hũ';
+            } else {
+                DOMElements.soiHu_resultContainer.querySelector('.soiHu-result-stats').classList.remove('hidden');
+                DOMElements.soiHu_scanReasoning.classList.add('hidden');
+                const winRate = (soiHu_chosenAI === 'gen4') ? (Math.random() * (98.5 - 85) + 85) : (Math.random() * (92.5 - 75) + 75);
+                const spinCount = Math.floor(Math.random() * (250 - 120 + 1)) + 120;
+                const scatterRate = (Math.random() * (90 - 50) + 50);
+                animateCountUp(DOMElements.soiHu_winRate, winRate, 2, '%');
+                animateCountUp(DOMElements.soiHu_spinCount, spinCount, 0, ' vòng');
+                animateCountUp(DOMElements.soiHu_scatterRate, scatterRate, 2, '%');
+                historyEntry.type = 'Phân tích';
+                historyEntry.winRate = winRate;
+            }
+
+            soiHu_scanHistory.unshift(historyEntry);
+            if (soiHu_scanHistory.length > 5) soiHu_scanHistory.pop();
+            
+            DOMElements.soiHu_financeAllocatorContainer.classList.remove('hidden');
+            DOMElements.soiHu_financeResult.innerHTML = "";
+            DOMElements.soiHu_capitalInput.value = "";
+        }
+        
+        function displayScanHistorySoiHu() {
+            const historyContent = DOMElements.soiHu_historyContent;
+            historyContent.innerHTML = '';
+            if (soiHu_scanHistory.length === 0) {
+                historyContent.innerHTML = '<p>Chưa có lịch sử quét.</p>';
+            } else {
+                soiHu_scanHistory.forEach(entry => {
+                    const item = document.createElement('div');
+                    item.className = 'soiHu-history-item';
+                    let details = `<p><strong>Game:</strong> ${entry.game.name}</p><p><strong>Loại:</strong> ${entry.type}</p>`;
+                    if(entry.winRate) details += `<p><strong>Tỉ lệ thắng:</strong> ${entry.winRate.toFixed(2)}%</p>`;
+                    details += `<p><strong>Khung giờ vàng:</strong> ${entry.goldenTime}</p><p><small>Thời gian: ${entry.timestamp.toLocaleString('vi-VN')}</small></p>`;
+                    item.innerHTML = details;
+                    historyContent.appendChild(item);
+                });
+            }
+            DOMElements.soiHu_modals.history.classList.remove('hidden');
+        }
+        
+        function runSecurityCheckSoiHu() {
+            const modal = DOMElements.soiHu_modals.security, messageEl = DOMElements.soiHu_securityMessage, closeBtn = DOMElements.soiHu_closeSecurityModalBtn;
+            messageEl.innerHTML = "";
+            closeBtn.classList.add('hidden');
+            modal.classList.remove('hidden');
+            playSoundSoiHu('scan');
+            const logMessages = [
+                "ĐANG PHÂN TÍCH TÀI KHOẢN...", "ĐANG KIỂM TRA LỊCH SỬ THẮNG...", "ĐANG KIỂM TRA IP HIỆN TẠI...",
+                "<span style='color:var(--soi-hu-error-red)'>PHÁT HIỆN THEO DÕI TỪ SẢNH GAME!</span>", "...................", "ĐANG XOÁ THEO DÕI...",
+                "ĐANG XOÁ IP CŨ...", "ĐANG THAY THẾ IP BẢO MẬT...", "ĐANG LÀM SẠCH BỘ NHỚ ĐỆM...",
+                "<strong style='color:var(--primary-color)'>TÀI KHOẢN ĐÃ ĐƯỢC LÀM SẠCH VÀ BẢO VỆ.</strong>", "<strong>BẢO MẬT KHÔI PHỤC 100%. CHÚC MAY MẮN!</strong>"
+            ];
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < logMessages.length) {
+                    messageEl.innerHTML += logMessages[i] + "<br>";
+                    messageEl.scrollTop = messageEl.scrollHeight;
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    stopSoundSoiHu('scan');
+                    playSoundSoiHu('success');
+                    closeBtn.classList.remove('hidden');
+                }
+            }, 900);
+        }
+        
+        function calculateAndDisplayFinanceSoiHu() {
+            const capitalInput = DOMElements.soiHu_capitalInput, resultDiv = DOMElements.soiHu_financeResult, rawValue = parseInt(capitalInput.value, 10);
+            if (isNaN(rawValue) || rawValue <= 0) { resultDiv.innerHTML = `<p style="color: var(--soi-hu-error-red);">Vui lòng nhập một số vốn hợp lệ.</p>`; return; }
+            const totalCapital = rawValue * 1000;
+            const exploreBet = (totalCapital * 0.01).toLocaleString('vi-VN');
+            const attackBet = (totalCapital * 0.025).toLocaleString('vi-VN');
+            const stopLoss = (totalCapital * 0.3).toLocaleString('vi-VN');
+            resultDiv.innerHTML = `
+                <p><strong>Tổng vốn:</strong> ${totalCapital.toLocaleString('vi-VN')} đ</p>
+                <p><strong>Giai đoạn 1 (Thăm dò):</strong> Cược <strong>${exploreBet} đ/vòng</strong> trong 15 vòng.</p>
+                <p><strong>Giai đoạn 2 (Tấn công):</strong> Nếu thắng lớn, tăng cược lên <strong>${attackBet} đ/vòng</strong>.</p>
+                <p><strong>Giai đoạn 3 (Bảo toàn):</strong> Nếu thua <strong>${stopLoss} đ</strong>, dừng lại và chạy lại Kiểm Tra Bảo Mật.</p>
+            `;
+        }
+        
+        function calculateGoldenTimeSoiHu() {
+            const now = new Date(), startOffset = Math.floor(Math.random() * 21) + 5, endTime = startOffset + (Math.floor(Math.random() * 6) + 10);
+            const startTime = new Date(now.getTime() + startOffset * 60000), finalEndTime = new Date(now.getTime() + endTime * 60000);
+            const formatTime = (date) => date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            return `${formatTime(startTime)} - ${formatTime(finalEndTime)}`;
+        }
+
+        function goBackToChoicesSoiHu() {
+            if(soiHu_dashboardInterval) clearInterval(soiHu_dashboardInterval);
+            switchViewSoiHu(DOMElements.soiHu_aiChoiceContainer, [DOMElements.soiHu_menuContainer]);
+            updateVideoBackgroundSoiHu('aiChoice');
+        }
+
+        function goBackToMenuSoiHu() { 
+            switchViewSoiHu(DOMElements.soiHu_menuContainer, [DOMElements.soiHu_resultContainer, DOMElements.soiHu_gameSelectionContainer]); 
+            updateVideoBackgroundSoiHu('menu'); 
+            startDashboardSoiHu(); 
+        }
+
+        function launchSoiHu() {
+            logActivity("Khởi chạy Lõi Tool Soi Hũ.");
+            DOMElements.aiCoreSelectionScreen.classList.add('hidden');
+            DOMElements.soiHuScreen.classList.remove('hidden');
+            initSoiHu();
+        }
+
+        function exitSoiHu() {
+            if(soiHu_dashboardInterval) clearInterval(soiHu_dashboardInterval);
+            DOMElements.soiHuScreen.classList.add('hidden');
+            DOMElements.aiCoreSelectionScreen.classList.remove('hidden');
+        }
+        
+        function initSoiHu() {
+            setScreenVisibilitySoiHu(DOMElements.soiHu_aiChoiceContainer, [DOMElements.soiHu_menuContainer, DOMElements.soiHu_scanningContainer, DOMElements.soiHu_resultContainer, DOMElements.soiHu_gameSelectionContainer]);
+            updateVideoBackgroundSoiHu('aiChoice');
+            DOMElements.soiHu_welcomeMessage.textContent = `CHÀO MỪNG, ${currentUserData?.username?.toUpperCase() || 'PILOT'}`;
+            updateEnergyDisplaySoiHu();
+        }
+
         // --- EVENT LISTENERS ---
         function setupEventListeners() {
             DOMElements.loginForm.addEventListener('submit', async (e) => {
@@ -1484,7 +1969,7 @@
                     playSound('open', 'G4');
                 }
                 else if (currentCoreIndex === 3) { // TOOL SOI HỦ
-                    showNotification("Tính năng sắp ra mắt!", "info");
+                    launchSoiHu();
                 }
             });
 
@@ -1544,8 +2029,6 @@
                     if (target === 'profile-log') fetchActivityLog();
                 });
             });
-
-            // Profile save and password change logic would go here...
             
             document.querySelectorAll('.close-modal-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -1575,6 +2058,22 @@
                     startToolForTableLB4(tableName);
                 }
             });
+
+            // --- Soi Hu Event Listeners ---
+            DOMElements.exitSoiHuBtn.addEventListener('click', exitSoiHu);
+            DOMElements.soiHu_choiceAILongBao.addEventListener('click', () => selectAISoiHu('base'));
+            DOMElements.soiHu_choiceAILongBao4.addEventListener('click', () => selectAISoiHu('gen4'));
+            DOMElements.soiHu_autoScanBtn.addEventListener('click', () => useFeatureSoiHu('autoScan', startAutoScanSoiHu));
+            DOMElements.soiHu_startAnalysisBtn.addEventListener('click', () => useFeatureSoiHu('startAnalysis', showGameSelectionSoiHu));
+            DOMElements.soiHu_jarHuntBtn.addEventListener('click', () => useFeatureSoiHu('jarHunt', startJarHuntSoiHu));
+            DOMElements.soiHu_securityCheckBtn.addEventListener('click', () => useFeatureSoiHu('securityCheck', runSecurityCheckSoiHu));
+            DOMElements.soiHu_historyBtn.addEventListener('click', () => { playSoundSoiHu('click'); displayScanHistorySoiHu(); });
+            DOMElements.soiHu_backToChoiceBtn.addEventListener('click', goBackToChoicesSoiHu);
+            DOMElements.soiHu_backToMenuBtn.addEventListener('click', goBackToMenuSoiHu);
+            DOMElements.soiHu_backToMenuFromGameSelectBtn.addEventListener('click', goBackToMenuSoiHu);
+            DOMElements.soiHu_calculateFinanceBtn.addEventListener('click', () => { playSoundSoiHu('click'); calculateAndDisplayFinanceSoiHu(); });
+            DOMElements.soiHu_closeHistoryModalBtn.addEventListener('click', () => DOMElements.soiHu_modals.history.classList.add('hidden'));
+            DOMElements.soiHu_closeSecurityModalBtn.addEventListener('click', () => { DOMElements.soiHu_modals.security.classList.add('hidden'); stopSoundSoiHu('scan'); });
         }
 
         // --- INITIALIZATION ---
@@ -1586,5 +2085,47 @@
 
         init();
     </script>
+
+<script>
+    const canvas = document.getElementById("matrix-bg");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const letters = "アイウエオカキクケコサシスセソタチツテトナニヌネノ";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = [];
+
+    for (let x = 0; x < columns; x++) drops[x] = 1;
+
+    function draw() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "#00ff00";
+        ctx.font = fontSize + "px monospace";
+
+        for (let i = 0; i < drops.length; i++) {
+            const text = letters.charAt(Math.floor(Math.random() * letters.length));
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+
+            drops[i]++;
+        }
+    }
+
+    setInterval(draw, 33);
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+</script>
+
 </body>
 </html>

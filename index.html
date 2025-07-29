@@ -11,8 +11,6 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
-    <!-- Thêm thư viện Three.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <style>
         /* --- CORE STYLES --- */
@@ -96,15 +94,14 @@
         .f168-banner { display: block; text-decoration: none; color: var(--error-red); font-weight: 700; margin-top: 15px; padding: 10px; border: 1px solid var(--error-red); text-shadow: 0 0 5px var(--error-red); font-size: 0.9em; line-height: 1.4; cursor: pointer; transition: all 0.2s ease; animation: boot-up 0.6s ease-out forwards, warning-blink 1.2s infinite 0.6s; }
         .f168-banner:hover { background-color: rgba(255, 60, 60, 0.5); color: var(--text-light); text-shadow: 0 0 10px var(--text-light); animation-play-state: paused; }
 
-        /* --- MÀN HÌNH CHỌN LÕI A.I (FIXED LAYOUT & 3D) --- */
+        /* --- MÀN HÌNH CHỌN LÕI A.I (FIXED LAYOUT) --- */
         #aiCoreSelectionScreen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between; /* NEW: Space out elements vertically */
-            gap: 10px;
-            padding: 70px 15px 15px 15px; /* Adjusted padding */
+            gap: 15px; /* Spacing between elements */
+            padding: 80px 15px 150px 15px;
             box-sizing: border-box;
             opacity: 0;
             transition: opacity 0.5s ease;
@@ -124,95 +121,29 @@
         .control-btn svg { width: 16px; height: 16px; fill: currentColor; }
         
         .title-vip {
-            font-size: 1.8em !important; /* Adjusted font size */
+            font-size: 2em !important;
             font-weight: 700;
             background: linear-gradient(90deg, var(--gold), var(--cyan), #ff00c1, var(--gold));
             background-size: 400%;
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: aurora-flow-vip 5s linear infinite, text-flicker-subtle 4s linear infinite; /* NEW: Added flicker animation */
-            text-shadow: 0 0 8px rgba(255, 215, 0, 0.8), 0 0 18px rgba(0, 255, 255, 0.7), 0 0 35px rgba(255, 0, 193, 0.6), 0 0 50px rgba(255, 255, 255, 0.2); /* NEW: Enhanced text shadow */
-            margin: 0;
-            flex-shrink: 0;
-        }
-        
-        #core-selector-3d-container {
-            width: 100%;
-            flex-grow: 1; /* NEW: Allow this to take up available space */
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 250px; /* Ensure it has a minimum height */
-        }
-        #core-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            cursor: grab;
-        }
-        #core-canvas:active {
-            cursor: grabbing;
-        }
-        .core-gif-background {
-            position: absolute;
-            width: 80%; /* Adjust size as needed */
-            max-width: 280px;
-            aspect-ratio: 4 / 3;
-            pointer-events: none;
-            border: 2px solid var(--border-color);
-            box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2), 0 0 15px var(--border-color);
-            background-color: var(--container-bg);
-            transition: opacity 0.4s ease;
-        }
-        .core-gif-background iframe {
-            width: 100%;
-            height: 100%;
-            border: 0;
-            pointer-events: none; /* FIX: Prevent iframe from capturing clicks */
+            animation: aurora-flow-vip 5s linear infinite;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.8), 0 0 15px rgba(0, 255, 255, 0.6), 0 0 30px rgba(255, 0, 193, 0.5);
         }
 
-        #core-info-display {
-            position: absolute;
-            bottom: 0;
-            left: 5%;
-            right: 5%;
-            text-align: center;
-            padding: 10px;
-            background: rgba(0,0,0,0.3);
-            backdrop-filter: blur(2px);
-            border-radius: 8px;
-            pointer-events: none;
-        }
-        #core-info-display h3 {
-            color: var(--yellow);
-            font-size: 1.2em;
-            margin: 0 0 5px 0;
-        }
-        #core-info-display p {
-            font-size: 0.85em;
-            color: var(--text-light);
-            line-height: 1.4;
-            opacity: 0.9;
-            margin: 0;
-        }
-        #swipe-instruction {
-            color: var(--cyan);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9em;
-            text-shadow: 0 0 8px var(--cyan);
-            animation: pulse-glow 2s infinite alternate;
-            margin: 10px 0;
-            flex-shrink: 0;
-        }
-        
-        #promo-banner { 
-            width: 100%; max-width: 400px; padding: 10px; background: rgba(255, 215, 0, 0.1); border: 1px solid var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; animation: promo-glow 2s infinite alternate; 
-            flex-shrink: 0; /* Prevent banner from shrinking */
-        }
+        #core-selector { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 400px; margin-bottom: 15px; } /* Added margin-bottom */
+        .core-nav-btn { background: transparent; border: 2px solid var(--cyan); color: var(--cyan); font-size: 2em; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; line-height: 1; padding: 0; border-radius: 50%; text-shadow: 0 0 8px var(--cyan); flex-shrink: 0; }
+        .core-nav-btn:hover { background: var(--cyan); color: var(--dark-blue); }
+        #core-options-container { width: calc(100% - 100px); height: 350px; position: relative; overflow: hidden; margin: 0 10px; }
+        .core-option { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--container-bg); border: 2px solid var(--border-color); box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2), 0 0 15px var(--border-color); padding: 15px; text-align: center; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); transition: transform 0.5s ease, opacity 0.5s ease, box-shadow 0.3s ease; opacity: 0; transform: scale(0.9); display: none; box-sizing: border-box; }
+        .core-option.active { opacity: 1; transform: scale(1); z-index: 2; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; }
+        .core-option.active:hover { transform: scale(1.02); box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2), 0 0 25px var(--yellow); }
+        .core-option h3 { color: var(--yellow); font-size: 1.2em; margin: 0 0 10px 0; flex-shrink: 0; }
+        .gif-container { width: 100%; padding-bottom: 75%; height: 0; position: relative; background-color: rgba(0,0,0,0.3); border: 1px solid var(--border-color); margin-bottom: 10px; flex-shrink: 0; }
+        .gif-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; border: 0; }
+        .core-description { font-size: 0.85em; color: var(--text-light); line-height: 1.4; opacity: 0.9; font-weight: 400; text-align: center; margin: 0; }
+        #promo-banner { width: 100%; max-width: 400px; padding: 10px; background: rgba(255, 215, 0, 0.1); border: 1px solid var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; animation: promo-glow 2s infinite alternate; }
         #promo-text { color: var(--gold); text-decoration: none; font-weight: 700; font-size: 0.8em; text-align: left; flex-grow: 1; text-shadow: 0 0 5px var(--gold); }
         #promo-spinner-link { flex-shrink: 0; margin-left: 10px; }
         #promo-spinner { width: 40px; height: 40px; cursor: pointer; }
@@ -469,16 +400,6 @@
         @keyframes promo-glow { from { box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); } to { box-shadow: 0 0 25px rgba(255, 215, 0, 0.8), inset 0 0 10px rgba(255, 215, 0, 0.3); } }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes text-flicker { 0% { opacity: 0.1; } 2% { opacity: 1; } 8% { opacity: 0.1; } 9% { opacity: 1; } 12% { opacity: 0.2; } 20% { opacity: 1; } 25% { opacity: 0.3; } 30% { opacity: 1; } 70% { opacity: 0.7; } 72% { opacity: 0.2; } 77% { opacity: .9; } 100% { opacity: .9; } }
-        @keyframes text-flicker-subtle {
-            0% { opacity: 1; text-shadow: 0 0 8px rgba(255, 215, 0, 0.8), 0 0 18px rgba(0, 255, 255, 0.7), 0 0 35px rgba(255, 0, 193, 0.6); }
-            2% { opacity: 0.8; text-shadow: 0 0 10px rgba(255, 215, 0, 0.6), 0 0 20px rgba(0, 255, 255, 0.5); }
-            8% { opacity: 1; text-shadow: 0 0 8px rgba(255, 215, 0, 0.8), 0 0 18px rgba(0, 255, 255, 0.7), 0 0 35px rgba(255, 0, 193, 0.6); }
-            9% { opacity: 0.5; text-shadow: none; }
-            12% { opacity: 1; text-shadow: 0 0 8px rgba(255, 215, 0, 0.8), 0 0 18px rgba(0, 255, 255, 0.7), 0 0 35px rgba(255, 0, 193, 0.6); }
-            20% { opacity: 1; } 25% { opacity: 0.6; } 30% { opacity: 1; }
-            70% { opacity: 1; } 72% { opacity: 0.7; } 77% { opacity: 1; }
-            100% { opacity: 1; }
-        }
         @keyframes slideIn { from { transform: translateX(110%); } to { transform: translateX(0); } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateX(110%); } }
         @keyframes screen-fade-in { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
@@ -498,15 +419,13 @@
         @keyframes pulse-glow {
             0% {
                 box-shadow: 0 0 5px var(--cyan), 0 0 10px var(--cyan);
-                text-shadow: 0 0 8px var(--cyan);
             }
             50% {
                 box-shadow: 0 0 20px var(--yellow), 0 0 30px var(--yellow);
-                text-shadow: 0 0 15px var(--yellow);
+                background-color: var(--yellow);
             }
             100% {
                 box-shadow: 0 0 5px var(--cyan), 0 0 10px var(--cyan);
-                text-shadow: 0 0 8px var(--cyan);
             }
         }
         @keyframes bubble-fade-in {
@@ -527,14 +446,13 @@
                 font-size: 1.5em;
             }
             #aiCoreSelectionScreen {
-                padding-top: 65px;
-                padding-bottom: 10px;
-                gap: 5px;
+                padding: 70px 15px 160px 15px;
+                gap: 10px;
             }
-            .title-vip {
-                font-size: 1.6em !important;
+            #core-options-container {
+                height: 330px;
             }
-            #swipe-instruction {
+            .core-description {
                 font-size: 0.8em;
             }
             #chat-window-container {
@@ -542,20 +460,6 @@
             }
             #main-footer {
                 font-size: 0.9em; /* Make footer text slightly smaller if needed */
-            }
-        }
-         @media (max-height: 700px) {
-            .title-vip {
-                margin-top: 0;
-                margin-bottom: 5px;
-            }
-            #core-selector-3d-container {
-                min-height: 200px;
-            }
-            #core-info-display {
-                position: relative;
-                bottom: auto;
-                margin-top: 10px;
             }
         }
     </style>
@@ -610,19 +514,13 @@
             </div>
         </div>
         <h1 data-text="CHỌN LÕI A.I" class="title-vip"></h1>
-        
-        <!-- 3D Core Selector -->
-        <div id="core-selector-3d-container">
-            <canvas id="core-canvas"></canvas>
-            <!-- GIF backgrounds will be appended here by JS -->
-            <div id="core-info-display">
-                <h3 id="core-name-display"></h3>
-                <p id="core-desc-display"></p>
-            </div>
+        <div id="core-selector">
+            <button id="prev-core-btn" class="core-nav-btn" aria-label="Lõi trước"><</button>
+            <div id="core-options-container">
+                </div>
+            <button id="next-core-btn" class="core-nav-btn" aria-label="Lõi tiếp theo">></button>
         </div>
-        
-        <p id="swipe-instruction">VUỐT ĐỂ CHỌN - CHẠM ĐỂ KÍCH HOẠT</p>
-
+        <!-- Removed activation button -->
         <div id="promo-banner">
             <a href="https://www.f168a2.net/home/register?id=409098214&currency=VND" target="_blank" id="promo-text">ĐĂNG KÍ NẠP ĐẦU 8888K - TẶNG VÒNG XOAY MAY MẮN</a>
             <a href="https://vongxoaylongbao.site/" target="_blank" id="promo-spinner-link"><svg id="promo-spinner" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color: #fcee0a; stop-opacity: 1" /><stop offset="100%" style="stop-color: #ffd700; stop-opacity: 1" /></linearGradient></defs><g class="spinner-wheel"><circle cx="50" cy="50" r="25" fill="transparent" stroke="#E74C3C" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(-90 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#F1C40F" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(-30 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#2ECC71" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(30 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#3498DB" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(90 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#9B59B6" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(150 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#1ABC9C" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(210 50 50)"/></g><circle cx="50" cy="50" r="48" fill="none" stroke="url(#gold-gradient)" stroke-width="4"/><path d="M50,0 L45,15 L55,15 Z" fill="var(--gold)" stroke="var(--dark-blue)" stroke-width="1" /><circle cx="50" cy="50" r="12" fill="var(--dark-blue)" stroke="var(--gold)" stroke-width="2"/><circle cx="50" cy="50" r="8" fill="var(--gold)"/></svg></a>
@@ -710,7 +608,7 @@
         
         <div id="energy-modal-lb4" class="hidden fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 screen">
             <div class="box-panel p-6 text-center max-w-sm w-full border-2 border-[var(--neon-red)] shadow-lg shadow-[var(--neon-red)]/30">
-                <h2 class="text-2xl font-bold text-[var(--neon-red)]">HẾT NĂNG LƯỢỢNG</h2>
+                <h2 class="text-2xl font-bold text-[var(--neon-red)]">HẾT NĂNG LƯỢNG</h2>
                 <p class="my-4 text-gray-300">ĐÃ HẾT NĂNG LƯỢNG VUI LÒNG RÚT RA NẠP LẠI HOẶC LIÊN HỆ TELE @LONGBAOF168</p>
                 <button id="modal-confirm-btn-lb4" class="bg-[var(--neon-green)] text-black font-bold py-2 px-8 rounded-md hover:bg-white transition-colors">XÁC NHẬN</button>
             </div>
@@ -902,10 +800,9 @@
             loginUsernameInput: document.getElementById('login-username'),
             loginPasswordInput: document.getElementById('login-password'),
             loginBtn: document.getElementById('loginBtn'),
-            coreSelector3DContainer: document.getElementById('core-selector-3d-container'),
-            coreCanvas: document.getElementById('core-canvas'),
-            coreNameDisplay: document.getElementById('core-name-display'),
-            coreDescDisplay: document.getElementById('core-desc-display'),
+            coreOptionsContainer: document.getElementById('core-options-container'),
+            prevCoreBtn: document.getElementById('prev-core-btn'),
+            nextCoreBtn: document.getElementById('next-core-btn'),
             userInfoBar: document.getElementById('user-info-bar'),
             userPilotSpan: document.getElementById('user-pilot'),
             userEnergySpan: document.getElementById('user-energy'),
@@ -1014,6 +911,7 @@
         const decodeText = (element) => {
             const originalText = element.dataset.text;
             if (!originalText) { return; }
+            // Don't decode the VIP title, it has its own animation
             if (element.classList.contains('title-vip')) {
                 element.textContent = originalText;
                 return;
@@ -1213,6 +1111,8 @@
         }
 
         // --- MAIN APP LOGIC ---
+        let currentCoreIndex = 0;
+
         function updateUIWithUserData(userData) {
             const energy = userData.energy || 0;
             DOMElements.userPilotSpan.textContent = `PILOT: ${userData.username.toUpperCase()}`;
@@ -1235,30 +1135,58 @@
             wasEnergyLow = isEnergyLow;
         }
 
-        function handleActivateCore(coreIndex) {
-            const selectedCore = CONFIG.ai_cores[coreIndex];
-            playSound('confirm');
-            showCoreLoadingAnimation(selectedCore, () => {
-                switch (selectedCore.id) {
-                    case 'longbao_iv':
-                        launchLongBaoIV();
-                        break;
-                    case 'yian':
-                    case 'aquarius':
-                        window.open(selectedCore.externalUrl, '_blank');
-                        break;
-                    case 'soi_hu':
-                        launchSoiHu();
-                        break;
-                }
+        function renderAICores() {
+            DOMElements.coreOptionsContainer.innerHTML = '';
+            CONFIG.ai_cores.forEach((core, index) => {
+                const coreEl = document.createElement('div');
+                coreEl.className = 'core-option';
+                coreEl.innerHTML = `
+                    <h3>${core.name}</h3>
+                    <div class="gif-container"><iframe src="${core.gif}" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div>
+                    <p class="core-description">${core.description}</p>
+                `;
+                
+                // Add click listener to the entire core card
+                coreEl.addEventListener('click', () => {
+                    // Only activate if this is the currently selected core
+                    if (index === currentCoreIndex) {
+                        playSound('confirm');
+                        showCoreLoadingAnimation();
+                    }
+                });
+
+                DOMElements.coreOptionsContainer.appendChild(coreEl);
             });
+            showCore(currentCoreIndex);
         }
-        
-        function showCoreLoadingAnimation(core, onComplete) {
+
+        function showCore(index) {
+            const coreOptions = document.querySelectorAll('.core-option');
+            coreOptions.forEach((o, i) => o.classList.toggle('active', i === index));
+        }
+
+        function handleActivateCore() {
+            const selectedCore = CONFIG.ai_cores[currentCoreIndex];
+            switch (selectedCore.id) {
+                case 'longbao_iv':
+                    launchLongBaoIV();
+                    break;
+                case 'yian':
+                    window.open(selectedCore.externalUrl, '_blank');
+                    break;
+                case 'aquarius':
+                    window.open(selectedCore.externalUrl, '_blank');
+                    break;
+                case 'soi_hu':
+                    launchSoiHu();
+                    break;
+            }
+        }
+
+        function showCoreLoadingAnimation() {
             const modal = DOMElements.coreLoadingModal;
             const bar = DOMElements.loadingProgressBar;
             const text = DOMElements.loadingPercentage;
-            DOMElements.loadingStatusText.textContent = `ĐANG NẠP LÕI ${core.name.toUpperCase()}...`;
             
             modal.classList.remove('hidden');
             let percentage = 0;
@@ -1273,7 +1201,9 @@
                     DOMElements.loadingStatusText.textContent = "NẠP LÕI THÀNH CÔNG!";
                     setTimeout(() => {
                         modal.classList.add('hidden');
-                        onComplete();
+                        // Finally, activate the core
+                        handleActivateCore();
+                        // Reset for next time after a delay to allow the core to launch
                         setTimeout(() => {
                            bar.style.width = '0%';
                            text.textContent = '0%';
@@ -1281,185 +1211,8 @@
                         }, 500);
                     }, 1000);
                 }
-            }, 30);
+            }, 30); // 30ms * 100 = 3 seconds total load time
         }
-
-        // --- 3D CORE CAROUSEL LOGIC ---
-        let scene, camera, renderer, coreGroup, raycaster, mouse;
-        let gifBackgrounds = [];
-        let isDragging = false, previousMousePosition = { x: 0, y: 0 };
-        let targetRotation = 0, currentRotation = 0;
-        const rotationSpeed = 0.05;
-        let activeCoreIndex = 0;
-
-        function initThreeJSCarousel() {
-            const container = DOMElements.coreSelector3DContainer;
-            if (!container || renderer) return; // Prevent re-initialization
-
-            // 1. Scene setup
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.z = 5;
-
-            renderer = new THREE.WebGLRenderer({ canvas: DOMElements.coreCanvas, alpha: true, antialias: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-
-            coreGroup = new THREE.Group();
-            scene.add(coreGroup);
-
-            // 2. Create GIF background elements
-            const existingGifs = container.querySelectorAll('.core-gif-background');
-            existingGifs.forEach(gif => gif.remove()); // Clear old gifs if any
-            
-            CONFIG.ai_cores.forEach((core, index) => {
-                const gifEl = document.createElement('div');
-                gifEl.className = 'core-gif-background hidden';
-                gifEl.innerHTML = `<iframe src="${core.gif}" frameborder="0" allowfullscreen></iframe>`;
-                container.appendChild(gifEl);
-                gifBackgrounds[index] = gifEl;
-            });
-
-            // 3. Create 3D planes
-            const planeSize = 3;
-            const radius = 4;
-            const angleStep = (Math.PI * 2) / CONFIG.ai_cores.length;
-
-            CONFIG.ai_cores.forEach((core, i) => {
-                const geometry = new THREE.PlaneGeometry(planeSize, planeSize * 0.75); // 4:3 aspect ratio
-                const material = new THREE.MeshBasicMaterial({
-                    color: 0x00ffff,
-                    wireframe: true,
-                    transparent: true,
-                    opacity: 0.3
-                });
-                const plane = new THREE.Mesh(geometry, material);
-                
-                const angle = i * angleStep;
-                plane.position.x = Math.sin(angle) * radius;
-                plane.position.z = -Math.cos(angle) * radius;
-                plane.lookAt(camera.position);
-
-                plane.userData = { index: i, core: core };
-                coreGroup.add(plane);
-            });
-            
-            // 4. Raycaster for clicks
-            raycaster = new THREE.Raycaster();
-            mouse = new THREE.Vector2();
-
-            // 5. Event Listeners
-            addCarouselEventListeners();
-            window.addEventListener('resize', onWindowResize, false);
-
-            // 6. Initial state & Animation
-            updateActiveCoreVisuals();
-            animateCarousel();
-        }
-
-        function onWindowResize() {
-            const container = DOMElements.coreSelector3DContainer;
-            if (!container || !renderer) return;
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        }
-
-        function animateCarousel() {
-            requestAnimationFrame(animateCarousel);
-            // Smooth rotation
-            currentRotation += (targetRotation - currentRotation) * rotationSpeed;
-            coreGroup.rotation.y = currentRotation;
-            renderer.render(scene, camera);
-        }
-
-        function addCarouselEventListeners() {
-            const canvas = DOMElements.coreCanvas;
-            canvas.addEventListener('mousedown', onDragStart);
-            canvas.addEventListener('mousemove', onDragMove);
-            canvas.addEventListener('mouseup', onDragEnd);
-            canvas.addEventListener('mouseleave', onDragEnd);
-
-            canvas.addEventListener('touchstart', onDragStart, { passive: false });
-            canvas.addEventListener('touchmove', onDragMove, { passive: false });
-            canvas.addEventListener('touchend', onDragEnd);
-            
-            canvas.addEventListener('click', onCanvasClick);
-        }
-        
-        function onDragStart(event) {
-            isDragging = true;
-            const x = event.touches ? event.touches[0].clientX : event.clientX;
-            previousMousePosition = { x: x };
-            DOMElements.coreCanvas.style.cursor = 'grabbing';
-        }
-
-        function onDragMove(event) {
-            if (!isDragging) return;
-            event.preventDefault();
-            const x = event.touches ? event.touches[0].clientX : event.clientX;
-            const deltaMove = { x: x - previousMousePosition.x };
-            
-            targetRotation -= deltaMove.x * 0.005; // Adjust sensitivity
-
-            previousMousePosition = { x: x };
-        }
-
-        function onDragEnd() {
-            if (!isDragging) return;
-            isDragging = false;
-            DOMElements.coreCanvas.style.cursor = 'grab';
-
-            // Snap to the nearest item
-            const angleStep = (Math.PI * 2) / CONFIG.ai_cores.length;
-            const closestIndex = Math.round(targetRotation / angleStep);
-            targetRotation = closestIndex * angleStep;
-            
-            activeCoreIndex = ((-closestIndex % CONFIG.ai_cores.length) + CONFIG.ai_cores.length) % CONFIG.ai_cores.length;
-            
-            playSound('navigate', activeCoreIndex % 2 === 0 ? 'C4' : 'E4');
-            updateActiveCoreVisuals();
-        }
-
-        function onCanvasClick(event) {
-            // Prevent click firing after a drag by checking if the mouse moved significantly
-            const x = event.clientX;
-            const movedDistance = Math.abs(x - previousMousePosition.x);
-            if (isDragging && movedDistance > 5) { // Threshold to differentiate drag from click
-                return;
-            }
-
-            const rect = renderer.domElement.getBoundingClientRect();
-            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(coreGroup.children);
-
-            if (intersects.length > 0) {
-                const clickedIndex = intersects[0].object.userData.index;
-                if (clickedIndex === activeCoreIndex) {
-                    handleActivateCore(activeCoreIndex);
-                }
-            }
-        }
-
-        function updateActiveCoreVisuals() {
-            const core = CONFIG.ai_cores[activeCoreIndex];
-            DOMElements.coreNameDisplay.textContent = core.name;
-            DOMElements.coreDescDisplay.textContent = core.description;
-
-            coreGroup.children.forEach((plane, index) => {
-                const isActive = index === activeCoreIndex;
-                plane.material.opacity = isActive ? 0 : 0.3; // Hide the active plane to show GIF behind
-            });
-
-            gifBackgrounds.forEach((gifEl, index) => {
-                const isActive = index === activeCoreIndex;
-                gifEl.classList.toggle('hidden', !isActive);
-            });
-        }
-
 
         // --- CHATBOT LOGIC (GEMINI INTEGRATED) ---
         function initChatbot() {
@@ -2268,6 +2021,8 @@
             DOMElements.showRegisterLink.addEventListener('click', () => { playSound('click'); DOMElements.loginForm.classList.add('hidden'); DOMElements.registerForm.classList.remove('hidden'); decodeText(DOMElements.registerForm.querySelector('h2')); });
             DOMElements.showLoginLink.addEventListener('click', () => { playSound('click'); DOMElements.registerForm.classList.add('hidden'); DOMElements.loginForm.classList.remove('hidden'); decodeText(DOMElements.loginForm.querySelector('h2')); });
             
+            DOMElements.nextCoreBtn.addEventListener('click', () => { playSound('navigate', 'E4'); currentCoreIndex = (currentCoreIndex + 1) % CONFIG.ai_cores.length; showCore(currentCoreIndex); });
+            DOMElements.prevCoreBtn.addEventListener('click', () => { playSound('navigate', 'C4'); currentCoreIndex = (currentCoreIndex - 1 + CONFIG.ai_cores.length) % CONFIG.ai_cores.length; showCore(currentCoreIndex); });
             DOMElements.logoutBtn.addEventListener('click', () => { logActivity("Đăng xuất."); signOut(auth); showNotification("Đã đăng xuất.", "info"); });
             DOMElements.chatForm.addEventListener('submit', handleSendMessage);
             document.querySelectorAll('.close-modal-btn').forEach(btn => btn.addEventListener('click', () => { playSound('click'); btn.closest('.modal-overlay').classList.add('hidden'); }));
@@ -2299,6 +2054,7 @@
             setupEventListeners(); 
             setupMatrixRain();
             initializeMedia();
+            renderAICores();
 
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
@@ -2321,7 +2077,6 @@
                         DOMElements.chatRobotContainer.classList.remove('hidden');
                         decodeText(DOMElements.aiCoreSelectionScreen.querySelector('h1'));
                         initChatbot();
-                        initThreeJSCarousel(); // Initialize the 3D carousel
                         startRandomGameNotifier();
                     }, 500);
                 } else {

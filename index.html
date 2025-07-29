@@ -57,7 +57,7 @@
         h1, h2, h3 { font-family: 'Orbitron', sans-serif; text-transform: uppercase; }
         #authScreen h2 { font-size: 1.8em; color: var(--yellow); text-shadow: 0 0 10px var(--yellow), 0 0 20px var(--cyan); margin: 0 0 25px 0; letter-spacing: 2px; min-height: 1.2em; }
         #authScreen form { width: 100%; }
-        input[type="text"], input[type="password"], input[type="tel"] { font-family: 'Rajdhani', sans-serif; font-weight: 700; margin: 10px 0; width: 100%; padding: 14px; background: rgba(0,0,0,0.5); color: var(--yellow); font-size: 1.1em; border: 1px solid var(--border-color); transition: all .2s ease; box-sizing: border-box; }
+        input[type="text"], input[type="password"], input[type="tel"], input[type="number"] { font-family: 'Rajdhani', sans-serif; font-weight: 700; margin: 10px 0; width: 100%; padding: 14px; background: rgba(0,0,0,0.5); color: var(--yellow); font-size: 1.1em; border: 1px solid var(--border-color); transition: all .2s ease; box-sizing: border-box; }
         input::placeholder { color: rgba(255, 255, 255, 0.4); font-weight: 400; }
         input:focus { outline: none; border-color: var(--yellow); box-shadow: 0 0 15px var(--yellow); }
         button, .btn-style { font-family: 'Orbitron', sans-serif; font-weight: 700; padding: 15px 20px; cursor: pointer; font-size: 1em; text-transform: uppercase; border: none; transition: all .2s ease-out; display: inline-block; text-align: center; text-decoration: none; }
@@ -100,8 +100,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px; /* Spacing between elements */
-            padding: 80px 15px 150px 15px;
+            gap: 10px; /* Reduced gap */
+            padding: 80px 15px 15px 15px; /* Adjusted padding */
             box-sizing: border-box;
             opacity: 0;
             transition: opacity 0.5s ease;
@@ -143,7 +143,10 @@
         .gif-container { width: 100%; padding-bottom: 75%; height: 0; position: relative; background-color: rgba(0,0,0,0.3); border: 1px solid var(--border-color); margin-bottom: 10px; flex-shrink: 0; }
         .gif-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; border: 0; }
         .core-description { font-size: 0.85em; color: var(--text-light); line-height: 1.4; opacity: 0.9; font-weight: 400; text-align: center; margin: 0; }
-        #promo-banner { width: 100%; max-width: 400px; padding: 10px; background: rgba(255, 215, 0, 0.1); border: 1px solid var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; animation: promo-glow 2s infinite alternate; }
+        #promo-banner, .community-banner { width: 100%; max-width: 400px; padding: 10px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; text-decoration: none; }
+        #promo-banner { background: rgba(255, 215, 0, 0.1); border: 1px solid var(--gold); box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); animation: promo-glow 2s infinite alternate; }
+        .community-banner { background: rgba(0, 255, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan); font-weight: 700; text-shadow: 0 0 5px var(--cyan); justify-content: center; transition: all 0.3s ease; }
+        .community-banner:hover { background: rgba(0, 255, 255, 0.2); box-shadow: 0 0 15px var(--cyan); color: white; }
         #promo-text { color: var(--gold); text-decoration: none; font-weight: 700; font-size: 0.8em; text-align: left; flex-grow: 1; text-shadow: 0 0 5px var(--gold); }
         #promo-spinner-link { flex-shrink: 0; margin-left: 10px; }
         #promo-spinner { width: 40px; height: 40px; cursor: pointer; }
@@ -327,6 +330,7 @@
         .dot-tie { background-color: #22c55e; box-shadow: 0 0 6px #22c55e; }
         .countdown-bar { height: 4px; width: 100%; background: linear-gradient(90deg, var(--neon-green), var(--neon-blue)); border-radius: 4px; box-shadow: 0 0 8px var(--neon-green); }
         .box-panel { background-color: var(--lb4-bg-color); border: 1px solid var(--lb4-border-color); border-radius: 0.5rem; backdrop-filter: blur(8px); box-shadow: 0 0 20px rgba(0, 255, 155, 0.1); }
+        .strategy-panel { position: relative; z-index: 10; } /* Button Fix */
         .bet-option-box { display: flex; align-items: center; justify-content: center; padding: 0.5rem 0.75rem; font-size: 0.875rem; font-semibold; border: 2px solid #475569; background-color: rgba(30, 41, 59, 0.8); color: #94a3b8; border-radius: 0.375rem; transition: all 0.3s; position: relative; overflow: hidden; }
         .bet-option-box.active { color: white; text-shadow: 0 0 5px white; }
         .bet-option-box.active::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); animation: flash 1.5s infinite; }
@@ -349,6 +353,7 @@
             transform: translateY(20px);
             animation: table-enter 0.5s ease-out forwards;
         }
+        .table-item-ultimate.hot-streak { animation: hot-table-glow 1.5s infinite alternate; }
         .table-item-ultimate::before {
             content: '';
             position: absolute;
@@ -440,6 +445,10 @@
         @keyframes table-enter { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes shockwave-animation { from { width: 0; height: 0; opacity: 0.7; border: 2px solid var(--neon-gold); } to { width: 200%; height: 200%; opacity: 0; border: 2px solid transparent; } }
         @keyframes pulse-red { 50% { box-shadow: 0 0 15px var(--neon-red); } }
+        @keyframes hot-table-glow {
+            from { box-shadow: 0 0 15px rgba(255, 29, 88, 0.4); border-image: linear-gradient(to bottom right, var(--neon-red), var(--neon-gold)) 1; }
+            to { box-shadow: 0 0 40px rgba(255, 29, 88, 0.8); border-image: linear-gradient(to bottom right, var(--neon-gold), var(--neon-red)) 1; }
+        }
         @keyframes fadeInUp { from { opacity: 0; transform: translate3d(0, 40px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
         @keyframes aurora-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes aurora-flow-vip { 0% { background-position: 0% 50%; } 50% { background-position: 200% 50%; } 100% { background-position: 0% 50%; } }
@@ -466,7 +475,15 @@
         }
         
         /* --- RESPONSIVE DESIGN --- */
-        @media (max-width: 480px) {
+        @media (max-width: 640px) {
+            #longbaoIVScreen { padding: 0.5rem; }
+            #longbaoIVScreen #table-selection-screen h1 { font-size: 1.5rem; }
+            #longbaoIVScreen #tool-screen #main-prediction-text { font-size: 2.5rem; }
+            #longbaoIVScreen #tool-screen #progress-circle { width: 120px; height: 120px; }
+            #longbaoIVScreen #tool-screen .box-panel { padding: 0.75rem; }
+            #longbaoIVScreen #tool-screen #advanced-analysis-btn { padding: 8px; font-size: 0.9em; }
+            #longbaoIVScreen #tool-screen #capital-input { padding: 8px; font-size: 0.9em; }
+
             #auth-content {
                 padding: 20px 15px;
             }
@@ -478,7 +495,7 @@
                 font-size: 1.5em;
             }
             #aiCoreSelectionScreen {
-                padding: 70px 15px 160px 15px;
+                padding: 70px 15px 15px 15px;
                 gap: 10px;
             }
             #core-options-container {
@@ -552,11 +569,12 @@
                 </div>
             <button id="next-core-btn" class="core-nav-btn" aria-label="Lõi tiếp theo">></button>
         </div>
-        <!-- Removed activation button -->
+        <!-- Banners -->
         <div id="promo-banner">
             <a href="https://www.f168a2.net/home/register?id=409098214&currency=VND" target="_blank" id="promo-text">ĐĂNG KÍ NẠP ĐẦU 8888K - TẶNG VÒNG XOAY MAY MẮN</a>
             <a href="https://vongxoaylongbao.site/" target="_blank" id="promo-spinner-link"><svg id="promo-spinner" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color: #fcee0a; stop-opacity: 1" /><stop offset="100%" style="stop-color: #ffd700; stop-opacity: 1" /></linearGradient></defs><g class="spinner-wheel"><circle cx="50" cy="50" r="25" fill="transparent" stroke="#E74C3C" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(-90 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#F1C40F" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(-30 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#2ECC71" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(30 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#3498DB" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(90 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#9B59B6" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(150 50 50)"/><circle cx="50" cy="50" r="25" fill="transparent" stroke="#1ABC9C" stroke-width="50" stroke-dasharray="26.18 157.08" transform="rotate(210 50 50)"/></g><circle cx="50" cy="50" r="48" fill="none" stroke="url(#gold-gradient)" stroke-width="4"/><path d="M50,0 L45,15 L55,15 Z" fill="var(--gold)" stroke="var(--dark-blue)" stroke-width="1" /><circle cx="50" cy="50" r="12" fill="var(--dark-blue)" stroke="var(--gold)" stroke-width="2"/><circle cx="50" cy="50" r="8" fill="var(--gold)"/></svg></a>
         </div>
+        <a href="https://t.me/LONGBAO88club" target="_blank" class="community-banner">THAM GIA CỘNG ĐỒNG SĂN CODE LONG BẢO</a>
     </div>
     
     <div id="chat-robot-container" class="hidden">
@@ -613,11 +631,14 @@
                         <div id="ai-reasoning" class="mt-2 text-center text-sm p-2 bg-black/20 rounded-md border border-cyan-500/20">
                             </div>
                     </div>
-                    <div class="box-panel p-4 flex-grow flex flex-col items-center justify-center">
-                        <h2 class="text-lg sm:text-xl font-bold text-[var(--neon-gold)] tracking-widest mb-4">TỈ LỆ THẮNG BÀN</h2>
-                        <div id="progress-circle" class="progress-circle w-36 h-36 sm:w-44 sm:h-44">
-                            <div class="w-[85%] h-[85%] bg-[#0f172a] rounded-full absolute z-0"></div>
-                            <span id="progress-value" class="relative z-10 text-2xl sm:text-3xl font-bold text-[var(--neon-green)]">80%</span>
+                    <!-- New Advanced Features Panel -->
+                    <div class="box-panel p-3 sm:p-4 strategy-panel">
+                        <h2 class="text-lg font-bold text-[var(--neon-gold)] tracking-widest mb-3">HỖ TRỢ CHIẾN LƯỢC</h2>
+                        <button id="advanced-analysis-btn" class="w-full bg-cyan-500/20 border border-cyan-500 text-cyan-400 font-bold py-2 px-4 rounded-md hover:bg-cyan-500/40 transition-colors mb-3">SOI CẦU NÂNG CAO (-15 NL)</button>
+                        <div class="space-y-2">
+                            <label for="capital-input" class="text-sm font-semibold text-gray-300">QUẢN LÝ VỐN (k = 1.000đ)</label>
+                            <input type="number" id="capital-input" placeholder="Nhập tổng vốn..." class="w-full text-center p-2">
+                            <div id="betting-suggestion" class="text-center font-bold text-lg h-8"></div>
                         </div>
                     </div>
                 </div>
@@ -734,6 +755,27 @@
     <div id="aquarius-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>Kích hoạt Siêu Lõi Aquarius</h3><p>VUI LÒNG NHẬP MÃ KÍCH HOẠT AQUARIUS</p><input type="text" id="aquarius-code-input" placeholder="MÃ KÍCH HOẠT"><p id="aquarius-error" class="auth-error"></p><div class="modal-buttons"><button id="confirm-aquarius-code" class="btn-primary">XÁC NHẬN</button><a href="https://t.me/longbaoF168" target="_blank" class="btn-style" style="border: 1px solid var(--cyan); color: var(--cyan);">LIÊN HỆ</a></div></div></div>
     <div id="low-energy-modal" class="modal-overlay hidden"><div class="modal-content warning"><button class="close-modal-btn">X</button><h3>CẢNH BÁO NĂNG LƯỢNG THẤP</h3><p>LÕI A.I ĐANG HẾT NĂNG LƯỢNG - HÃY RÚT RA NẠP LẠI ĐỂ HỒI PHỤC LÕI</p><div class="modal-buttons"><button class="close-modal-btn btn-primary" style="position: static;">ĐÃ HIỂU</button></div></div></div>
     <div id="profile-modal" class="modal-overlay hidden"><div class="modal-content"><button class="close-modal-btn">X</button><h3>HỒ SƠ PILOT</h3><div class="profile-tabs"><button class="profile-tab active" data-tab="profile-info">Thông tin</button><button class="profile-tab" data-tab="profile-security">Bảo mật</button><button class="profile-tab" data-tab="profile-log">Nhật ký</button></div><div id="profile-info" class="profile-tab-content active"><form id="profile-form"><div class="profile-avatar-section"><img id="profile-avatar-preview" src="https://placehold.co/100x100/0A192F/00ffff?text=P" alt="Profile Avatar"><div class="profile-form-group" style="width: 100%;"><label for="profile-avatar-url">URL Ảnh Đại Diện</label><input type="text" id="profile-avatar-url" placeholder="https://example.com/image.png"></div></div><div class="profile-form-group"><label for="profile-f168-username">Tên Tài Khoản F168</label><input type="text" id="profile-f168-username" placeholder="Nhập tên tài khoản F168"><small>Chỉ được đổi 2 lần/tháng, mỗi lần cách nhau 15 ngày.</small></div><div class="profile-form-group"><label for="profile-phone">Số Điện Thoại</label><input type="tel" id="profile-phone" placeholder="Nhập số điện thoại"></div><div class="modal-buttons"><button type="submit" id="save-profile-btn" class="btn-primary">LƯU THAY ĐỔI</button></div></form></div><div id="profile-security" class="profile-tab-content"><form id="change-password-form"><div class="profile-form-group"><label for="current-password">Mật khẩu hiện tại</label><input type="password" id="current-password" required></div><div class="profile-form-group"><label for="new-password">Mật khẩu mới</label><input type="password" id="new-password" required></div><div class="modal-buttons"><button type="submit" class="btn-primary">ĐỔI MẬT KHẨU</button></div></form></div><div id="profile-log" class="profile-tab-content"><div id="activity-log-container"><div class="loading-spinner"></div></div></div></div></div>
+    <!-- New Advanced Analysis Modal -->
+    <div id="advanced-analysis-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="border-color: var(--neon-green); box-shadow: inset 0 0 20px rgba(0, 255, 155, 0.3), 0 0 35px var(--neon-green);">
+            <button class="close-modal-btn">X</button>
+            <h3 id="analysis-modal-title" style="color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green);">PHÂN TÍCH NÂNG CAO</h3>
+            <div id="analysis-modal-content" class="text-left text-sm space-y-4 font-mono">
+                <div>
+                    <h4 class="font-bold text-cyan-400 mb-1">ĐỘ ỔN ĐỊNH BÀN:</h4>
+                    <p id="analysis-stability"></p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-cyan-400 mb-1">THỐNG KÊ CẦU (50 VÁN GẦN NHẤT):</h4>
+                    <ul id="analysis-patterns" class="list-disc list-inside"></ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-cyan-400 mb-1">DỰ ĐOÁN 3 VÁN TIẾP THEO:</h4>
+                    <ul id="analysis-next-predictions" class="list-disc list-inside"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <footer id="main-footer">
         <a id="footer-contact-link" href="https://t.me/longbaoF168" target="_blank">LIÊN HỆ LONG BẢO</a>
@@ -770,6 +812,7 @@
                     soiHuAutoScan: 10,
                     soiHuAnalysis: 2,
                     geminiChat: 5,
+                    advancedAnalysis: 15, // New cost
                 }
             },
             ai_cores: [
@@ -820,6 +863,8 @@
         let ytPlayer, isYtReady = false;
         const sound = {};
         let randomNotifierTimeout; // Timer for random game notifications
+        let hotTables = {}; // For streak alerts
+        let userCapital = 0; // For betting assistant
 
         // --- DOM Elements ---
         const DOMElements = {
@@ -885,6 +930,16 @@
             modalConfirmBtnLB4: document.getElementById('modal-confirm-btn-lb4'),
             shockwaveContainer: document.getElementById('shockwave-container'),
             aiReasoning: document.getElementById('ai-reasoning'),
+            // New Ultimate Elements
+            advancedAnalysisBtn: document.getElementById('advanced-analysis-btn'),
+            capitalInput: document.getElementById('capital-input'),
+            bettingSuggestion: document.getElementById('betting-suggestion'),
+            advancedAnalysisModal: document.getElementById('advanced-analysis-modal'),
+            analysisModalTitle: document.getElementById('analysis-modal-title'),
+            analysisStability: document.getElementById('analysis-stability'),
+            analysisPatterns: document.getElementById('analysis-patterns'),
+            analysisNextPredictions: document.getElementById('analysis-next-predictions'),
+            // Soi Hu Elements
             soiHuScreen: document.getElementById('soiHuScreen'),
             soiHu_mainContent: document.getElementById('soiHu_mainContent'),
             soiHu_aiChoiceContainer: document.getElementById('soiHu_aiChoiceContainer'),
@@ -1489,6 +1544,7 @@
         let currentVisibleTable = null;
         let lb4ConfigData = null;
         let lb4AnimationId;
+        let streakCheckInterval;
 
         async function launchLongBaoIV() {
             logActivity("Khởi chạy Lõi LongBao IV.");
@@ -1516,6 +1572,7 @@
             initializeAllTablesState();
             generateTableListLB4();
             if (!globalUpdateInterval) startGlobalUpdater();
+            if (!streakCheckInterval) streakCheckInterval = setInterval(checkForStreaks, 5000); // Check for streaks every 5 seconds
             
             initLongBaoIVBackground();
             updateSuggestedTableLB4();
@@ -1536,16 +1593,10 @@
                 const winRateChance = (Math.floor(Math.random() * (95 - 70 + 1)) + 70) / 100;
 
                 for (let i = 0; i < initialRoundCount; i++) {
-                    // Simulate a result
                     const result = outcomes[Math.floor(Math.random() * outcomes.length)];
                     initialHistory.push(result);
-                    // Simulate if it was a win or loss based on a random prediction
                     const randomPrediction = outcomes[Math.floor(Math.random() * outcomes.length)];
-                    if (randomPrediction === result) {
-                        wins++;
-                    } else {
-                        losses++;
-                    }
+                    if (randomPrediction === result) wins++; else losses++;
                 }
 
                 allTablesState[name] = {
@@ -1603,7 +1654,6 @@
             if (tableState.history.length > 150) tableState.history.shift();
             tableState.history.push(actualResult);
             tableState.lastPrediction = { main: mainPrediction, sub: subPrediction, result: actualResult, reasoning: reasoning };
-            // Add variance to next update time for more realism
             tableState.nextUpdateTime = Date.now() + CONFIG.longbao_iv.prediction_interval + (Math.random() * 2000 - 1000);
         }
 
@@ -1645,6 +1695,10 @@
                 clearInterval(globalUpdateInterval);
                 globalUpdateInterval = null;
             }
+            if (streakCheckInterval) {
+                clearInterval(streakCheckInterval);
+                streakCheckInterval = null;
+            }
         }
 
         function generateTableListLB4() {
@@ -1658,6 +1712,7 @@
                 const tableElement = document.createElement('div');
                 tableElement.className = 'table-item-ultimate p-4 flex flex-col justify-between';
                 tableElement.style.animationDelay = `${index * 50}ms`;
+                tableElement.dataset.tableName = name; // Add data attribute
 
                 const miniHistoryHTML = tableState.history.slice(-12).map(result => {
                     const dotClass = result === 'NHÀ CON' ? 'player' : 'banker';
@@ -1698,6 +1753,7 @@
             updateFluctuatingWinRateLB4();
             updateEnergyBarLB4();
             resetCountdownLB4();
+            updateBettingSuggestion(); // Update betting suggestion with new prediction
         }
 
         function renderFullTableState(tableName) {
@@ -1725,6 +1781,7 @@
             void DOMElements.countdownBar.offsetWidth;
             DOMElements.countdownBar.style.transition = `width ${timeRemaining / 1000}s linear`;
             DOMElements.countdownBar.style.width = '0%';
+            updateBettingSuggestion();
         }
         
         function startToolForTableLB4(tableName) {
@@ -1893,6 +1950,140 @@
             animate();
             window.addEventListener('resize', setupCanvas);
         }
+
+        // --- ULTIMATE FEATURES ---
+
+        function checkForStreaks() {
+            const STREAK_LENGTH = 5;
+            let changed = false;
+            for (const tableName in allTablesState) {
+                const tableState = allTablesState[tableName];
+                const history = tableState.history;
+                if (history.length < STREAK_LENGTH) continue;
+
+                const lastFive = history.slice(-STREAK_LENGTH);
+                const first = lastFive[0];
+                const isStreak = lastFive.every(res => res === first);
+
+                if (isStreak && !hotTables[tableName]) {
+                    hotTables[tableName] = { type: 'streak', notified: false };
+                    changed = true;
+                } else if (!isStreak && hotTables[tableName]) {
+                    delete hotTables[tableName];
+                    changed = true;
+                }
+            }
+
+            if (changed) {
+                updateTableSelectionUI();
+                for (const tableName in hotTables) {
+                    if (!hotTables[tableName].notified) {
+                        showNotification(`🔥 Bàn ${tableName} đang có cầu bệt!`, 'info');
+                        hotTables[tableName].notified = true;
+                    }
+                }
+            }
+        }
+
+        function updateTableSelectionUI() {
+            if (DOMElements.tableSelectionScreen.classList.contains('hidden')) return;
+            const tableElements = DOMElements.tableListContainer.querySelectorAll('.table-item-ultimate');
+            tableElements.forEach(el => {
+                const tableName = el.dataset.tableName;
+                if (hotTables[tableName]) {
+                    el.classList.add('hot-streak');
+                } else {
+                    el.classList.remove('hot-streak');
+                }
+            });
+        }
+        
+        async function handleAdvancedAnalysis() {
+            if (!currentVisibleTable) return;
+            const cost = CONFIG.energy.costs.advancedAnalysis;
+            if (!currentUserData || currentUserData.energy < cost) {
+                playSound('error');
+                showNotification(`Không đủ năng lượng! Cần ${cost}, bạn còn ${currentUserData.energy}.`, "error");
+                return;
+            }
+
+            const newEnergy = currentUserData.energy - cost;
+            const userDocRef = doc(db, "users", auth.currentUser.uid);
+            await updateDoc(userDocRef, { energy: newEnergy });
+            logActivity(`Sử dụng Soi Cầu Nâng Cao (-${cost} năng lượng) tại bàn ${currentVisibleTable}.`);
+            
+            playSound('open');
+            const analysis = calculateAdvancedAnalysis(currentVisibleTable);
+            
+            DOMElements.analysisModalTitle.textContent = `PHÂN TÍCH NÂNG CAO - ${currentVisibleTable}`;
+            DOMElements.analysisStability.innerHTML = `<span style="color: ${analysis.stability.color}">${analysis.stability.text}</span>`;
+            DOMElements.analysisPatterns.innerHTML = Object.entries(analysis.patterns).map(([key, value]) => `<li>${key}: ${value} lần</li>`).join('');
+            DOMElements.analysisNextPredictions.innerHTML = analysis.nextPredictions.map(p => `<li>${p.outcome} <span class="text-gray-400">(${p.chance}%)</span></li>`).join('');
+            
+            DOMElements.advancedAnalysisModal.classList.remove('hidden');
+        }
+
+        function calculateAdvancedAnalysis(tableName) {
+            const history = allTablesState[tableName].history.slice(-50);
+            let changes = 0;
+            let patterns = { 'Cầu Bệt': 0, 'Cầu 1-1': 0, 'Cầu 2-2': 0, 'Khác': 0 };
+            
+            // Pattern analysis
+            for (let i = 1; i < history.length; i++) {
+                if (history[i] !== history[i - 1]) changes++;
+                if (i >= 1 && history[i] !== history[i-1] && history[i-1] !== history[i-2]) patterns['Cầu 1-1']++;
+                if (i >= 3 && history[i] === history[i-1] && history[i-2] === history[i-3] && history[i-1] !== history[i-2]) patterns['Cầu 2-2']++;
+                if (i >= 2 && history[i] === history[i-1] && history[i-1] === history[i-2]) patterns['Cầu Bệt']++;
+            }
+
+            // Stability
+            const stabilityValue = 1 - (changes / history.length);
+            let stability = {};
+            if (stabilityValue > 0.7) stability = { text: 'Rất Ổn Định', color: 'var(--success-green)' };
+            else if (stabilityValue > 0.5) stability = { text: 'Ổn Định', color: 'var(--yellow)' };
+            else stability = { text: 'Biến Động', color: 'var(--error-red)' };
+
+            // Next predictions (simple model)
+            const lastOutcome = history[history.length - 1];
+            let nextPredictions = [
+                { outcome: lastOutcome, chance: Math.round(stabilityValue * 100) },
+                { outcome: lastOutcome === 'NHÀ CON' ? 'NHÀ CÁI' : 'NHÀ CON', chance: Math.round((1 - stabilityValue) * 100) },
+                { outcome: lastOutcome, chance: Math.round(stabilityValue * 70) }
+            ];
+
+            return { stability, patterns, nextPredictions };
+        }
+
+        function updateBettingSuggestion() {
+            if (!currentVisibleTable || userCapital <= 0) {
+                DOMElements.bettingSuggestion.textContent = '';
+                return;
+            }
+            const tableState = allTablesState[currentVisibleTable];
+            if (!tableState.lastPrediction) {
+                DOMElements.bettingSuggestion.textContent = '';
+                return;
+            }
+
+            const reasoning = tableState.lastPrediction.reasoning;
+            let confidence = 0.5; // Base confidence
+            if (reasoning.includes("chuỗi 3")) confidence = 0.8;
+            if (reasoning.includes("xen kẽ")) confidence = 0.7;
+
+            let suggestionText = '';
+            if (confidence > 0.75) {
+                suggestionText = `Cược ${Math.round(userCapital * 0.05)}k (5%)`;
+                DOMElements.bettingSuggestion.style.color = 'var(--success-green)';
+            } else if (confidence > 0.6) {
+                suggestionText = `Cược ${Math.round(userCapital * 0.02)}k (2%)`;
+                DOMElements.bettingSuggestion.style.color = 'var(--yellow)';
+            } else {
+                suggestionText = 'Bỏ qua / Cược nhỏ';
+                DOMElements.bettingSuggestion.style.color = 'var(--error-red)';
+            }
+            DOMElements.bettingSuggestion.textContent = suggestionText;
+        }
+
 
         // --- CORE: SOI HU LOGIC ---
         let soiHuConfigData = null;
@@ -2106,6 +2297,15 @@
             DOMElements.exitLongbaoBtnTables.addEventListener('click', exitLongBaoIV);
             DOMElements.backToTablesBtn.addEventListener('click', showTableSelectionScreenLB4);
             DOMElements.modalConfirmBtnLB4.addEventListener('click', () => { DOMElements.energyModalLB4.classList.add('hidden'); exitLongBaoIV(); });
+            
+            // Ultimate Features Listeners
+            DOMElements.advancedAnalysisBtn.addEventListener('click', handleAdvancedAnalysis);
+            DOMElements.capitalInput.addEventListener('input', (e) => {
+                userCapital = parseFloat(e.target.value) || 0;
+                updateBettingSuggestion();
+            });
+
+            // Soi Hu Listeners
             DOMElements.exitSoiHuBtn.addEventListener('click', exitSoiHu);
             DOMElements.soiHu_choiceAILongBao.addEventListener('click', () => selectAISoiHu('base'));
             DOMElements.soiHu_choiceAILongBao4.addEventListener('click', () => selectAISoiHu('gen4'));

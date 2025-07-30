@@ -804,6 +804,8 @@
                 messagingSenderId: "259613170671",
                 appId: "1:259613170671:web:6fe2467879c01da52b41a",
             },
+            // FIX: Thêm một hằng số cho đuôi email để dễ dàng quản lý
+            authDomainSuffix: "@long-bao-tool-ai.web.app",
             energy: {
                 initial: 5, // Năng lượng khởi tạo là 5
                 max: 100,
@@ -1147,7 +1149,8 @@
             const password = DOMElements.loginPasswordInput.value;
             DOMElements.loginBtn.disabled = true;
             try {
-                const fakeEmail = `${username}@longbao-tool.ai`;
+                // FIX: Sử dụng hằng số đuôi email đã được định nghĩa để đồng bộ
+                const fakeEmail = `${username}${CONFIG.authDomainSuffix}`;
                 await signInWithEmailAndPassword(auth, fakeEmail, password);
                 await logActivity("Đăng nhập vào hệ thống.");
                 showNotification("Kết nối thành công! Đang chuyển hướng...", "success");
@@ -1171,7 +1174,8 @@
             }
             registerBtn.disabled = true;
             try {
-                const fakeEmail = `${username}@longbao-tool.ai`;
+                // FIX: Sử dụng hằng số đuôi email đã được định nghĩa để đồng bộ
+                const fakeEmail = `${username}${CONFIG.authDomainSuffix}`;
                 const userCredential = await createUserWithEmailAndPassword(auth, fakeEmail, password);
                 const userDocRef = doc(db, "users", userCredential.user.uid);
                 await setDoc(userDocRef, { 

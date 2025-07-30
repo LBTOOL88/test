@@ -1084,7 +1084,7 @@
         const startMedia = async () => {
             if (soundsReady) {
                  if (isYtReady && ytPlayer && ytPlayer.isMuted()) {
-                    ytPlayer.unMute();
+                    // ytPlayer.unMute(); // ĐÃ TẮT ÂM THANH NỀN
                 }
                 return;
             }
@@ -1092,8 +1092,8 @@
             soundsReady = true;
             console.log("Audio Context started.");
              if (isYtReady && ytPlayer && ytPlayer.isMuted()) {
-                ytPlayer.unMute();
-                console.log("YouTube player unmuted.");
+                // ytPlayer.unMute(); // ĐÃ TẮT ÂM THANH NỀN
+                console.log("YouTube player will remain muted.");
             }
         };
 
